@@ -1,5 +1,9 @@
 package com.whitecards.cadela.services
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -9,94 +13,65 @@ import com.whitecards.cadela.data.model.Program
 import com.whitecards.cadela.data.model.Session
 import kotlinx.coroutines.*
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.CyclicBarrier
 
 object FirebaseService {
     var exercises = ArrayList<Exercise>()
     var programs = ArrayList<Program>()
     var sessions = ArrayList<Session>()
 
-    var errorFound = false
-
-    private var _exerciceWaiter = CountDownLatch(1)
-    private var _programWaiter = CountDownLatch(1)
-    private var _sessionWaiter = CountDownLatch(1)
+    var isInit: Boolean = false
 
     private val _database = FirebaseDatabase.getInstance().getReference("")
 
-    var isLaunch = false
+    init {
+        isInit = false
+    }
 
-    fun initAsync(): Deferred<Boolean> = GlobalScope.async {
+    fun init(callback: (success: Boolean) -> Unit) {
+        if(isInit) return
 
-        if(!isLaunch) {
-            isLaunch = true
-            exercises.clear()
-            programs.clear()
-            sessions.clear()
-
-            withContext(Dispatchers.Default) {
-                _database.child("exercises").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        exercises.clear()
-                        for (child in snapshot.children) {
-                            exercises.add(child.getValue(Exercise::class.java)!!)
-                        }
-                        _exerciceWaiter.countDown()
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        exercises.clear()
-                        errorFound = true
-                        _exerciceWaiter.countDown()
-                    }
-                })
+        _database.child("exercises").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (child in snapshot.children) {
+                    exercises.add(child.getValue(Exercise::class.java)!!)
+                }
 
                 _database.child("programs").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        _exerciceWaiter.await()
-
-                        programs.clear()
-                        if (!errorFound && exercises.size != 0) {
-                            for (child in snapshot.children) {
-                                programs.add(child.getValue(Program::class.java)!!)
-                            }
-
-                            populateProgramWithRealExercises()
+                        for (child in snapshot.children) {
+                            programs.add(child.getValue(Program::class.java)!!)
                         }
-                        _programWaiter.countDown()
+
+                        populateProgramWithRealExercises()
+
+                        _database.child("sessions").child(AuthService.token.value!!)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    for (child in snapshot.children) {
+                                        sessions.add(child.getValue(Session::class.java)!!)
+                                    }
+
+                                    isInit = true
+                                    callback.invoke(isInit)
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    callback.invoke(isInit)
+                                }
+                            })
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-                        programs.clear()
-                        errorFound = true
-                        _programWaiter.countDown()
+                        callback.invoke(isInit)
                     }
                 })
-
-                _database.child("sessions").child(AuthService.token!!)
-                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            _programWaiter.await()
-
-                            if (!errorFound && programs.size != 0) {
-                                for (child in snapshot.children) {
-                                    sessions.add(child.getValue(Session::class.java)!!)
-                                }
-                            }
-                            _sessionWaiter.countDown()
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            errorFound = true
-                            _sessionWaiter.countDown()
-                        }
-                    })
             }
 
-
-            withContext(Dispatchers.Default) { _sessionWaiter.await() }
-        }
-
-            !errorFound && programs.size != 0 && exercises.size != 0
+            override fun onCancelled(error: DatabaseError) {
+                callback.invoke(isInit)
+            }
+        })
     }
 
     private fun populateProgramWithRealExercises() {

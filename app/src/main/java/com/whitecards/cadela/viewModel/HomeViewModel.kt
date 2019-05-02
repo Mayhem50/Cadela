@@ -2,20 +2,22 @@ package com.whitecards.cadela.viewModel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.view.View
 import com.whitecards.cadela.services.FirebaseService
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 
 class HomeViewModel : ViewModel(){
-    var isLoading = MutableLiveData<Boolean>()
+    val isLoading: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     init {
-        isLoading.value = true
-        init()
-    }
+        isLoading.value = View.VISIBLE
 
-    private fun init() = GlobalScope.async{
-        val result = FirebaseService.initAsync().await()
-        isLoading.postValue(result)
+        FirebaseService.init {
+            if(it){
+                isLoading.value = View.GONE
+            }
+            else{
+                isLoading.value = View.VISIBLE
+            }
+        }
     }
 }

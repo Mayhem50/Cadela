@@ -1,10 +1,15 @@
 package com.whitecards.cadela.data.model
 
+import android.util.Log
 import com.google.firebase.database.PropertyName
 import com.whitecards.cadela.utils.ModelHelpers
+import java.lang.Exception
 import java.text.DateFormat
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -22,17 +27,14 @@ class Session{
     @set:PropertyName("date_program_start")
     var dateOfProgramBeginingString: String = ""
         set(value){
-            var formatter = DateFormat.getDateInstance(DateFormat.FULL, Locale.FRANCE)
-            try {
-                dateOfProgramBegining = LocalDateTime.parse(value, formatter)
-            }
+                dateOfProgramBegining = tryParseLocalDateTime(value)
         }
 
     @get:PropertyName("creation_date")
     @set:PropertyName("creation_date")
     var dateOfCreationString: String = ""
         set(value){
-            dateOfProgramBegining = LocalDateTime.parse(value)
+            dateOfCreation = tryParseLocalDateTime(value)
         }
 
     @PropertyName("program") lateinit var program: Program
@@ -67,4 +69,8 @@ class Session{
             return result
         }
     }
+}
+
+private fun tryParseLocalDateTime(string: String): LocalDateTime {
+    return Instant.ofEpochSecond(string.toLong()).atZone(ZoneId.systemDefault()).toLocalDateTime()
 }
