@@ -1,5 +1,6 @@
 package com.whitecards.cadela.services
 
+import android.arch.lifecycle.MutableLiveData
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -7,15 +8,14 @@ import java.util.concurrent.CyclicBarrier
 
 object AuthService {
     lateinit var callbackManager: CallbackManager
-    lateinit var waiter: CyclicBarrier
-    var user: FirebaseUser? = null
-    var token: String? = null
+    var user: MutableLiveData<FirebaseUser?> = MutableLiveData()
+    var token: MutableLiveData<String?> = MutableLiveData()
 
     fun init() {
         initFacebook()
-        user = FirebaseAuth.getInstance().currentUser
-        user?.let {
-            token = it.uid
+        user.value = FirebaseAuth.getInstance().currentUser
+        user.value?.let {
+            token.value = it.uid
         }
     }
 

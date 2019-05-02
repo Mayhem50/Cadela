@@ -1,11 +1,15 @@
 package com.whitecards.cadela.viewModel
 
 import android.app.Activity
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.whitecards.cadela.ui.main.MainActivity
 import com.whitecards.cadela.services.AuthService
 import com.whitecards.cadela.services.loginFacebookAsync
@@ -22,6 +26,7 @@ class LoginViewModel : ViewModel(){
     init{
         isLoading.value = View.GONE
         AuthService.init()
+
     }
 
     fun onFacebookClick(view: View) {
@@ -29,16 +34,20 @@ class LoginViewModel : ViewModel(){
         loginFacebookAsync(activity)
     }
 
-    private fun loginFacebookAsync(activity: Activity) = GlobalScope.launch {
+    private fun loginFacebookAsync(activity: Activity) {
         isLoading.postValue(View.VISIBLE)
-        val success = AuthService.loginFacebookAsync(activity).await()
+        AuthService.loginFacebookAsync(activity)
 
-        isLoading.postValue(View.GONE)
+        AuthService.user.observe(activity as LifecycleOwner, object : Observer<FirebaseUser?> {
+            override fun onChanged(user: FirebaseUser?) {
+                user?.let {
+                    userName.value = it.displayName
+                    startMainActivityAsync(activity)
+                }
 
-        if(success){
-            userName.postValue(AuthService.user!!.displayName)
-            startMainActivityAsync(activity)
-        }
+                isLoading.postValue(View.GONE)
+            }
+        })
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
