@@ -6,7 +6,7 @@
         <variable name="vm" type="com.whitecards.cadela.viewModel.SettingsViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,7 +22,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/textView2"
         />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" app:layout_constraintGuide_begin="285dp" android:id="@+id/guideline2"/>
@@ -104,11 +104,11 @@
                 app:layout_constraintTop_toTopOf="@+id/guideline3"
                 android:onClick="@{(v) -> vm.onApplyChange(v)}"
                 android:visibility="@{vm.applyChangeButtonVisibility}"/>
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" app:layout_constraintGuide_begin="160dp"
                 android:id="@+id/guideline3"/>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

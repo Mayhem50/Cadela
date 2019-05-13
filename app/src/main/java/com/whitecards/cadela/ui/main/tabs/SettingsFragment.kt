@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.support.v4.app.Fragment
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.whitecards.cadela.R
 import com.whitecards.cadela.databinding.FragmentMainSettingsBinding
 import com.whitecards.cadela.viewModel.SettingsViewModel
@@ -14,7 +13,7 @@ import com.whitecards.cadela.viewModel.SettingsViewModel
 /**
  * A placeholder fragment containing a simple view.
  */
-class SettingsFragment : Fragment() {
+class SettingsFragment : androidx.fragment.app.Fragment() {
 
     private lateinit var viewModel: SettingsViewModel
 
@@ -27,7 +26,12 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentMainSettingsBinding>(inflater, R.layout.fragment_main_settings, container, false)
+        val binding = DataBindingUtil.inflate<FragmentMainSettingsBinding>(
+            inflater,
+            R.layout.fragment_main_settings,
+            container,
+            false
+        )
         binding.vm = viewModel
         binding.lifecycleOwner = this
         return binding.root

@@ -1,10 +1,10 @@
 package com.whitecards.cadela.ui.login
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.FirebaseApp
 import com.whitecards.cadela.R
 import com.whitecards.cadela.databinding.ActivityLoginBinding

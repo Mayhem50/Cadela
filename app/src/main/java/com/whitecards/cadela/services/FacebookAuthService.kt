@@ -3,27 +3,30 @@ package com.whitecards.cadela.services
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
-import com.facebook.*
-import com.facebook.login.*
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.*
-import java.util.concurrent.CyclicBarrier
 
 
-fun AuthService.initFacebook(){
+fun AuthService.initFacebook() {
     callbackManager = CallbackManager.Factory.create()
 
     LoginManager.getInstance().registerCallback(
-        callbackManager, object: FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult){
+        callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
                 handleResult(loginResult.accessToken)
             }
 
-            override fun onCancel(){
+            override fun onCancel() {
                 Log.d("DISMISS", "Cancel")
             }
-            override fun onError(error: FacebookException){
+
+            override fun onError(error: FacebookException) {
                 Log.d("ERROR", error.toString())
             }
         }
@@ -41,7 +44,7 @@ private fun AuthService.handleResult(accessToken: AccessToken?) {
     }
 }
 
-fun AuthService.onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
+fun AuthService.onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     callbackManager.onActivityResult(requestCode, resultCode, data)
 }
 

@@ -1,26 +1,28 @@
 package com.whitecards.cadela.ui.main.tabs
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.support.v4.app.Fragment
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
-import android.support.v7.widget.RecyclerView
+import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.whitecards.cadela.R
+import com.whitecards.cadela.adapters.ExerciceAdapter
+import com.whitecards.cadela.databinding.FragmentMainHomeBinding
+import com.whitecards.cadela.services.AuthService
 import com.whitecards.cadela.viewModel.HomeViewModel
-import com.whitecards.cadela.databinding.*
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : androidx.fragment.app.Fragment() {
 
     private lateinit var _viewModel: HomeViewModel
     var viewModelFactory = ViewModelProvider.NewInstanceFactory()
@@ -28,17 +30,31 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
-        var binding = DataBindingUtil.inflate<FragmentMainHomeBinding>(inflater, R.layout.fragment_main_home, container, false)
+        savedInstanceState: Bundle?
+    ): View? {
+        var binding =
+            DataBindingUtil.inflate<FragmentMainHomeBinding>(inflater, R.layout.fragment_main_home, container, false)
 
-        binding.homeVm = ViewModelProviders.of(activity!!, viewModelFactory).get(HomeViewModel::class.java)
+        _viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(HomeViewModel::class.java)
+        binding.homeVm = _viewModel
         binding.lifecycleOwner = this
 
-        var recycler = binding.root.findViewById<RecyclerView>(R.id.home_exercises)
+        var recycler = binding.root.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.home_exercises)
         var layoutManager = FlexboxLayoutManager(binding.root.context)
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.flexWrap = FlexWrap.WRAP
-        recycler.layoutManager = layoutManager as RecyclerView.LayoutManager
+        recycler.layoutManager = layoutManager
+
+        var image = binding.root.findViewById<ImageView>(R.id.user_photo)
+        AuthService.user.value?.let {
+            Glide.with(binding.root).load(it.photoUrl).into(image)
+        }
+
+        _viewModel.session.observe(this, Observer { session ->
+            val adapter = ExerciceAdapter(session.program)
+            recycler.adapter = adapter
+            adapter.submitList(session.program.exercises)
+        })
 
         return binding.root
     }

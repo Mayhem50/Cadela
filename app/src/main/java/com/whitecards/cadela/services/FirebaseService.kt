@@ -1,9 +1,5 @@
 package com.whitecards.cadela.services
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -11,9 +7,6 @@ import com.google.firebase.database.ValueEventListener
 import com.whitecards.cadela.data.model.Exercise
 import com.whitecards.cadela.data.model.Program
 import com.whitecards.cadela.data.model.Session
-import kotlinx.coroutines.*
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.CyclicBarrier
 
 object FirebaseService {
     var exercises = ArrayList<Exercise>()
@@ -29,7 +22,7 @@ object FirebaseService {
     }
 
     fun init(callback: (success: Boolean) -> Unit) {
-        if(isInit) return
+        if (isInit) return
 
         _database.child("exercises").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

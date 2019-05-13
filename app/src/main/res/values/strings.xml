@@ -26,4 +26,7 @@
 
     <string name="logout">Déconnexion</string>
     <string name="validate_settings">Valider</string>
+    <string name="user_avatar">user_avatar</string>
+    <string name="home_actual_level">Niveau actuel :</string>
+    <string name="home_starting_program_date">Commencé le :</string>
 </resources>

@@ -1,33 +1,47 @@
 package com.whitecards.cadela.viewModel
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
-import android.view.View
-import com.whitecards.cadela.data.model.Exercise
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.whitecards.cadela.data.model.Session
 import com.whitecards.cadela.services.FirebaseService
+import java.time.format.DateTimeFormatter
 
-class HomeViewModel : ViewModel(){
-    var _isLoading = MutableLiveData<Int>()
-    var _sessions = MutableLiveData<ArrayList<Session>>()
+class HomeViewModel : ViewModel() {
+    private var _isLoading = MutableLiveData<Boolean>()
+    private var _actualLevel = MutableLiveData<Int>()
+    private var _programStartingDate = MutableLiveData<String>()
 
-    val isLoading: LiveData<Int>
+    private var _session = MutableLiveData<Session>()
+
+    val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    val sessions: LiveData<ArrayList<Session>>
-        get() = _sessions
+    val session: LiveData<Session>
+        get() = _session
+
+    val actualLevel: LiveData<Int>
+        get() = _actualLevel
+
+    val programStartingDate: LiveData<String>
+        get() = _programStartingDate
 
     init {
-        _isLoading.value = View.VISIBLE
+        _isLoading.value = true
 
         FirebaseService.init {
-            if(it){
-                _isLoading.value = View.GONE
-                _sessions.value = FirebaseService.sessions
-            }
-            else{
-                _isLoading.value = View.VISIBLE
+            if (it) {
+                _isLoading.value = false
+                val lastSession = FirebaseService.sessions.lastOrNull()
+                val session = Session.createFromPrevious(lastSession)
+                _session.value = session
+
+                val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
+                _programStartingDate.value = session.dateOfProgramBegining.format(formatter)
+
+                _actualLevel.value = session.program.level
+            } else {
+                _isLoading.value = false
             }
         }
     }

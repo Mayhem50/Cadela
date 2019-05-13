@@ -1,20 +1,19 @@
 package com.whitecards.cadela.ui.main.tabs
 
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentPagerAdapter
 import com.whitecards.cadela.R
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class SectionsPagerAdapter(private val context: Context, fm: androidx.fragment.app.FragmentManager) :
+    androidx.fragment.app.FragmentPagerAdapter(fm) {
 
     private val TAB_TITLES = arrayOf(
         R.string.tab_text_1,
@@ -28,8 +27,8 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
         R.drawable.ic_settings_black_24dp
     )
 
-    override fun getItem(position: Int): Fragment {
-        if(position == 2) return SettingsFragment()
+    override fun getItem(position: Int): androidx.fragment.app.Fragment {
+        if (position == 2) return SettingsFragment()
         return HomeFragment()
     }
 
