@@ -46,16 +46,17 @@ class Session{
 
     companion object{
         fun createFromPrevious(session: Session?): Session{
-            val (program, levelchanged) = Program.getProgramFfromPreviousSession(session)
+            val (program, levelChanged) = Program.getProgramFromPreviousSession(session)
             var result = Session().apply {
                 isPrending = false
                 dateOfCreation = LocalDateTime.now()
                 dateOfProgramBegining = LocalDateTime.now()
+                this.program = program
             }
 
             session?.let {
                 if(session.isPrending) return session
-                if(!levelchanged){
+                if(!levelChanged){
                     result.dateOfProgramBegining = it.dateOfProgramBegining
                 }
 
