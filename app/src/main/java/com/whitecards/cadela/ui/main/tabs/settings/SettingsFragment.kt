@@ -1,4 +1,4 @@
-package com.whitecards.cadela.ui.main.tabs
+package com.whitecards.cadela.ui.main.tabs.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.whitecards.cadela.R
 import com.whitecards.cadela.databinding.FragmentMainSettingsBinding
-import com.whitecards.cadela.viewModel.SettingsViewModel
 
 /**
  * A placeholder fragment containing a simple view.

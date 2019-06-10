@@ -30,4 +30,9 @@
     <string name="home_actual_level">Niveau actuel :</string>
     <string name="home_starting_program_date">Commencé le :</string>
     <string name="title_activity_workout">WorkoutActivity</string>
+
+    <!-- Workout Activity -->
+    <string name="next_exercise">Suivant</string>
+    <string name="end_workout">Fin</string>
+
 </resources>

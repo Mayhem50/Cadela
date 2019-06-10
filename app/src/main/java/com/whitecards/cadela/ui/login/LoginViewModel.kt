@@ -1,4 +1,4 @@
-package com.whitecards.cadela.viewModel
+package com.whitecards.cadela.ui.login
 
 import android.app.Activity
 import android.content.Intent
@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.whitecards.cadela.services.AuthService
 import com.whitecards.cadela.services.loginFacebookAsync
 import com.whitecards.cadela.services.onActivityResult

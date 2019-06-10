@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.FirebaseApp
 import com.whitecards.cadela.R
 import com.whitecards.cadela.databinding.ActivityLoginBinding
-import com.whitecards.cadela.viewModel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
 

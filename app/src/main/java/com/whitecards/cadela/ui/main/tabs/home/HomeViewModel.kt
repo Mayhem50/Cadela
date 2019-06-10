@@ -1,13 +1,12 @@
-package com.whitecards.cadela.viewModel
+package com.whitecards.cadela.ui.main.tabs.home
 
 import android.app.Activity
 import android.content.Intent
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.whitecards.cadela.WorkoutActivity
+import com.whitecards.cadela.ui.workout.WorkoutActivity
 import com.whitecards.cadela.data.model.Session
 import com.whitecards.cadela.services.FirebaseService
 import kotlinx.coroutines.*

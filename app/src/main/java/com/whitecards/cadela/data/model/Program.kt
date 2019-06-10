@@ -37,7 +37,7 @@ class Program {
     @get:PropertyName("rest_between_exo")
     var restBetweenTimeString: String = ""
         set(value) {
-            restBetweenTime = ModelHelpers.stringToListInt(value)
+            restBetweenTimes = ModelHelpers.stringToListInt(value)
         }
 
     @set:PropertyName("start")
@@ -71,7 +71,7 @@ class Program {
 
     @set:Exclude
     @get:Exclude
-    lateinit var restBetweenTime: ArrayList<Int>
+    lateinit var restBetweenTimes: ArrayList<Int>
 
     @set:Exclude
     @get:Exclude
@@ -268,7 +268,7 @@ val test = Program(
     level = 999
     series = arrayListOf(1, 1, 1, 1)
     restInTimes = arrayListOf(0, 0, 0)
-    restBetweenTime = arrayListOf(180, 180, 180)
+    restBetweenTimes = arrayListOf(180, 180, 180)
     targetRepetitionAtStart = arrayListOf(0, 0, 0, 0)
     rythms = arrayListOf(ERythm.Normal, ERythm.Normal, ERythm.Normal, ERythm.Normal)
     exercises = arrayListOf(

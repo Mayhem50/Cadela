@@ -1,4 +1,4 @@
-package com.whitecards.cadela.viewModel
+package com.whitecards.cadela.ui.adapters
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.whitecards.cadela.adapters
+package com.whitecards.cadela.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,6 @@ import com.whitecards.cadela.R
 import com.whitecards.cadela.data.model.Exercise
 import com.whitecards.cadela.data.model.Program
 import com.whitecards.cadela.databinding.ListItemExerciseBinding
-import com.whitecards.cadela.viewModel.ExerciseListItemViewModel
 
 class ExerciceAdapter(private val program: Program) :
     ListAdapter<Exercise, ExerciceAdapter.ViewHolder>(ExerciseItemDiffCallback()) {

@@ -1,4 +1,4 @@
-package com.whitecards.cadela.ui.main.tabs
+package com.whitecards.cadela.ui.main
 
 import android.content.Context
 import android.text.Spannable
@@ -7,6 +7,8 @@ import android.text.style.ImageSpan
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentPagerAdapter
 import com.whitecards.cadela.R
+import com.whitecards.cadela.ui.main.tabs.home.HomeFragment
+import com.whitecards.cadela.ui.main.tabs.settings.SettingsFragment
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

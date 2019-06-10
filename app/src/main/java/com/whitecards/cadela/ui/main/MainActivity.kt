@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import com.whitecards.cadela.R
-import com.whitecards.cadela.ui.main.tabs.SectionsPagerAdapter
 
 class MainActivity : AppCompatActivity() {
 

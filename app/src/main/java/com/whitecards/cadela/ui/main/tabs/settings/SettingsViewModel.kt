@@ -1,4 +1,4 @@
-package com.whitecards.cadela.viewModel
+package com.whitecards.cadela.ui.main.tabs.settings
 
 import android.app.Activity
 import android.content.Intent

@@ -1,4 +1,4 @@
-package com.whitecards.cadela.viewModel
+package com.whitecards.cadela.ui.main
 
 import androidx.lifecycle.ViewModel
 

@@ -1,4 +1,4 @@
-package com.whitecards.cadela.ui.main.tabs
+package com.whitecards.cadela.ui.main.tabs.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,10 +14,9 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.whitecards.cadela.R
-import com.whitecards.cadela.adapters.ExerciceAdapter
+import com.whitecards.cadela.ui.adapters.ExerciceAdapter
 import com.whitecards.cadela.databinding.FragmentMainHomeBinding
 import com.whitecards.cadela.services.AuthService
-import com.whitecards.cadela.viewModel.HomeViewModel
 
 /**
  * A placeholder fragment containing a simple view.

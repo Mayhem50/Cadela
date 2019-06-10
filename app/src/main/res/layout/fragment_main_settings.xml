@@ -3,14 +3,14 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="vm" type="com.whitecards.cadela.viewModel.SettingsViewModel"/>
+        <variable name="vm" type="com.whitecards.cadela.ui.main.tabs.settings.SettingsViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.main.tabs.HomeFragment">
+            tools:context=".ui.main.tabs.home.HomeFragment">
 
         <TextView
                 android:text="@string/actual_level"

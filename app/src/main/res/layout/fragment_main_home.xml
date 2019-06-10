@@ -6,13 +6,13 @@
 
     <data>
         <import type="android.view.View"/>
-        <variable name="homeVm" type="com.whitecards.cadela.viewModel.HomeViewModel"/>
+        <variable name="homeVm" type="com.whitecards.cadela.ui.main.tabs.home.HomeViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/constraintLayout"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="match_parent"
-                                                       tools:context=".ui.main.tabs.HomeFragment">
+                                                       tools:context=".ui.main.tabs.home.HomeFragment">
 
         <androidx.cardview.widget.CardView
                 android:layout_width="80dp"
