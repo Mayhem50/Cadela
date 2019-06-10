@@ -29,4 +29,5 @@
     <string name="user_avatar">user_avatar</string>
     <string name="home_actual_level">Niveau actuel :</string>
     <string name="home_starting_program_date">Commencé le :</string>
+    <string name="title_activity_workout">WorkoutActivity</string>
 </resources>

@@ -39,7 +39,7 @@ class HomeFragment : androidx.fragment.app.Fragment() {
         binding.homeVm = _viewModel
         binding.lifecycleOwner = this
 
-        var recycler = binding.root.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.home_exercises)
+        var recycler = binding.root.findViewById<View>(R.id.home_exercises) as androidx.recyclerview.widget.RecyclerView
         var layoutManager = FlexboxLayoutManager(binding.root.context)
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.flexWrap = FlexWrap.WRAP

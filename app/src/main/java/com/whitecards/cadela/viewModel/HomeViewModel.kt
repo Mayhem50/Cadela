@@ -1,10 +1,16 @@
 package com.whitecards.cadela.viewModel
 
+import android.app.Activity
+import android.content.Intent
+import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.whitecards.cadela.WorkoutActivity
 import com.whitecards.cadela.data.model.Session
 import com.whitecards.cadela.services.FirebaseService
+import kotlinx.coroutines.*
 import java.time.format.DateTimeFormatter
 
 class HomeViewModel : ViewModel() {
@@ -28,21 +34,32 @@ class HomeViewModel : ViewModel() {
 
     init {
         _isLoading.value = true
-
-        FirebaseService.init {
-            if (it) {
-                _isLoading.value = false
-                val lastSession = FirebaseService.sessions.lastOrNull()
-                val session = Session.createFromPrevious(lastSession)
-                _session.value = session
-
-                val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-                _programStartingDate.value = session.dateOfProgramBegining.format(formatter)
-
-                _actualLevel.value = session.program.level
-            } else {
-                _isLoading.value = false
-            }
+        GlobalScope.launch {
+            val result = FirebaseService.initAsync().await()
+            update(result)
         }
+    }
+
+    private fun update(success: Boolean) {
+        if (success) {
+            _isLoading.postValue(false)
+            val lastSession = FirebaseService.sessions.lastOrNull()
+            val session = Session.createFromPrevious(lastSession)
+            _session.postValue(session)
+
+            val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
+            _programStartingDate.postValue(session.dateOfProgramBegining.format(formatter))
+
+            _actualLevel.postValue(session.program.level)
+        } else {
+            _isLoading.postValue(false)
+        }
+    }
+
+    fun startWorkout(view: View)
+    {
+        val activity = view.context as Activity
+        val intent  = Intent(activity, WorkoutActivity::class.java)
+        activity.startActivity(intent)
     }
 }

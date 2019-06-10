@@ -33,18 +33,19 @@ class LoginViewModel : ViewModel() {
 
     private fun loginFacebookAsync(activity: Activity) {
         isLoading.postValue(View.VISIBLE)
-        AuthService.loginFacebookAsync(activity)
+        with(AuthService) {
+            loginFacebookAsync(activity)
 
-        AuthService.user.observe(activity as LifecycleOwner, object : Observer<FirebaseUser?> {
-            override fun onChanged(user: FirebaseUser?) {
-                user?.let {
-                    userName.value = it.displayName
-                    startMainActivityAsync(activity)
-                }
+            user.observe(activity as LifecycleOwner,
+                Observer { user ->
+                    user?.let {
+                        userName.value = it.displayName
+                        startMainActivity(activity)
+                    }
 
-                isLoading.postValue(View.GONE)
-            }
-        })
+                    isLoading.postValue(View.GONE)
+                })
+        }
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -53,13 +54,13 @@ class LoginViewModel : ViewModel() {
 
     fun checkIsLogged(activity: Activity) {
         FirebaseAuth.getInstance().currentUser?.let {
-            startMainActivityAsync(activity)
+            startMainActivity(activity)
         }
     }
 
-    private fun startMainActivityAsync(activity: Activity) {
+    private fun startMainActivity(activity: Activity) {
         val intent = Intent(activity.application, MainActivity::class.java)
-        intent.flags = intent.flags or Intent.FLAG_ACTIVITY_NO_HISTORY
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(intent)
     }
 }

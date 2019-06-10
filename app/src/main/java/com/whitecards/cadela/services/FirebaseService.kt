@@ -7,6 +7,12 @@ import com.google.firebase.database.ValueEventListener
 import com.whitecards.cadela.data.model.Exercise
 import com.whitecards.cadela.data.model.Program
 import com.whitecards.cadela.data.model.Session
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 object FirebaseService {
     var exercises = ArrayList<Exercise>()
@@ -21,51 +27,67 @@ object FirebaseService {
         isInit = false
     }
 
-    fun init(callback: (success: Boolean) -> Unit) {
-        if (isInit) return
+    fun initAsync(): Deferred<Boolean> = GlobalScope.async {
 
-        _database.child("exercises").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (child in snapshot.children) {
-                    exercises.add(child.getValue(Exercise::class.java)!!)
+            if(readExercisesAsync())
+                if(readProgramsAsync())
+                    return@async readSessionsAsync()
+
+        false
+    }
+
+    private suspend fun readExercisesAsync(): Boolean =
+        suspendCoroutine {
+            _database.child("exercises").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (child in snapshot.children) {
+                        exercises.add(child.getValue(Exercise::class.java)!!)
+                    }
+                    it.resume(true)
                 }
 
-                _database.child("programs").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    it.resume(false)
+                }
+            })
+        }
+
+    private suspend fun readProgramsAsync(): Boolean =
+        suspendCoroutine {
+            _database.child("programs").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (child in snapshot.children) {
+                        programs.add(child.getValue(Program::class.java)!!)
+                    }
+
+                    populateProgramWithRealExercises()
+                    it.resume(true)
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    it.resume(false)
+                }
+            })
+        }
+
+    private suspend fun readSessionsAsync(): Boolean =
+        suspendCoroutine {
+            _database.child("sessions").child(AuthService.token.value!!)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         for (child in snapshot.children) {
-                            programs.add(child.getValue(Program::class.java)!!)
+                            sessions.add(child.getValue(Session::class.java)!!)
                         }
 
-                        populateProgramWithRealExercises()
-
-                        _database.child("sessions").child(AuthService.token.value!!)
-                            .addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    for (child in snapshot.children) {
-                                        sessions.add(child.getValue(Session::class.java)!!)
-                                    }
-
-                                    isInit = true
-                                    callback.invoke(isInit)
-                                }
-
-                                override fun onCancelled(error: DatabaseError) {
-                                    callback.invoke(isInit)
-                                }
-                            })
+                        isInit = true
+                        it.resume(true)
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-                        callback.invoke(isInit)
+                        it.resume(false)
                     }
                 })
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                callback.invoke(isInit)
-            }
-        })
-    }
+        }
 
     private fun populateProgramWithRealExercises() {
         for (program in programs) {
