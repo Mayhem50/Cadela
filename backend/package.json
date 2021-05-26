@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch --silent --verbose",
     "prepare": "cd .. && husky install backend/.husky"
   },
   "repository": {
