@@ -6,7 +6,7 @@ const InvalidParamsError = (message) => ({
 })
 
 const makeUserRepository = () => {
-  const save = jest.fn((user) => {})
+  const save = jest.fn(async (user) => {})
   return { save }
 }
 
@@ -25,7 +25,7 @@ const makeEmailValidator = ({ isValid } = { isValid: true }) => {
 const emailValidator = makeEmailValidator()
 
 const makeSignupService = (userRepository, emailValidator) => {
-  const signup = (user) => {
+  const signup = async (user) => {
     if (!user) {
       throw InvalidParamsError("user")
     }
@@ -46,7 +46,7 @@ const makeSignupService = (userRepository, emailValidator) => {
     if (!emailValidator.valid(email)) {
       throw InvalidParamsError("email")
     }
-    userRepository.save(user)
+    await userRepository.save(user)
     return {
       body: { token: "any_token" }
     }
@@ -64,7 +64,7 @@ describe("Signup", () => {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    const ret = signupService.signup(user)
+    const ret = await signupService.signup(user)
 
     expect(userRepository.save).toHaveBeenCalledWith(user)
     expect(ret.body).toHaveProperty("token")
@@ -73,13 +73,13 @@ describe("Signup", () => {
   it("Throw an error if user is undefined", () => {
     const signupService = makeSignupService(userRepository, emailValidator)
 
-    expect(signupService.signup).toThrow(InvalidParamsError("user"))
+    expect(signupService.signup).rejects.toThrow(InvalidParamsError("user"))
   })
 
   it("Throw an error if user.firstName is empty", () => {
     const signupService = makeSignupService(userRepository, emailValidator)
     const user = {}
-    expect(() => signupService.signup(user)).toThrow(
+    expect(() => signupService.signup(user)).rejects.toThrow(
       InvalidParamsError("firstName")
     )
   })
@@ -87,7 +87,7 @@ describe("Signup", () => {
   it("Throw an error if user.lastName is empty", () => {
     const signupService = makeSignupService(userRepository, emailValidator)
     const user = { firstName: "John" }
-    expect(() => signupService.signup(user)).toThrow(
+    expect(() => signupService.signup(user)).rejects.toThrow(
       InvalidParamsError("lastName")
     )
   })
@@ -95,7 +95,7 @@ describe("Signup", () => {
   it("Throw an error if user.email is empty", () => {
     const signupService = makeSignupService(userRepository, emailValidator)
     const user = { firstName: "John", lastName: "McLane" }
-    expect(() => signupService.signup(user)).toThrow(
+    expect(() => signupService.signup(user)).rejects.toThrow(
       InvalidParamsError("email")
     )
   })
@@ -107,7 +107,7 @@ describe("Signup", () => {
       lastName: "McLane",
       email: "any_email@mail.com"
     }
-    expect(() => signupService.signup(user)).toThrow(
+    expect(() => signupService.signup(user)).rejects.toThrow(
       InvalidParamsError("password")
     )
   })
@@ -121,7 +121,7 @@ describe("Signup", () => {
       email: "invalid_email",
       password: "any_password"
     }
-    expect(() => signupService.signup(user)).toThrow(
+    expect(() => signupService.signup(user)).rejects.toThrow(
       InvalidParamsError("email")
     )
   })
