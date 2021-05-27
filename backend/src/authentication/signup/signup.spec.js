@@ -34,8 +34,16 @@ const makeTokenGenerator = () => {
 
 const tokenGenerator = makeTokenGenerator()
 
+const InternalError = () => ({
+  message: "Internal server error",
+  name: "InternalError"
+})
+
 const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
   const signup = async (user) => {
+    if (!userRepository || !emailValidator || !tokenGenerator) {
+      throw InternalError()
+    }
     if (!user) {
       throw InvalidParamError("user")
     }
@@ -86,53 +94,60 @@ describe("Signup", () => {
     expect(ret.body).toHaveProperty("token")
   })
 
-  it("Throw an error if user is undefined", () => {
+  it("Throw an error if any injection is missing", async () => {
+    const signupService = makeSignupService()
+    await expect(signupService.signup()).rejects.toEqual(InternalError())
+  })
+
+  it("Throw an error if user is undefined", async () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
       tokenGenerator
     )
 
-    expect(signupService.signup()).rejects.toEqual(InvalidParamError("user"))
+    await expect(signupService.signup()).rejects.toEqual(
+      InvalidParamError("user")
+    )
   })
 
-  it("Throw an error if user.firstName is empty", () => {
+  it("Throw an error if user.firstName is empty", async () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
       tokenGenerator
     )
     const user = {}
-    expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("firstName")
     )
   })
 
-  it("Throw an error if user.lastName is empty", () => {
+  it("Throw an error if user.lastName is empty", async () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
       tokenGenerator
     )
     const user = { firstName: "John" }
-    expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("lastName")
     )
   })
 
-  it("Throw an error if user.email is empty", () => {
+  it("Throw an error if user.email is empty", async () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
       tokenGenerator
     )
     const user = { firstName: "John", lastName: "McLane" }
-    expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
     )
   })
 
-  it("Throw an error if user.password is empty", () => {
+  it("Throw an error if user.password is empty", async () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
@@ -143,12 +158,12 @@ describe("Signup", () => {
       lastName: "McLane",
       email: "any_email@mail.com"
     }
-    expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("password")
     )
   })
 
-  it("Throw an error if user.email is not valid", () => {
+  it("Throw an error if user.email is not valid", async () => {
     const emailValidator = makeEmailValidator({ isValid: false })
     const signupService = makeSignupService(
       userRepository,
@@ -161,7 +176,7 @@ describe("Signup", () => {
       email: "invalid_email",
       password: "any_password"
     }
-    expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
     )
   })
