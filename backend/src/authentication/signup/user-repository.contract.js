@@ -5,9 +5,10 @@ export const COMPLETE_USER = {
   password: "any_password"
 }
 
-export const UserRepositoryContract = (repoUnderTest, beforeEach, afterEach) =>
+export const UserRepositoryContract = (repoUnderTest, beforeEach, afterAll) =>
   describe("User Repository", () => {
     beforeEach && beforeEach()
+    afterAll && afterAll()
     it("Save user and return an unique id", async () => {
       const userRepository = repoUnderTest
 
