@@ -7,13 +7,19 @@ const USER_ID = 1664
 const makeUserRepository = () => {
   let users = []
   let userId
+
+  const obfuscateUser = (user) => {
+    delete user.password
+    return user
+  }
+
   const save = jest.fn(async (user) => {
     userId = users.push(user).toString()
     return userId
   })
 
   const getByEmail = jest.fn(async (email) => {
-    return users[0]
+    return users[0] && obfuscateUser(users[0])
   })
 
   const getUserId = () => userId
@@ -260,6 +266,17 @@ describe("Signup", () => {
         email: "another_email@mail.com"
       })
       expect(id1).not.toEqual(id2)
+    })
+
+    it("Return user by email witout password", async () => {
+      const userRepository = makeUserRepository()
+
+      await userRepository.save(COMPLETE_USER)
+      const user = await userRepository.getByEmail(COMPLETE_USER.email)
+      const expectedUser = { ...COMPLETE_USER }
+      delete expectedUser.password
+
+      expect(user).toEqual(expectedUser)
     })
   })
 })
