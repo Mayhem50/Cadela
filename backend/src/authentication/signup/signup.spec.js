@@ -45,7 +45,19 @@ const makeTokenGenerator = () => {
   return { generate }
 }
 
-const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
+const makeEncrypter = () => {
+  const encrypt = jest.fn(async (password) => {
+    return password
+  })
+  return { encrypt }
+}
+
+const makeSignupService = (
+  userRepository,
+  emailValidator,
+  tokenGenerator,
+  encrypter
+) => {
   const signup = async (user) => {
     try {
       if (!user) {
@@ -73,7 +85,11 @@ const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
         throw InternalError("User already exists")
       }
 
-      const userId = await userRepository.save(user)
+      const hashedPassword = await encrypter.encrypt(user.password)
+
+      const userToSave = { ...user, password: hashedPassword }
+
+      const userId = await userRepository.save(userToSave)
       const token = tokenGenerator.generate(userId)
       return {
         body: { token }
@@ -100,22 +116,26 @@ describe("Signup", () => {
   let userRepository
   let emailValidator
   let tokenGenerator
+  let encrypter
 
   beforeEach(() => {
     userRepository = makeUserRepository()
     emailValidator = makeEmailValidator()
     tokenGenerator = makeTokenGenerator()
+    encrypter = makeEncrypter()
   })
 
   it("Save user and return token", async () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
     const user = COMPLETE_USER
     const ret = await signupService.signup(user)
 
+    expect(encrypter.encrypt).toHaveBeenCalledWith(user.password)
     expect(userRepository.save).toHaveBeenCalledWith(user)
     expect(tokenGenerator.generate).toHaveBeenCalledWith(
       userRepository.getUserId()
@@ -127,7 +147,8 @@ describe("Signup", () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
     const user = {
       firstName: "John",
@@ -161,7 +182,8 @@ describe("Signup", () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
 
     const user = {
@@ -178,7 +200,8 @@ describe("Signup", () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
 
     await expect(signupService.signup()).rejects.toEqual(
@@ -190,7 +213,8 @@ describe("Signup", () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
     const user = {}
     await expect(signupService.signup(user)).rejects.toEqual(
@@ -202,7 +226,8 @@ describe("Signup", () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
     const user = { firstName: "John" }
     await expect(signupService.signup(user)).rejects.toEqual(
@@ -214,7 +239,8 @@ describe("Signup", () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
     const user = { firstName: "John", lastName: "McLane" }
     await expect(signupService.signup(user)).rejects.toEqual(
@@ -226,7 +252,8 @@ describe("Signup", () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
     const user = {
       firstName: "John",
@@ -243,7 +270,8 @@ describe("Signup", () => {
     const signupService = makeSignupService(
       userRepository,
       emailValidator,
-      tokenGenerator
+      tokenGenerator,
+      encrypter
     )
     const user = {
       firstName: "John",
