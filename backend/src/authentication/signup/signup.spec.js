@@ -64,6 +64,18 @@ const makeEncrypter = () => {
   return { encrypt, compare }
 }
 
+const makeHandler = (signupService) => {
+  const execute = async (request) => {
+    const token = await signupService.signup(request.user)
+    return {
+      statusCode: 200,
+      body: { token }
+    }
+  }
+
+  return { execute }
+}
+
 describe("Signup", () => {
   let userRepository
   let emailValidator
@@ -75,6 +87,28 @@ describe("Signup", () => {
     emailValidator = makeEmailValidator()
     tokenGenerator = makeTokenGenerator()
     encrypter = makeEncrypter()
+  })
+
+  describe("Signup Http Handler", () => {
+    let signupService
+    beforeEach(() => {
+      signupService = makeSignupService(
+        userRepository,
+        emailValidator,
+        tokenGenerator,
+        encrypter
+      )
+    })
+    it("Return 200 and a token if it succes when a complete user is sent", async () => {
+      const handler = makeHandler(signupService)
+
+      const request = { user: { ...COMPLETE_USER } }
+      const response = await handler.execute(request)
+
+      expect(response.body).toBeDefined()
+      expect(response.body.token).toBeDefined()
+      expect(response.statusCode).toBe(200)
+    })
   })
 
   it("Save user and return token", async () => {
