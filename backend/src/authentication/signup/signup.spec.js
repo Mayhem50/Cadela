@@ -1,8 +1,12 @@
 import { jest } from "@jest/globals"
 import { InvalidParamError } from "./invalid-param-error"
 
+const USER_ID = 1664
+
 const makeUserRepository = () => {
-  const save = jest.fn(async (user) => {})
+  const save = jest.fn(async (user) => {
+    return USER_ID
+  })
   return { save }
 }
 
@@ -20,7 +24,17 @@ const makeEmailValidator = ({ isValid } = { isValid: true }) => {
 
 const emailValidator = makeEmailValidator()
 
-const makeSignupService = (userRepository, emailValidator) => {
+const makeTokenGenerator = () => {
+  const generate = jest.fn((userId) => {
+    return "any_token"
+  })
+
+  return { generate }
+}
+
+const tokenGenerator = makeTokenGenerator()
+
+const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
   const signup = async (user) => {
     if (!user) {
       throw InvalidParamError("user")
@@ -42,9 +56,10 @@ const makeSignupService = (userRepository, emailValidator) => {
     if (!emailValidator.valid(email)) {
       throw InvalidParamError("email")
     }
-    await userRepository.save(user)
+    const userId = await userRepository.save(user)
+    const token = tokenGenerator.generate(userId)
     return {
-      body: { token: "any_token" }
+      body: { token }
     }
   }
 
@@ -53,7 +68,11 @@ const makeSignupService = (userRepository, emailValidator) => {
 
 describe("Signup", () => {
   it("Save user and return token", async () => {
-    const signupService = makeSignupService(userRepository, emailValidator)
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
     const user = {
       firstName: "John",
       lastName: "McLane",
@@ -63,61 +82,86 @@ describe("Signup", () => {
     const ret = await signupService.signup(user)
 
     expect(userRepository.save).toHaveBeenCalledWith(user)
+    expect(tokenGenerator.generate).toHaveBeenCalledWith(USER_ID)
     expect(ret.body).toHaveProperty("token")
   })
 
   it("Throw an error if user is undefined", () => {
-    const signupService = makeSignupService(userRepository, emailValidator)
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
 
-    expect(signupService.signup).rejects.toThrow(InvalidParamError("user"))
+    expect(signupService.signup()).rejects.toEqual(InvalidParamError("user"))
   })
 
   it("Throw an error if user.firstName is empty", () => {
-    const signupService = makeSignupService(userRepository, emailValidator)
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
     const user = {}
-    expect(() => signupService.signup(user)).rejects.toThrow(
+    expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("firstName")
     )
   })
 
   it("Throw an error if user.lastName is empty", () => {
-    const signupService = makeSignupService(userRepository, emailValidator)
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
     const user = { firstName: "John" }
-    expect(() => signupService.signup(user)).rejects.toThrow(
+    expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("lastName")
     )
   })
 
   it("Throw an error if user.email is empty", () => {
-    const signupService = makeSignupService(userRepository, emailValidator)
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
     const user = { firstName: "John", lastName: "McLane" }
-    expect(() => signupService.signup(user)).rejects.toThrow(
+    expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
     )
   })
 
   it("Throw an error if user.password is empty", () => {
-    const signupService = makeSignupService(userRepository, emailValidator)
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
     const user = {
       firstName: "John",
       lastName: "McLane",
       email: "any_email@mail.com"
     }
-    expect(() => signupService.signup(user)).rejects.toThrow(
+    expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("password")
     )
   })
 
   it("Throw an error if user.email is not valid", () => {
     const emailValidator = makeEmailValidator({ isValid: false })
-    const signupService = makeSignupService(userRepository, emailValidator)
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
     const user = {
       firstName: "John",
       lastName: "McLane",
       email: "invalid_email",
       password: "any_password"
     }
-    expect(() => signupService.signup(user)).rejects.toThrow(
+    expect(() => signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
     )
   })
