@@ -13,14 +13,18 @@ const client = new MongoClient(process.env.MONGO_URL, {
   useUnifiedTopology: true
 })
 
-UserRepositoryContract(
-  makeMongoDbUserRepository(client),
-  beforeEach(async () => {
-    await client.connect()
-    const collection = await client.db(process.env.DB_NAME).collection("users")
-    await collection.deleteMany({})
-  }),
-  afterAll(async () => {
-    await client.close()
-  }, 5000)
-)
+describe("MongoDB User Repository", () => {
+  UserRepositoryContract(
+    makeMongoDbUserRepository(client),
+    beforeEach(async () => {
+      await client.connect()
+      const collection = await client
+        .db(process.env.DB_NAME)
+        .collection("users")
+      await collection.deleteMany({})
+    }),
+    afterAll(async () => {
+      await client.close()
+    }, 5000)
+  )
+})

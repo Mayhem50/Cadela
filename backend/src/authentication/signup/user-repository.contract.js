@@ -6,7 +6,7 @@ export const COMPLETE_USER = {
 }
 
 export const UserRepositoryContract = (repoUnderTest, beforeEach, afterAll) =>
-  describe("User Repository", () => {
+  describe("User Repository Contract", () => {
     beforeEach && beforeEach()
     afterAll && afterAll()
     it("Save user and return an unique id", async () => {
