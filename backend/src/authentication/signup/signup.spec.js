@@ -9,6 +9,7 @@ import {
 
 import { EmailValidatorContract } from "./email-validator.contract"
 import { TokenGeneratorContract } from "./token-generator.contract"
+import { EncrypterContract } from "./encrypter.contract"
 
 const USER_ID = 1664
 
@@ -235,12 +236,5 @@ describe("Signup", () => {
   UserRepositoryContract(makeUserRepository())
   EmailValidatorContract(makeEmailValidator())
   TokenGeneratorContract(makeTokenGenerator())
-
-  describe("Encrypter Contract", () => {
-    it("Always encrypt password the same", () => {
-      const hash1 = encrypter.encrypt("any_password")
-      const hash2 = encrypter.encrypt("any_password")
-      expect(hash1).toBe(hash2)
-    })
-  })
+  EncrypterContract(makeEncrypter())
 })
