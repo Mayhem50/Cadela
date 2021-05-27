@@ -7,6 +7,8 @@ import {
   COMPLETE_USER
 } from "./user-repository.contract"
 
+import { EmailValidatorContract } from "./email-validator.contract"
+
 const USER_ID = 1664
 
 const makeUserRepository = () => {
@@ -34,7 +36,7 @@ const makeUserRepository = () => {
 
 const makeEmailValidator = ({ isValid } = { isValid: true }) => {
   const valid = (email) => {
-    return isValid
+    return email.includes("@")
   }
 
   return {
@@ -229,12 +231,6 @@ describe("Signup", () => {
     )
   })
 
-  describe("Email Validator", () => {
-    it("Return true when email is valid", () => {
-      const isValid = emailValidator.valid("any_email@mail.com")
-      expect(isValid).toBe(true)
-    })
-  })
-
   UserRepositoryContract(makeUserRepository())
+  EmailValidatorContract(makeEmailValidator())
 })
