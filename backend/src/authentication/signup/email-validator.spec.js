@@ -1,12 +1,5 @@
-import EmailValidator from "email-validator"
 import { EmailValidatorContract } from "./email-validator.contract"
-
-const makeEmailValidator = () => {
-  const valid = (email) => {
-    return EmailValidator.validate(email)
-  }
-  return { valid }
-}
+import { makeEmailValidator } from "./email-validator"
 
 describe("Email Validator from email-validator", () => {
   EmailValidatorContract(makeEmailValidator())
