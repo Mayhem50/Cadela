@@ -10,8 +10,7 @@ import {
 import { EmailValidatorContract } from "./email-validator.contract"
 import { TokenGeneratorContract } from "./token-generator.contract"
 import { EncrypterContract } from "./encrypter.contract"
-
-const USER_ID = 1664
+import { makeHandler } from "./request-handler"
 
 const makeUserRepository = () => {
   let users = []
@@ -62,26 +61,6 @@ const makeEncrypter = () => {
     return hash === password
   })
   return { encrypt, compare }
-}
-
-const makeHandler = (signupService) => {
-  const execute = async (request) => {
-    try {
-      const token = await signupService.signup(request.user)
-
-      return {
-        statusCode: 200,
-        body: { token }
-      }
-    } catch (error) {
-      return {
-        statusCode: error.name === "InvalidParamError" ? 400 : 500,
-        body: { error }
-      }
-    }
-  }
-
-  return { execute }
 }
 
 describe("Signup", () => {
