@@ -40,23 +40,23 @@ const makeTokenGenerator = () => {
 
 const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
   const signup = async (user) => {
-    if (!user) {
-      throw InvalidParamError("user")
-    }
-    const { firstName, lastName, email, password } = user
-    if (!firstName) {
-      throw InvalidParamError("firstName")
-    }
-    if (!lastName) {
-      throw InvalidParamError("lastName")
-    }
-    if (!email) {
-      throw InvalidParamError("email")
-    }
-    if (!password) {
-      throw InvalidParamError("password")
-    }
     try {
+      if (!user) {
+        throw InvalidParamError("user")
+      }
+      const { firstName, lastName, email, password } = user
+      if (!firstName) {
+        throw InvalidParamError("firstName")
+      }
+      if (!lastName) {
+        throw InvalidParamError("lastName")
+      }
+      if (!email) {
+        throw InvalidParamError("email")
+      }
+      if (!password) {
+        throw InvalidParamError("password")
+      }
       if (!emailValidator.valid(email)) {
         throw InvalidParamError("email")
       }
