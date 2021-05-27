@@ -37,6 +37,7 @@
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
     "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.9",
     "morgan": "^1.10.0"
   }
