@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node --experimental-vm-modules ./src",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests",
-    "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch --silent --verbose",
+    "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch ",
     "prepare": "cd .. && husky install backend/.husky"
   },
   "repository": {
@@ -32,9 +32,11 @@
     "prettier": "^2.3.0"
   },
   "dependencies": {
+    "@shelf/jest-mongodb": "^1.2.4",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "http-errors": "^1.8.0",
+    "mongodb": "^3.6.9",
     "morgan": "^1.10.0"
   }
 }

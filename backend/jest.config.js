@@ -8,5 +8,6 @@ export default {
   coverageProvider: "v8",
   testEnvironment: "jest-environment-node",
 
-  testMatch: ["**/*.test.js", "**/*.spec.js"]
+  testMatch: ["**/*.test.js", "**/*.spec.js"],
+  preset: "@shelf/jest-mongodb"
 }

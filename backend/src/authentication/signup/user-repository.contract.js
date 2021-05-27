@@ -5,15 +5,18 @@ export const COMPLETE_USER = {
   password: "any_password"
 }
 
-export const UserRepositoryContract = (repoUnderTest) =>
+export const UserRepositoryContract = (repoUnderTest, beforeEach, afterEach) =>
   describe("User Repository", () => {
+    beforeEach && beforeEach()
     it("Save user and return an unique id", async () => {
       const userRepository = repoUnderTest
 
       const id1 = await userRepository.save(COMPLETE_USER)
       const id2 = await userRepository.save({
-        ...COMPLETE_USER,
-        email: "another_email@mail.com"
+        firstName: "Johny",
+        lastName: "Halliday",
+        email: "another_email@mail.com",
+        password: "another_password"
       })
       expect(id1).not.toEqual(id2)
     })
