@@ -8,7 +8,7 @@ export const client = new MongoClient(process.env.MONGO_URL, {
 
 client.connect()
 
-export const makeMongoDbUserRepository = (client) => {
+export const makeUserRepository = (client) => {
   const obfuscateUser = (user) => {
     delete user.password
   }
@@ -29,4 +29,4 @@ export const makeMongoDbUserRepository = (client) => {
   return { save, getByEmail }
 }
 
-export const mongDbUserRepository = makeMongoDbUserRepository(client)
+export const mongDbUserRepository = makeUserRepository(client)

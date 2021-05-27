@@ -4,7 +4,7 @@ import {
 } from "./user-repository.contract"
 
 import MongoDb from "mongodb"
-import { makeMongoDbUserRepository } from "./user-repository"
+import { makeUserRepository } from "./user-repository"
 
 const { MongoClient } = MongoDb
 
@@ -15,7 +15,7 @@ const client = new MongoClient(process.env.MONGO_URL, {
 
 describe("MongoDB User Repository", () => {
   UserRepositoryContract(
-    makeMongoDbUserRepository(client),
+    makeUserRepository(client),
     beforeEach(async () => {
       await client.connect()
       const collection = await client
