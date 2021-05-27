@@ -6,16 +6,19 @@ const USER_ID = 1664
 
 const makeUserRepository = () => {
   let users = []
+  let userId
   const save = jest.fn(async (user) => {
-    users.push(user)
-    return USER_ID
+    userId = users.push(user).toString()
+    return userId
   })
 
   const getByEmail = jest.fn(async (email) => {
     return users[0]
   })
 
-  return { save, getByEmail }
+  const getUserId = () => userId
+
+  return { save, getByEmail, getUserId }
 }
 
 const makeEmailValidator = ({ isValid } = { isValid: true }) => {
@@ -27,8 +30,6 @@ const makeEmailValidator = ({ isValid } = { isValid: true }) => {
     valid
   }
 }
-
-const emailValidator = makeEmailValidator()
 
 const makeTokenGenerator = () => {
   const generate = jest.fn((userId) => {
@@ -82,6 +83,13 @@ const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
   return { signup }
 }
 
+const COMPLETE_USER = {
+  firstName: "John",
+  lastName: "McLane",
+  email: "any_email@mail.com",
+  password: "any_password"
+}
+
 describe("Signup", () => {
   let userRepository
   let emailValidator
@@ -99,16 +107,13 @@ describe("Signup", () => {
       emailValidator,
       tokenGenerator
     )
-    const user = {
-      firstName: "John",
-      lastName: "McLane",
-      email: "any_email@mail.com",
-      password: "any_password"
-    }
+    const user = COMPLETE_USER
     const ret = await signupService.signup(user)
 
     expect(userRepository.save).toHaveBeenCalledWith(user)
-    expect(tokenGenerator.generate).toHaveBeenCalledWith(USER_ID)
+    expect(tokenGenerator.generate).toHaveBeenCalledWith(
+      userRepository.getUserId()
+    )
     expect(ret.body).toHaveProperty("token")
   })
 
@@ -243,5 +248,18 @@ describe("Signup", () => {
     await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
     )
+  })
+
+  describe("User Repository", () => {
+    it("Save user and return an unique id", async () => {
+      const userRepository = makeUserRepository()
+
+      const id1 = await userRepository.save(COMPLETE_USER)
+      const id2 = await userRepository.save({
+        ...COMPLETE_USER,
+        email: "another_email@mail.com"
+      })
+      expect(id1).not.toEqual(id2)
+    })
   })
 })
