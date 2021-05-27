@@ -229,5 +229,12 @@ describe("Signup", () => {
     )
   })
 
+  describe("Email Validator", () => {
+    it("Return true when email is valid", () => {
+      const isValid = emailValidator.valid("any_email@mail.com")
+      expect(isValid).toBe(true)
+    })
+  })
+
   UserRepositoryContract(makeUserRepository())
 })
