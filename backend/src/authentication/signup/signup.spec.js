@@ -8,6 +8,7 @@ import {
 } from "./user-repository.contract"
 
 import { EmailValidatorContract } from "./email-validator.contract"
+import { TokenGeneratorContract } from "./token-generator.contract"
 
 const USER_ID = 1664
 
@@ -231,14 +232,7 @@ describe("Signup", () => {
     )
   })
 
-  describe("Token Generator Contract", () => {
-    it("Generate a unique token based on userId", () => {
-      const token1 = tokenGenerator.generate("user_id_1")
-      const token2 = tokenGenerator.generate("user_id_2")
-      expect(token1).not.toBe(token2)
-    })
-  })
-
   UserRepositoryContract(makeUserRepository())
   EmailValidatorContract(makeEmailValidator())
+  TokenGeneratorContract(makeTokenGenerator())
 })
