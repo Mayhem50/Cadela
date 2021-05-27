@@ -38,8 +38,6 @@ const makeTokenGenerator = () => {
   return { generate }
 }
 
-const tokenGenerator = makeTokenGenerator()
-
 const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
   const signup = async (user) => {
     if (!userRepository || !emailValidator || !tokenGenerator) {
@@ -83,9 +81,13 @@ const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
 
 describe("Signup", () => {
   let userRepository
+  let emailValidator
+  let tokenGenerator
 
   beforeEach(() => {
     userRepository = makeUserRepository()
+    emailValidator = makeEmailValidator()
+    tokenGenerator = makeTokenGenerator()
   })
 
   it("Save user and return token", async () => {
