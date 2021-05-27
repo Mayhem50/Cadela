@@ -31,20 +31,21 @@ const makeSignupService = (userRepository, emailValidator) => {
     if (!user) {
       throw InvalidParamsError("user")
     }
-    if (!user.firstName) {
+    const { firstName, lastName, email, password } = user
+    if (!firstName) {
       throw InvalidParamsError("firstName")
     }
-    if (!user.lastName) {
+    if (!lastName) {
       throw InvalidParamsError("lastName")
     }
-    if (!user.email) {
+    if (!email) {
       throw InvalidParamsError("email")
     }
-    if (!user.password) {
+    if (!password) {
       throw InvalidParamsError("password")
     }
 
-    if (!emailValidator.valid(user.email)) {
+    if (!emailValidator.valid(email)) {
       throw InvalidParamsError("email")
     }
     const token = userRepository.save(user)
