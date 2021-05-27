@@ -66,10 +66,18 @@ const makeEncrypter = () => {
 
 const makeHandler = (signupService) => {
   const execute = async (request) => {
-    const token = await signupService.signup(request.user)
-    return {
-      statusCode: 200,
-      body: { token }
+    try {
+      const token = await signupService.signup(request.user)
+
+      return {
+        statusCode: 200,
+        body: { token }
+      }
+    } catch (error) {
+      return {
+        statusCode: 400,
+        body: { error }
+      }
     }
   }
 
@@ -108,6 +116,18 @@ describe("Signup", () => {
       expect(response.body).toBeDefined()
       expect(response.body.token).toBeDefined()
       expect(response.statusCode).toBe(200)
+    })
+
+    it("Return 400 if service throw an InvalidParamError", async () => {
+      const handler = makeHandler(signupService)
+
+      const request = { user: undefined }
+      const response = await handler.execute(request)
+
+      expect(response.body).toBeDefined()
+      expect(response.body.error).toBeDefined()
+      expect(response.body.error).toEqual(InvalidParamError("user"))
+      expect(response.statusCode).toBe(400)
     })
   })
 
