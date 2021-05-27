@@ -19,6 +19,9 @@ const makeSignupService = (userRepository) => {
     if (!user) {
       throw MissingParamsError("user")
     }
+    if (!user.firstName) {
+      throw MissingParamsError("firstName")
+    }
     const token = userRepository.save(user)
     return {
       body: { token }
@@ -31,7 +34,7 @@ const makeSignupService = (userRepository) => {
 describe("Signup", () => {
   it("Save user and return token", async () => {
     const signupService = makeSignupService(userRepository)
-    const user = {}
+    const user = { firstName: "John" }
     const ret = signupService.signup(user)
 
     expect(userRepository.save).toHaveBeenCalledWith(user)
@@ -42,5 +45,13 @@ describe("Signup", () => {
     const signupService = makeSignupService(userRepository)
 
     expect(signupService.signup).toThrow(MissingParamsError("user"))
+  })
+
+  it("Throw an error if user.firstName is empty", () => {
+    const signupService = makeSignupService(userRepository)
+    const user = {}
+    expect(() => signupService.signup(user)).toThrow(
+      MissingParamsError("firstName")
+    )
   })
 })
