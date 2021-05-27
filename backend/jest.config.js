@@ -9,5 +9,6 @@ export default {
   testEnvironment: "jest-environment-node",
 
   testMatch: ["**/*.test.js", "**/*.spec.js"],
-  preset: "@shelf/jest-mongodb"
+  preset: "@shelf/jest-mongodb",
+  watchPathIgnorePatterns: ["node_modules", "output", "globalConfig"]
 }

@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node --experimental-vm-modules ./src",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests",
-    "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch ",
+    "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch --silent --verbose",
     "prepare": "cd .. && husky install backend/.husky"
   },
   "repository": {

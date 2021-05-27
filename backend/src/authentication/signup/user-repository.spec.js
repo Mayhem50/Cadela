@@ -9,7 +9,7 @@ const { MongoClient } = MongoDb
 let connection
 let collection
 
-const makeRepository = () => {
+const makeMongoDbUserRepository = () => {
   const obfuscateUser = (user) => {
     delete user.password
   }
@@ -29,7 +29,7 @@ const makeRepository = () => {
 }
 
 UserRepositoryContract(
-  makeRepository(),
+  makeMongoDbUserRepository(),
   beforeEach(async () => {
     connection = await MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
