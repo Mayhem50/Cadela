@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals"
 
-const MissingParamsError = (message) => ({
+const InvalidParamsError = (message) => ({
   message,
   name: "MissingParamsError"
 })
@@ -14,22 +14,38 @@ const makeUserRepository = () => {
 
 const userRepository = makeUserRepository()
 
-const makeSignupService = (userRepository) => {
+const makeEmailValidator = (isValid = true) => {
+  const valid = (email) => {
+    return isValid
+  }
+
+  return {
+    valid
+  }
+}
+
+const emailValidator = makeEmailValidator()
+
+const makeSignupService = (userRepository, emailValidator) => {
   const signup = (user) => {
     if (!user) {
-      throw MissingParamsError("user")
+      throw InvalidParamsError("user")
     }
     if (!user.firstName) {
-      throw MissingParamsError("firstName")
+      throw InvalidParamsError("firstName")
     }
     if (!user.lastName) {
-      throw MissingParamsError("lastName")
+      throw InvalidParamsError("lastName")
     }
     if (!user.email) {
-      throw MissingParamsError("email")
+      throw InvalidParamsError("email")
     }
     if (!user.password) {
-      throw MissingParamsError("password")
+      throw InvalidParamsError("password")
+    }
+
+    if (!emailValidator.valid(user.email)) {
+      throw InvalidParamsError("email")
     }
     const token = userRepository.save(user)
     return {
@@ -42,7 +58,7 @@ const makeSignupService = (userRepository) => {
 
 describe("Signup", () => {
   it("Save user and return token", async () => {
-    const signupService = makeSignupService(userRepository)
+    const signupService = makeSignupService(userRepository, emailValidator)
     const user = {
       firstName: "John",
       lastName: "McLane",
@@ -56,44 +72,58 @@ describe("Signup", () => {
   })
 
   it("Throw an error if user is undefined", () => {
-    const signupService = makeSignupService(userRepository)
+    const signupService = makeSignupService(userRepository, emailValidator)
 
-    expect(signupService.signup).toThrow(MissingParamsError("user"))
+    expect(signupService.signup).toThrow(InvalidParamsError("user"))
   })
 
   it("Throw an error if user.firstName is empty", () => {
-    const signupService = makeSignupService(userRepository)
+    const signupService = makeSignupService(userRepository, emailValidator)
     const user = {}
     expect(() => signupService.signup(user)).toThrow(
-      MissingParamsError("firstName")
+      InvalidParamsError("firstName")
     )
   })
 
   it("Throw an error if user.lastName is empty", () => {
-    const signupService = makeSignupService(userRepository)
+    const signupService = makeSignupService(userRepository, emailValidator)
     const user = { firstName: "John" }
     expect(() => signupService.signup(user)).toThrow(
-      MissingParamsError("lastName")
+      InvalidParamsError("lastName")
     )
   })
 
   it("Throw an error if user.email is empty", () => {
-    const signupService = makeSignupService(userRepository)
+    const signupService = makeSignupService(userRepository, emailValidator)
     const user = { firstName: "John", lastName: "McLane" }
     expect(() => signupService.signup(user)).toThrow(
-      MissingParamsError("email")
+      InvalidParamsError("email")
     )
   })
 
   it("Throw an error if user.password is empty", () => {
-    const signupService = makeSignupService(userRepository)
+    const signupService = makeSignupService(userRepository, emailValidator)
     const user = {
       firstName: "John",
       lastName: "McLane",
       email: "any_email@mail.com"
     }
     expect(() => signupService.signup(user)).toThrow(
-      MissingParamsError("password")
+      InvalidParamsError("password")
+    )
+  })
+
+  it("Throw an error if user.email is not valid", () => {
+    const emailValidator = makeEmailValidator(false)
+    const signupService = makeSignupService(userRepository, emailValidator)
+    const user = {
+      firstName: "John",
+      lastName: "McLane",
+      email: "invalid_email",
+      password: "any_password"
+    }
+    expect(() => signupService.signup(user)).toThrow(
+      InvalidParamsError("email")
     )
   })
 })
