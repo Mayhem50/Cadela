@@ -75,7 +75,7 @@ const makeHandler = (signupService) => {
       }
     } catch (error) {
       return {
-        statusCode: 400,
+        statusCode: error.name === "InvalidParamError" ? 400 : 500,
         body: { error }
       }
     }
@@ -128,6 +128,19 @@ describe("Signup", () => {
       expect(response.body.error).toBeDefined()
       expect(response.body.error).toEqual(InvalidParamError("user"))
       expect(response.statusCode).toBe(400)
+    })
+
+    it("Return 500 if service throw an InternalError", async () => {
+      const signupService = makeSignupService()
+      const handler = makeHandler(signupService)
+
+      const request = { user: { ...COMPLETE_USER } }
+      const response = await handler.execute(request)
+
+      expect(response.body).toBeDefined()
+      expect(response.body.error).toBeDefined()
+      expect(response.body.error).toEqual(InternalError())
+      expect(response.statusCode).toBe(500)
     })
   })
 
