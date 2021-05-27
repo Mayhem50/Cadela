@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals"
+import { InternalError } from "./internal-error"
 import { InvalidParamError } from "./invalid-param-error"
 
 const USER_ID = 1664
@@ -33,11 +34,6 @@ const makeTokenGenerator = () => {
 }
 
 const tokenGenerator = makeTokenGenerator()
-
-const InternalError = () => ({
-  message: "Internal server error",
-  name: "InternalError"
-})
 
 const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
   const signup = async (user) => {
