@@ -10,7 +10,7 @@ let connection
 let collection
 
 const makeRepository = () => {
-  function obfuscateUser(user) {
+  const obfuscateUser = (user) => {
     delete user.password
   }
 
