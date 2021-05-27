@@ -6,9 +6,7 @@ const InvalidParamsError = (message) => ({
 })
 
 const makeUserRepository = () => {
-  const save = jest.fn((user) => {
-    return "any_token"
-  })
+  const save = jest.fn((user) => {})
   return { save }
 }
 
@@ -48,9 +46,9 @@ const makeSignupService = (userRepository, emailValidator) => {
     if (!emailValidator.valid(email)) {
       throw InvalidParamsError("email")
     }
-    const token = userRepository.save(user)
+    userRepository.save(user)
     return {
-      body: { token }
+      body: { token: "any_token" }
     }
   }
 
