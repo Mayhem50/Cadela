@@ -46,7 +46,7 @@ const makeEmailValidator = ({ isValid } = { isValid: true }) => {
 
 const makeTokenGenerator = () => {
   const generate = jest.fn((userId) => {
-    return "any_token"
+    return `${userId}_any_token`
   })
 
   return { generate }
@@ -229,6 +229,14 @@ describe("Signup", () => {
     await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
     )
+  })
+
+  describe("Token Generator Contract", () => {
+    it("Generate a unique token based on userId", () => {
+      const token1 = tokenGenerator.generate("user_id_1")
+      const token2 = tokenGenerator.generate("user_id_2")
+      expect(token1).not.toBe(token2)
+    })
   })
 
   UserRepositoryContract(makeUserRepository())
