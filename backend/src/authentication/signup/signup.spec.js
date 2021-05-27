@@ -14,7 +14,7 @@ const makeUserRepository = () => {
 
 const userRepository = makeUserRepository()
 
-const makeEmailValidator = (isValid = true) => {
+const makeEmailValidator = ({ isValid } = { isValid: true }) => {
   const valid = (email) => {
     return isValid
   }
@@ -115,7 +115,7 @@ describe("Signup", () => {
   })
 
   it("Throw an error if user.email is not valid", () => {
-    const emailValidator = makeEmailValidator(false)
+    const emailValidator = makeEmailValidator({ isValid: false })
     const signupService = makeSignupService(userRepository, emailValidator)
     const user = {
       firstName: "John",
