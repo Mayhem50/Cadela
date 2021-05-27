@@ -1,4 +1,4 @@
-export const InternalError = () => ({
-  message: "Internal server error",
+export const InternalError = (message) => ({
+  message: message || "Internal server error",
   name: "InternalError"
 })

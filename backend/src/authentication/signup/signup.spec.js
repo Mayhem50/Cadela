@@ -1,17 +1,22 @@
-import { jest } from "@jest/globals"
+import { jest, beforeEach } from "@jest/globals"
 import { InternalError } from "./internal-error"
 import { InvalidParamError } from "./invalid-param-error"
 
 const USER_ID = 1664
 
 const makeUserRepository = () => {
+  let users = []
   const save = jest.fn(async (user) => {
+    users.push(user)
     return USER_ID
   })
-  return { save }
-}
 
-const userRepository = makeUserRepository()
+  const getByEmail = jest.fn(async (email) => {
+    return users[0]
+  })
+
+  return { save, getByEmail }
+}
 
 const makeEmailValidator = ({ isValid } = { isValid: true }) => {
   const valid = (email) => {
@@ -60,6 +65,12 @@ const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
     if (!emailValidator.valid(email)) {
       throw InvalidParamError("email")
     }
+    const userFound = await userRepository.getByEmail(email)
+
+    if (userFound) {
+      throw InternalError("User already exists")
+    }
+
     const userId = await userRepository.save(user)
     const token = tokenGenerator.generate(userId)
     return {
@@ -71,6 +82,12 @@ const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
 }
 
 describe("Signup", () => {
+  let userRepository
+
+  beforeEach(() => {
+    userRepository = makeUserRepository()
+  })
+
   it("Save user and return token", async () => {
     const signupService = makeSignupService(
       userRepository,
@@ -88,6 +105,22 @@ describe("Signup", () => {
     expect(userRepository.save).toHaveBeenCalledWith(user)
     expect(tokenGenerator.generate).toHaveBeenCalledWith(USER_ID)
     expect(ret.body).toHaveProperty("token")
+  })
+
+  it("Throw an error if user already exists", async () => {
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
+    const user = {
+      firstName: "John",
+      lastName: "McLane",
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+    await signupService.signup(user)
+    await expect(signupService.signup(user)).rejects.toBeDefined()
   })
 
   it("Throw an error if any injection is missing", async () => {
@@ -126,7 +159,7 @@ describe("Signup", () => {
       tokenGenerator
     )
     const user = { firstName: "John" }
-    await expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("lastName")
     )
   })
@@ -138,7 +171,7 @@ describe("Signup", () => {
       tokenGenerator
     )
     const user = { firstName: "John", lastName: "McLane" }
-    await expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
     )
   })
@@ -154,7 +187,7 @@ describe("Signup", () => {
       lastName: "McLane",
       email: "any_email@mail.com"
     }
-    await expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("password")
     )
   })
@@ -172,7 +205,7 @@ describe("Signup", () => {
       email: "invalid_email",
       password: "any_password"
     }
-    await expect(() => signupService.signup(user)).rejects.toEqual(
+    await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
     )
   })
