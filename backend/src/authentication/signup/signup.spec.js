@@ -40,9 +40,6 @@ const makeTokenGenerator = () => {
 
 const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
   const signup = async (user) => {
-    if (!userRepository || !emailValidator || !tokenGenerator) {
-      throw InternalError()
-    }
     if (!user) {
       throw InvalidParamError("user")
     }
@@ -59,20 +56,26 @@ const makeSignupService = (userRepository, emailValidator, tokenGenerator) => {
     if (!password) {
       throw InvalidParamError("password")
     }
+    try {
+      if (!emailValidator.valid(email)) {
+        throw InvalidParamError("email")
+      }
+      const userFound = await userRepository.getByEmail(email)
 
-    if (!emailValidator.valid(email)) {
-      throw InvalidParamError("email")
-    }
-    const userFound = await userRepository.getByEmail(email)
+      if (userFound) {
+        throw InternalError("User already exists")
+      }
 
-    if (userFound) {
-      throw InternalError("User already exists")
-    }
-
-    const userId = await userRepository.save(user)
-    const token = tokenGenerator.generate(userId)
-    return {
-      body: { token }
+      const userId = await userRepository.save(user)
+      const token = tokenGenerator.generate(userId)
+      return {
+        body: { token }
+      }
+    } catch (error) {
+      if (error.stack?.includes("TypeError")) {
+        throw InternalError()
+      }
+      throw error ?? InternalError()
     }
   }
 
@@ -122,12 +125,42 @@ describe("Signup", () => {
       password: "any_password"
     }
     await signupService.signup(user)
-    await expect(signupService.signup(user)).rejects.toBeDefined()
+    await expect(signupService.signup(user)).rejects.toEqual(
+      InternalError("User already exists")
+    )
   })
 
   it("Throw an error if any injection is missing", async () => {
     const signupService = makeSignupService()
-    await expect(signupService.signup()).rejects.toEqual(InternalError())
+
+    const user = {
+      firstName: "John",
+      lastName: "McLane",
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+
+    await expect(signupService.signup(user)).rejects.toEqual(InternalError())
+  })
+
+  it("Throw an error if any injection is malformed", async () => {
+    userRepository = {}
+    tokenGenerator = {}
+    emailValidator = {}
+    const signupService = makeSignupService(
+      userRepository,
+      emailValidator,
+      tokenGenerator
+    )
+
+    const user = {
+      firstName: "John",
+      lastName: "McLane",
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+
+    await expect(signupService.signup(user)).rejects.toEqual(InternalError())
   })
 
   it("Throw an error if user is undefined", async () => {
