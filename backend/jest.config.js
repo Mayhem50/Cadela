@@ -3,7 +3,10 @@
  * https://jestjs.io/docs/configuration
  */
 
-module.exports = {
+export default {
+  transform: {},
   coverageProvider: "v8",
-  testEnvironment: "jest-environment-node"
+  testEnvironment: "jest-environment-node",
+
+  testMatch: ["**/*.test.js", "**/*.spec.js"]
 }

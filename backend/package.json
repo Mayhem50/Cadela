@@ -2,10 +2,10 @@
   "name": "cadela-backend",
   "version": "0.0.1",
   "description": "Backend for Cadela",
-  "main": "index.js",
   "scripts": {
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch --silent --verbose",
+    "start": "node --experimental-vm-modules ./src",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests",
+    "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch --silent --verbose",
     "prepare": "cd .. && husky install backend/.husky"
   },
   "repository": {
@@ -21,14 +21,20 @@
     "url": "https://github.com/Mayhem50/Cadela/issues"
   },
   "homepage": "https://github.com/Mayhem50/Cadela#readme",
+  "type": "module",
   "devDependencies": {
     "@types/jest": "^26.0.23",
+    "cd": "^0.3.3",
     "husky": "^6.0.0",
     "jest": "^27.0.1",
+    "jest-environment-node": "^27.0.1",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "morgan": "^1.10.0"
   }
 }
