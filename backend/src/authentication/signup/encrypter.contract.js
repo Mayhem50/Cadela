@@ -1,8 +1,13 @@
 export const EncrypterContract = (encrypterUnderTest) =>
   describe("Encrypter Contract", () => {
-    it("Always encrypt password the same", async () => {
-      const hash1 = await encrypterUnderTest.encrypt("any_password")
-      const hash2 = await encrypterUnderTest.encrypt("any_password")
-      expect(hash1).toBe(hash2)
+    it("Return a non null string", async () => {
+      const hash = await encrypterUnderTest.encrypt("any_password")
+      expect(hash).not.toBe("")
+      expect(hash).not.toBeUndefined()
+    })
+    it("Encrypt password and can compare it", async () => {
+      const hash = await encrypterUnderTest.encrypt("any_password")
+      const isSame = await encrypterUnderTest.compare("any_password", hash)
+      expect(isSame).toBe(true)
     })
   })

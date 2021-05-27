@@ -58,7 +58,10 @@ const makeEncrypter = () => {
   const encrypt = jest.fn(async (password) => {
     return password
   })
-  return { encrypt }
+  const compare = jest.fn(async (password, hash) => {
+    return hash === password
+  })
+  return { encrypt, compare }
 }
 
 describe("Signup", () => {
