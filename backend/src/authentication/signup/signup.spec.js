@@ -235,4 +235,12 @@ describe("Signup", () => {
   UserRepositoryContract(makeUserRepository())
   EmailValidatorContract(makeEmailValidator())
   TokenGeneratorContract(makeTokenGenerator())
+
+  describe("Encrypter Contract", () => {
+    it("Always encrypt password the same", () => {
+      const hash1 = encrypter.encrypt("any_password")
+      const hash2 = encrypter.encrypt("any_password")
+      expect(hash1).toBe(hash2)
+    })
+  })
 })
