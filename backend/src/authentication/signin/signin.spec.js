@@ -5,10 +5,11 @@ const makeSigninService = () => {
     if (!credential) {
       throw InvalidParamError("credential")
     }
-    if (!credential.email) {
+    const { email, password } = credential
+    if (!email) {
       throw InvalidParamError("email")
     }
-    if (!credential.password) {
+    if (!password) {
       throw InvalidParamError("password")
     }
     return {
