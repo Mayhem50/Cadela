@@ -1,7 +1,13 @@
+import { jest, beforeEach } from "@jest/globals"
 import { InternalError } from "../signup/internal-error"
 import { InvalidParamError } from "../signup/invalid-param-error"
 
-const makeSigninService = (emailValidator, userRepository, encrypter) => {
+const makeSigninService = (
+  emailValidator,
+  userRepository,
+  encrypter,
+  tokenGenerator
+) => {
   const sign = (credential) => {
     try {
       if (!credential) {
@@ -31,8 +37,10 @@ const makeSigninService = (emailValidator, userRepository, encrypter) => {
         throw InternalError("wrong email/password")
       }
 
+      const token = tokenGenerator.generate(foundUser.id)
+
       return {
-        body: { token: "any_token" }
+        body: { token }
       }
     } catch (error) {
       if (error.stack?.includes("TypeError")) {
@@ -53,7 +61,7 @@ const makeEmailValidator = (isValid = true) => {
 
 const makeUserRepository = (found = true) => {
   const getByEmail = (email) => {
-    return found ? { id: "any_user_id", password: "any_password" } : undefined
+    return found ? { id: USER_ID, password: "any_password" } : undefined
   }
   return { getByEmail }
 }
@@ -66,16 +74,26 @@ const makeEncrypter = (isRightPassword = true) => {
   return { compare }
 }
 
+const makeTokenGenerator = () => {
+  const generate = jest.fn((userId) => {
+    return "any_token"
+  })
+  return { generate }
+}
+
 const emailValidator = makeEmailValidator()
 const userRepository = makeUserRepository()
 const encrypter = makeEncrypter()
+const tokenGenerator = makeTokenGenerator()
+const USER_ID = "any_user_id"
 
 describe("Signin", () => {
   it("Sign a user when email & password are provided and return a token", () => {
     const signinService = makeSigninService(
       emailValidator,
       userRepository,
-      encrypter
+      encrypter,
+      tokenGenerator
     )
     const credential = {
       email: "any_email@mail.com",
@@ -193,5 +211,22 @@ describe("Signin", () => {
       password: "any_password"
     }
     expect(() => signinService.sign(credential)).toThrow(InternalError())
+  })
+
+  it("Use token generator to create token", () => {
+    const signinService = makeSigninService(
+      emailValidator,
+      userRepository,
+      encrypter,
+      tokenGenerator
+    )
+    const credential = {
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+
+    signinService.sign(credential)
+
+    expect(tokenGenerator.generate).toBeCalledWith(USER_ID)
   })
 })
