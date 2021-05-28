@@ -1,7 +1,7 @@
 import { InternalError } from "../signup/internal-error"
 import { InvalidParamError } from "../signup/invalid-param-error"
 
-const makeSigninService = (emailValidator, userRepository) => {
+const makeSigninService = (emailValidator, userRepository, encrypter) => {
   const sign = (credential) => {
     if (!credential) {
       throw InvalidParamError("credential")
@@ -27,6 +27,12 @@ const makeSigninService = (emailValidator, userRepository) => {
       throw InternalError("user not found")
     }
 
+    const isRightPassword = encrypter.compare(password, foundUser.password)
+
+    if (!isRightPassword) {
+      throw InternalError("wrong email/password")
+    }
+
     return {
       body: { token: "any_token" }
     }
@@ -43,17 +49,30 @@ const makeEmailValidator = (isValid = true) => {
 
 const makeUserRepository = (found = true) => {
   const getByEmail = (email) => {
-    return found ? { id: "any_user_id" } : undefined
+    return found ? { id: "any_user_id", password: "any_password" } : undefined
   }
   return { getByEmail }
 }
 
+const makeEncrypter = (isRightPassword = true) => {
+  const compare = (password, hash) => {
+    return isRightPassword
+  }
+
+  return { compare }
+}
+
 const emailValidator = makeEmailValidator()
 const userRepository = makeUserRepository()
+const encrypter = makeEncrypter()
 
 describe("Signin", () => {
   it("Sign a user when email & password are provided and return a token", () => {
-    const signinService = makeSigninService(emailValidator, userRepository)
+    const signinService = makeSigninService(
+      emailValidator,
+      userRepository,
+      encrypter
+    )
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -129,5 +148,21 @@ describe("Signin", () => {
       password: "any_password"
     }
     expect(() => signinService.sign(credential)).toThrow(InternalError())
+  })
+
+  it("Fail if wrong password provided", () => {
+    const encrypter = makeEncrypter(false)
+    const signinService = makeSigninService(
+      emailValidator,
+      userRepository,
+      encrypter
+    )
+    const credential = {
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+    expect(() => signinService.sign(credential)).toThrow(
+      InternalError("wrong email/password")
+    )
   })
 })
