@@ -26,8 +26,11 @@ const makeEncrypter = (isRightPassword = true) => {
   const compare = async (password, hash) => {
     return isRightPassword
   }
+  const encrypt = async (password) => {
+    return password
+  }
 
-  return { compare }
+  return { compare, encrypt }
 }
 
 const makeTokenGenerator = () => {
@@ -210,4 +213,11 @@ describe("Signin", () => {
 
   UserRepositoryContract(makeUserRepository(true))
   TokenGeneratorContract(makeTokenGenerator())
+  describe("Encrypter Contract", () => {
+    it("Encrypt password and can compare it", async () => {
+      const hash = await encrypter.encrypt("any_password")
+      const isSame = await encrypter.compare("any_password", hash)
+      expect(isSame).toBe(true)
+    })
+  })
 })
