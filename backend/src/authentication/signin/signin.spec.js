@@ -8,7 +8,7 @@ const makeSigninService = (
   encrypter,
   tokenGenerator
 ) => {
-  const sign = (credential) => {
+  const sign = async (credential) => {
     try {
       if (!credential) {
         throw InvalidParamError("credential")
@@ -88,7 +88,7 @@ const tokenGenerator = makeTokenGenerator()
 const USER_ID = "any_user_id"
 
 describe("Signin", () => {
-  it("Sign a user when email & password are provided and return a token", () => {
+  it("Sign a user when email & password are provided and return a token", async () => {
     const signinService = makeSigninService(
       emailValidator,
       userRepository,
@@ -99,18 +99,20 @@ describe("Signin", () => {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    const ret = signinService.sign(credential)
+    const ret = await signinService.sign(credential)
     expect(ret.body).toHaveProperty("token")
     expect(ret.body.token).not.toBe("")
     expect(ret.body.token).toBeDefined()
   })
 
-  it("Fail if no credential provided", () => {
+  it("Fail if no credential provided", async () => {
     const signinService = makeSigninService()
-    expect(() => signinService.sign()).toThrow(InvalidParamError("credential"))
+    await expect(signinService.sign()).rejects.toEqual(
+      InvalidParamError("credential")
+    )
   })
 
-  it("Fail if no credential does not contain email", () => {
+  it("Fail if no credential does not contain email", async () => {
     const signinService = makeSigninService(
       emailValidator,
       userRepository,
@@ -119,12 +121,12 @@ describe("Signin", () => {
     const credential = {
       password: "any_password"
     }
-    expect(() => signinService.sign(credential)).toThrow(
+    await expect(signinService.sign(credential)).rejects.toEqual(
       InvalidParamError("email")
     )
   })
 
-  it("Fail if no credential does not contain password", () => {
+  it("Fail if no credential does not contain password", async () => {
     const signinService = makeSigninService(
       emailValidator,
       userRepository,
@@ -133,12 +135,12 @@ describe("Signin", () => {
     const credential = {
       email: "any_email@mail.com"
     }
-    expect(() => signinService.sign(credential)).toThrow(
+    await expect(signinService.sign(credential)).rejects.toEqual(
       InvalidParamError("password")
     )
   })
 
-  it("Fail if email provided is not valid", () => {
+  it("Fail if email provided is not valid", async () => {
     const emailValidator = makeEmailValidator(false)
     const signinService = makeSigninService(
       emailValidator,
@@ -149,21 +151,23 @@ describe("Signin", () => {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    expect(() => signinService.sign(credential)).toThrow(
+    await expect(signinService.sign(credential)).rejects.toEqual(
       InvalidParamError("email")
     )
   })
 
-  it("Fail if email validator is not provided", () => {
+  it("Fail if email validator is not provided", async () => {
     const signinService = makeSigninService()
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    expect(() => signinService.sign(credential)).toThrow(InternalError())
+    await expect(signinService.sign(credential)).rejects.toEqual(
+      InternalError()
+    )
   })
 
-  it("Fail if email does not exit in db", () => {
+  it("Fail if email does not exit in db", async () => {
     const userRepository = makeUserRepository(false)
     const signinService = makeSigninService(
       emailValidator,
@@ -174,21 +178,23 @@ describe("Signin", () => {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    expect(() => signinService.sign(credential)).toThrow(
+    await expect(signinService.sign(credential)).rejects.toEqual(
       InternalError("user not found")
     )
   })
 
-  it("Fail if user repository is not provided", () => {
+  it("Fail if user repository is not provided", async () => {
     const signinService = makeSigninService(emailValidator)
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    expect(() => signinService.sign(credential)).toThrow(InternalError())
+    await expect(signinService.sign(credential)).rejects.toEqual(
+      InternalError()
+    )
   })
 
-  it("Fail if wrong password provided", () => {
+  it("Fail if wrong password provided", async () => {
     const encrypter = makeEncrypter(false)
     const signinService = makeSigninService(
       emailValidator,
@@ -199,21 +205,23 @@ describe("Signin", () => {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    expect(() => signinService.sign(credential)).toThrow(
+    await expect(signinService.sign(credential)).rejects.toEqual(
       InternalError("wrong email/password")
     )
   })
 
-  it("Fail if encrypter is not provided", () => {
+  it("Fail if encrypter is not provided", async () => {
     const signinService = makeSigninService(emailValidator, userRepository)
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    expect(() => signinService.sign(credential)).toThrow(InternalError())
+    await expect(signinService.sign(credential)).rejects.toEqual(
+      InternalError()
+    )
   })
 
-  it("Use token generator to create token", () => {
+  it("Use token generator to create token", async () => {
     const signinService = makeSigninService(
       emailValidator,
       userRepository,
@@ -225,12 +233,12 @@ describe("Signin", () => {
       password: "any_password"
     }
 
-    signinService.sign(credential)
+    await signinService.sign(credential)
 
     expect(tokenGenerator.generate).toBeCalledWith(USER_ID)
   })
 
-  it("Fail if token generator is not provided", () => {
+  it("Fail if token generator is not provided", async () => {
     const signinService = makeSigninService(
       emailValidator,
       userRepository,
@@ -240,6 +248,8 @@ describe("Signin", () => {
       email: "any_email@mail.com",
       password: "any_password"
     }
-    expect(() => signinService.sign(credential)).toThrow(InternalError())
+    await expect(signinService.sign(credential)).rejects.toEqual(
+      InternalError()
+    )
   })
 })
