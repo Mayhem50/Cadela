@@ -1,10 +1,17 @@
-export const UserRepositoryContract = (repoUnderTest, USER_ID) =>
+export const USER_EMAIL = "any_email@mail.com"
+export const USER_ID = "any_user_id"
+
+export const UserRepositoryContract = (repoUnderTest, beforeEach) =>
   describe("User Repository Contract", () => {
+    beforeEach && beforeEach()
     it("Return user by email", async () => {
       const userRepository = repoUnderTest
-      const email = "any_email@mail.com"
-      const user = await userRepository.getByEmail(email)
-      const expectedUser = { id: USER_ID, password: "any_password", email }
+      const user = await userRepository.getByEmail(USER_EMAIL)
+      const expectedUser = {
+        id: user.id,
+        password: "any_password",
+        email: USER_EMAIL
+      }
 
       expect(user).toEqual(expectedUser)
     })

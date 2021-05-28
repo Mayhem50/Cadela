@@ -1,7 +1,11 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InternalError, InvalidParamError } from "../../shared/errors"
 import { makeSigninService } from "./signin-service"
-import { UserRepositoryContract } from "./user-repository.contract"
+import {
+  UserRepositoryContract,
+  USER_EMAIL,
+  USER_ID
+} from "./user-repository.contract"
 
 const makeEmailValidator = (isValid = true) => {
   const valid = () => {
@@ -36,7 +40,6 @@ const emailValidator = makeEmailValidator()
 const userRepository = makeUserRepository()
 const encrypter = makeEncrypter()
 const tokenGenerator = makeTokenGenerator()
-const USER_ID = "any_user_id"
 
 describe("Signin", () => {
   it("Sign a user when email & password are provided and return a token", async () => {
@@ -204,5 +207,5 @@ describe("Signin", () => {
     )
   })
 
-  UserRepositoryContract(makeUserRepository(true), USER_ID)
+  UserRepositoryContract(makeUserRepository(true))
 })
