@@ -1,12 +1,4 @@
-import MongoDb from "mongodb"
-const { MongoClient } = MongoDb
-
-export const client = new MongoClient(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-
-client.connect()
+import { client } from "../shared/mongo-client"
 
 export const makeUserRepository = (client) => {
   const save = async (user) => {
