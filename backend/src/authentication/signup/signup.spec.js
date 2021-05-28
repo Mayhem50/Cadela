@@ -15,18 +15,13 @@ const makeUserRepository = () => {
   let users = []
   let userId
 
-  const obfuscateUser = (user) => {
-    delete user.password
-    return user
-  }
-
   const save = jest.fn(async (user) => {
     userId = users.push(user).toString()
     return userId
   })
 
   const getByEmail = jest.fn(async (email) => {
-    return users[0] && obfuscateUser(users[0])
+    return users[0]
   })
 
   const getUserId = () => userId

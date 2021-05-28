@@ -22,13 +22,12 @@ export const UserRepositoryContract = (repoUnderTest, beforeEach, afterAll) =>
       expect(id1).not.toEqual(id2)
     })
 
-    it("Return user by email witout password", async () => {
+    it("Return user by email", async () => {
       const userRepository = repoUnderTest
 
       await userRepository.save(COMPLETE_USER)
       const user = await userRepository.getByEmail(COMPLETE_USER.email)
       const expectedUser = { ...COMPLETE_USER }
-      delete expectedUser.password
 
       expect(user).toEqual(expectedUser)
     })

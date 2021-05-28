@@ -9,10 +9,6 @@ export const client = new MongoClient(process.env.MONGO_URL, {
 client.connect()
 
 export const makeUserRepository = (client) => {
-  const obfuscateUser = (user) => {
-    delete user.password
-  }
-
   const save = async (user) => {
     const collection = await client.db(process.env.DB_NAME).collection("users")
     const result = await collection.insertOne(user)
@@ -22,7 +18,6 @@ export const makeUserRepository = (client) => {
   const getByEmail = async (email) => {
     const collection = await client.db(process.env.DB_NAME).collection("users")
     const user = await collection.findOne({ email })
-    user && obfuscateUser(user)
     return user
   }
 
