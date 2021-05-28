@@ -11,7 +11,7 @@ const server = http
       throw error
     }
 
-    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port
+    const bind = typeof port === "string" ? "Pipe " + port : "Port " + port
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
