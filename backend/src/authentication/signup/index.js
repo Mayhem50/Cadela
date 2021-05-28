@@ -1,4 +1,4 @@
-import { mongDbUserRepository } from "./user-repository"
+import { mongDbUserRepository } from "../shared/user-repository"
 import { makeEmailValidator } from "./email-validator"
 import { makeEncrypter } from "./encrypter"
 import { makeTokenGenerator } from "./token-generator"

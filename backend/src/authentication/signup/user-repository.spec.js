@@ -4,7 +4,7 @@ import {
 } from "./user-repository.contract"
 
 import MongoDb from "mongodb"
-import { makeUserRepository } from "./user-repository"
+import { makeUserRepository } from "../shared/user-repository"
 
 const { MongoClient } = MongoDb
 

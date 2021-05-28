@@ -27,7 +27,7 @@ export const UserRepositoryContract = (repoUnderTest, beforeEach, afterAll) =>
 
       await userRepository.save(COMPLETE_USER)
       const user = await userRepository.getByEmail(COMPLETE_USER.email)
-      const expectedUser = { ...COMPLETE_USER }
+      const expectedUser = { ...COMPLETE_USER, id: user.id }
 
       expect(user).toEqual(expectedUser)
     })
