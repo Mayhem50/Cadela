@@ -1,5 +1,10 @@
+import { InvalidParamError } from "../signup/invalid-param-error"
+
 const makeSigninService = () => {
   const sign = (credential) => {
+    if (!credential) {
+      throw InvalidParamError("credential")
+    }
     return {
       body: { token: "any_token" }
     }
@@ -18,5 +23,10 @@ describe("Signin", () => {
     expect(ret.body).toHaveProperty("token")
     expect(ret.body.token).not.toBe("")
     expect(ret.body.token).toBeDefined()
+  })
+
+  it("Fail if no credential provided", () => {
+    const signinService = makeSigninService()
+    expect(signinService.sign).toThrow(InvalidParamError("credential"))
   })
 })
