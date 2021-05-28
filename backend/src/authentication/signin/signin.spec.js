@@ -25,13 +25,16 @@ const makeSigninService = (
         throw InvalidParamError("email")
       }
 
-      const foundUser = userRepository.getByEmail(email)
+      const foundUser = await userRepository.getByEmail(email)
 
       if (!foundUser) {
         throw InternalError("user not found")
       }
 
-      const isRightPassword = encrypter.compare(password, foundUser.password)
+      const isRightPassword = await encrypter.compare(
+        password,
+        foundUser.password
+      )
 
       if (!isRightPassword) {
         throw InternalError("wrong email/password")
@@ -60,14 +63,14 @@ const makeEmailValidator = (isValid = true) => {
 }
 
 const makeUserRepository = (found = true) => {
-  const getByEmail = (email) => {
+  const getByEmail = async (email) => {
     return found ? { id: USER_ID, password: "any_password" } : undefined
   }
   return { getByEmail }
 }
 
 const makeEncrypter = (isRightPassword = true) => {
-  const compare = (password, hash) => {
+  const compare = async (password, hash) => {
     return isRightPassword
   }
 
