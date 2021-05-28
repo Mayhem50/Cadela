@@ -10,7 +10,7 @@ export const makeSignupService = ({
   tokenGenerator,
   encrypter
 } = {}) => {
-  const signup = async (user) => {
+  const signup = async (user = {}) => {
     try {
       if (!user) {
         throw InvalidParamError("user")

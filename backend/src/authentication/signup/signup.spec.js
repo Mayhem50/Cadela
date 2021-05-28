@@ -152,7 +152,7 @@ describe("Signup", () => {
     })
 
     await expect(signupService.signup()).rejects.toEqual(
-      InvalidParamError("user")
+      expect.objectContaining({ name: InvalidParamError().name })
     )
   })
 
