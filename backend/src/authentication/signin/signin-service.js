@@ -1,11 +1,11 @@
 import { InternalError, InvalidParamError } from "../../shared/errors"
 
-export const makeSigninService = (
+export const makeSigninService = ({
   emailValidator,
   userRepository,
   encrypter,
   tokenGenerator
-) => {
+} = {}) => {
   const sign = async (credential) => {
     try {
       if (!credential) {

@@ -60,12 +60,12 @@ const tokenGenerator = makeTokenGenerator()
 describe("Signin", () => {
   describe("Signin Http Handler", () => {
     it("Return 200 and a token if it succes when a complete user is sent", async () => {
-      const signinService = makeSigninService(
+      const signinService = makeSigninService({
         emailValidator,
-        userRepository,
         encrypter,
+        userRepository,
         tokenGenerator
-      )
+      })
       const handler = makeHandler(signinService)
 
       const request = {
@@ -81,12 +81,12 @@ describe("Signin", () => {
   })
 
   it("Sign a user when email & password are provided and return a token", async () => {
-    const signinService = makeSigninService(
+    const signinService = makeSigninService({
       emailValidator,
       userRepository,
       encrypter,
       tokenGenerator
-    )
+    })
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -105,11 +105,11 @@ describe("Signin", () => {
   })
 
   it("Fail if no credential does not contain email", async () => {
-    const signinService = makeSigninService(
+    const signinService = makeSigninService({
       emailValidator,
       userRepository,
       encrypter
-    )
+    })
     const credential = {
       password: "any_password"
     }
@@ -119,11 +119,11 @@ describe("Signin", () => {
   })
 
   it("Fail if no credential does not contain password", async () => {
-    const signinService = makeSigninService(
+    const signinService = makeSigninService({
       emailValidator,
       userRepository,
       encrypter
-    )
+    })
     const credential = {
       email: "any_email@mail.com"
     }
@@ -133,11 +133,11 @@ describe("Signin", () => {
   })
 
   it("Fail if email provided is not valid", async () => {
-    const signinService = makeSigninService(
+    const signinService = makeSigninService({
       emailValidator,
       userRepository,
       encrypter
-    )
+    })
     const credential = {
       email: "invalid_email",
       password: "any_password"
@@ -160,11 +160,11 @@ describe("Signin", () => {
 
   it("Fail if email does not exit in db", async () => {
     const userRepository = makeUserRepository(false)
-    const signinService = makeSigninService(
+    const signinService = makeSigninService({
       emailValidator,
       userRepository,
       encrypter
-    )
+    })
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -175,7 +175,7 @@ describe("Signin", () => {
   })
 
   it("Fail if user repository is not provided", async () => {
-    const signinService = makeSigninService(emailValidator)
+    const signinService = makeSigninService({ emailValidator })
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -187,11 +187,11 @@ describe("Signin", () => {
 
   it("Fail if wrong password provided", async () => {
     const encrypter = makeEncrypter(false)
-    const signinService = makeSigninService(
+    const signinService = makeSigninService({
       emailValidator,
       userRepository,
       encrypter
-    )
+    })
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -202,7 +202,7 @@ describe("Signin", () => {
   })
 
   it("Fail if encrypter is not provided", async () => {
-    const signinService = makeSigninService(emailValidator, userRepository)
+    const signinService = makeSigninService({ emailValidator, userRepository })
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -213,12 +213,12 @@ describe("Signin", () => {
   })
 
   it("Use token generator to create token", async () => {
-    const signinService = makeSigninService(
+    const signinService = makeSigninService({
       emailValidator,
       userRepository,
       encrypter,
       tokenGenerator
-    )
+    })
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -230,11 +230,11 @@ describe("Signin", () => {
   })
 
   it("Fail if token generator is not provided", async () => {
-    const signinService = makeSigninService(
+    const signinService = makeSigninService({
       emailValidator,
       userRepository,
       encrypter
-    )
+    })
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
