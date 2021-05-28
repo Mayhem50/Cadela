@@ -9,12 +9,12 @@ const emailValidator = makeEmailValidator()
 const tokenGenerator = makeTokenGenerator()
 const encrypter = makeEncrypter()
 
-const signupService = makeSignupService(
-  mongDbUserRepository,
+const signupService = makeSignupService({
+  userRepository: mongDbUserRepository,
   emailValidator,
   tokenGenerator,
   encrypter
-)
+})
 
 const signupHandler = makeHandler(signupService)
 
