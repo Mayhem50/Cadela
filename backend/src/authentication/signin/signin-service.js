@@ -13,6 +13,14 @@ function validateInput(email, password, emailValidator) {
   }
 }
 
+async function checkPassword(encrypter, password, foundUser) {
+  const isRightPassword = await encrypter.compare(password, foundUser.password)
+
+  if (!isRightPassword) {
+    throw InternalError("wrong email/password")
+  }
+}
+
 export const makeSigninService = ({
   emailValidator,
   userRepository,
@@ -30,14 +38,7 @@ export const makeSigninService = ({
         throw InternalError("user not found")
       }
 
-      const isRightPassword = await encrypter.compare(
-        password,
-        foundUser.password
-      )
-
-      if (!isRightPassword) {
-        throw InternalError("wrong email/password")
-      }
+      await checkPassword(encrypter, password, foundUser)
 
       const token = tokenGenerator.generate(foundUser.id)
 
