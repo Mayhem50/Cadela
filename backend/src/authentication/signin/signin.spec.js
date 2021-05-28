@@ -1,10 +1,15 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InternalError, InvalidParamError } from "../../shared/errors"
+import { HttpResponse } from "../signup/http-response"
 import { EmailValidatorContract } from "./email-validator.contract"
 import { EncrypterContract } from "./encrypter.contract"
 import { makeSigninService } from "./signin-service"
 import { TokenGeneratorContract } from "./token-generator.contract"
-import { UserRepositoryContract, USER_ID } from "./user-repository.contract"
+import {
+  UserRepositoryContract,
+  USER_EMAIL,
+  USER_ID
+} from "./user-repository.contract"
 
 const makeEmailValidator = () => {
   const valid = (email) => {
@@ -38,12 +43,43 @@ const makeTokenGenerator = () => {
   return { generate }
 }
 
+const makeHandler = (signinService) => {
+  const execute = async (request) => {
+    const response = await signinService.sign(request.credential)
+    return HttpResponse.ok(response.body)
+  }
+
+  return { execute }
+}
+
 const emailValidator = makeEmailValidator()
 const userRepository = makeUserRepository()
 const encrypter = makeEncrypter()
 const tokenGenerator = makeTokenGenerator()
 
 describe("Signin", () => {
+  describe("Signin Http Handler", () => {
+    it("Return 200 and a token if it succes when a complete user is sent", async () => {
+      const signinService = makeSigninService(
+        emailValidator,
+        userRepository,
+        encrypter,
+        tokenGenerator
+      )
+      const handler = makeHandler(signinService)
+
+      const request = {
+        credential: { email: USER_EMAIL, password: "any_password" }
+      }
+
+      const response = await handler.execute(request)
+
+      expect(response.body).toBeDefined()
+      expect(response.body.token).toBeDefined()
+      expect(response.statusCode).toBe(200)
+    })
+  })
+
   it("Sign a user when email & password are provided and return a token", async () => {
     const signinService = makeSigninService(
       emailValidator,
