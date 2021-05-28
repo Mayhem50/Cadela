@@ -6,7 +6,7 @@ const makeSigninService = (emailValidator, userRepository, encrypter) => {
     if (!credential) {
       throw InvalidParamError("credential")
     }
-    if (!emailValidator || !userRepository) {
+    if (!emailValidator || !userRepository || !encrypter) {
       throw InternalError()
     }
     const { email, password } = credential
@@ -89,7 +89,11 @@ describe("Signin", () => {
   })
 
   it("Fail if no credential does not contain email", () => {
-    const signinService = makeSigninService(emailValidator, userRepository)
+    const signinService = makeSigninService(
+      emailValidator,
+      userRepository,
+      encrypter
+    )
     const credential = {
       password: "any_password"
     }
@@ -99,7 +103,11 @@ describe("Signin", () => {
   })
 
   it("Fail if no credential does not contain password", () => {
-    const signinService = makeSigninService(emailValidator, userRepository)
+    const signinService = makeSigninService(
+      emailValidator,
+      userRepository,
+      encrypter
+    )
     const credential = {
       email: "any_email@mail.com"
     }
@@ -110,7 +118,11 @@ describe("Signin", () => {
 
   it("Fail if email provided is not valid", () => {
     const emailValidator = makeEmailValidator(false)
-    const signinService = makeSigninService(emailValidator, userRepository)
+    const signinService = makeSigninService(
+      emailValidator,
+      userRepository,
+      encrypter
+    )
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -131,7 +143,11 @@ describe("Signin", () => {
 
   it("Fail if email does not exit in db", () => {
     const userRepository = makeUserRepository(false)
-    const signinService = makeSigninService(emailValidator, userRepository)
+    const signinService = makeSigninService(
+      emailValidator,
+      userRepository,
+      encrypter
+    )
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -164,5 +180,15 @@ describe("Signin", () => {
     expect(() => signinService.sign(credential)).toThrow(
       InternalError("wrong email/password")
     )
+  })
+
+  it("Fail if encrypter is not provided", () => {
+    const encrypter = makeEncrypter(false)
+    const signinService = makeSigninService(emailValidator, userRepository)
+    const credential = {
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+    expect(() => signinService.sign(credential)).toThrow(InternalError())
   })
 })
