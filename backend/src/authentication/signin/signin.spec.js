@@ -1,6 +1,7 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InternalError, InvalidParamError } from "../../shared/errors"
 import { makeSigninService } from "./signin-service"
+import { TokenGeneratorContract } from "./token-generator.contract"
 import {
   UserRepositoryContract,
   USER_EMAIL,
@@ -208,11 +209,5 @@ describe("Signin", () => {
   })
 
   UserRepositoryContract(makeUserRepository(true))
-  describe("Token Generator Contract", () => {
-    it("Generate a unique token based on userId", () => {
-      const token1 = tokenGenerator.generate("user_id_1")
-      const token2 = tokenGenerator.generate("user_id_2")
-      expect(token1).not.toBe(token2)
-    })
-  })
+  TokenGeneratorContract(makeTokenGenerator())
 })
