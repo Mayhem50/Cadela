@@ -1,26 +1,5 @@
 import { InternalError, InvalidParamError } from "../../shared/errors"
 
-function validateInput(email, password, emailValidator) {
-  if (!email) {
-    throw InvalidParamError("email")
-  }
-  if (!password) {
-    throw InvalidParamError("password")
-  }
-
-  if (!emailValidator.valid(email)) {
-    throw InvalidParamError("email")
-  }
-}
-
-async function checkPassword(encrypter, password, foundUser) {
-  const isRightPassword = await encrypter.compare(password, foundUser.password)
-
-  if (!isRightPassword) {
-    throw InternalError("wrong email/password")
-  }
-}
-
 export const makeSigninService = ({
   emailValidator,
   userRepository,
@@ -30,15 +9,10 @@ export const makeSigninService = ({
   const sign = async (credential = {}) => {
     try {
       const { email, password } = credential
-      validateInput(email, password, emailValidator)
 
-      const foundUser = await userRepository.getByEmail(email)
-
-      if (!foundUser) {
-        throw InternalError("user not found")
-      }
-
-      await checkPassword(encrypter, password, foundUser)
+      validateInput(emailValidator, email, password)
+      const foundUser = await findUser(userRepository, email)
+      await checkPassword(encrypter, password, foundUser.password)
 
       const token = tokenGenerator.generate(foundUser.id)
 
@@ -53,4 +27,34 @@ export const makeSigninService = ({
     }
   }
   return { sign }
+}
+
+function validateInput(emailValidator, email, password) {
+  if (!email) {
+    throw InvalidParamError("email")
+  }
+  if (!password) {
+    throw InvalidParamError("password")
+  }
+
+  if (!emailValidator.valid(email)) {
+    throw InvalidParamError("email")
+  }
+}
+
+async function checkPassword(encrypter, password, hash) {
+  const isRightPassword = await encrypter.compare(password, hash)
+
+  if (!isRightPassword) {
+    throw InternalError("wrong email/password")
+  }
+}
+
+async function findUser(userRepository, email) {
+  const foundUser = await userRepository.getByEmail(email)
+
+  if (!foundUser) {
+    throw InternalError("user not found")
+  }
+  return foundUser
 }
