@@ -45,8 +45,12 @@ const makeTokenGenerator = () => {
 
 const makeHandler = (signinService) => {
   const execute = async (request) => {
-    const response = await signinService.sign(request.credential)
-    return HttpResponse.ok(response.body)
+    try {
+      const response = await signinService.sign(request.credential)
+      return HttpResponse.ok(response.body)
+    } catch (error) {
+      return HttpResponse.requestError({ error })
+    }
   }
 
   return { execute }
@@ -77,6 +81,24 @@ describe("Signin", () => {
       expect(response.body).toBeDefined()
       expect(response.body.token).toBeDefined()
       expect(response.statusCode).toBe(200)
+    })
+
+    it("Return 400 if service throw an InvalidParamError", async () => {
+      const signinService = makeSigninService({
+        emailValidator,
+        encrypter,
+        userRepository,
+        tokenGenerator
+      })
+      const handler = makeHandler(signinService)
+
+      const request = { credential: undefined }
+      const response = await handler.execute(request)
+
+      expect(response.body).toBeDefined()
+      expect(response.body.error).toBeDefined()
+      expect(response.body.error).toEqual(InvalidParamError("credential"))
+      expect(response.statusCode).toBe(400)
     })
   })
 
