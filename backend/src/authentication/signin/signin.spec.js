@@ -1,9 +1,9 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InternalError, InvalidParamError } from "../../shared/errors"
 import { HttpPostHandlerContract } from "../shared/http-handler.contract"
-import { HttpResponse } from "../signup/http-response"
 import { EmailValidatorContract } from "./email-validator.contract"
 import { EncrypterContract } from "./encrypter.contract"
+import { makeHandler } from "./request-handler"
 import { makeSigninService } from "./signin-service"
 import { TokenGeneratorContract } from "./token-generator.contract"
 import {
@@ -42,21 +42,6 @@ const makeTokenGenerator = () => {
     return userId
   })
   return { generate }
-}
-
-const makeHandler = (signinService) => {
-  const execute = async (request) => {
-    try {
-      const response = await signinService.sign(request.credential)
-      return HttpResponse.ok(response.body)
-    } catch (error) {
-      return error.name === "InvalidParamError"
-        ? HttpResponse.requestError({ error })
-        : HttpResponse.internalError({ error })
-    }
-  }
-
-  return { execute }
 }
 
 const emailValidator = makeEmailValidator()
