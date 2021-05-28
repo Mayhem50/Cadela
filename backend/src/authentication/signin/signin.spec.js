@@ -63,13 +63,18 @@ const tokenGenerator = makeTokenGenerator()
 
 describe("Signin", () => {
   describe("Signin Http Handler", () => {
-    it("Return 200 and a token if it succes when a complete user is sent", async () => {
-      const signinService = makeSigninService({
+    let signinService
+
+    beforeEach(() => {
+      signinService = makeSigninService({
         emailValidator,
         encrypter,
         userRepository,
         tokenGenerator
       })
+    })
+
+    it("Return 200 and a token if it succes when a complete user is sent", async () => {
       const handler = makeHandler(signinService)
 
       const request = {
@@ -84,12 +89,6 @@ describe("Signin", () => {
     })
 
     it("Return 400 if service throw an InvalidParamError", async () => {
-      const signinService = makeSigninService({
-        emailValidator,
-        encrypter,
-        userRepository,
-        tokenGenerator
-      })
       const handler = makeHandler(signinService)
 
       const request = { credential: undefined }
