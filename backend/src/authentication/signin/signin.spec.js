@@ -183,7 +183,6 @@ describe("Signin", () => {
   })
 
   it("Fail if encrypter is not provided", () => {
-    const encrypter = makeEncrypter(false)
     const signinService = makeSigninService(emailValidator, userRepository)
     const credential = {
       email: "any_email@mail.com",
