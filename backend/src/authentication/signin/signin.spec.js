@@ -8,6 +8,9 @@ const makeSigninService = () => {
     if (!credential.email) {
       throw InvalidParamError("email")
     }
+    if (!credential.password) {
+      throw InvalidParamError("password")
+    }
     return {
       body: { token: "any_token" }
     }
@@ -40,6 +43,16 @@ describe("Signin", () => {
     }
     expect(() => signinService.sign(credential)).toThrow(
       InvalidParamError("email")
+    )
+  })
+
+  it("Fail if no credential does not contain email", () => {
+    const signinService = makeSigninService()
+    const credential = {
+      email: "any_email@mail.com"
+    }
+    expect(() => signinService.sign(credential)).toThrow(
+      InvalidParamError("password")
     )
   })
 })
