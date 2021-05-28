@@ -3,38 +3,42 @@ import { InvalidParamError } from "../signup/invalid-param-error"
 
 const makeSigninService = (emailValidator, userRepository, encrypter) => {
   const sign = (credential) => {
-    if (!credential) {
-      throw InvalidParamError("credential")
-    }
-    if (!emailValidator || !userRepository || !encrypter) {
-      throw InternalError()
-    }
-    const { email, password } = credential
-    if (!email) {
-      throw InvalidParamError("email")
-    }
-    if (!password) {
-      throw InvalidParamError("password")
-    }
+    try {
+      if (!credential) {
+        throw InvalidParamError("credential")
+      }
+      const { email, password } = credential
+      if (!email) {
+        throw InvalidParamError("email")
+      }
+      if (!password) {
+        throw InvalidParamError("password")
+      }
 
-    if (!emailValidator.valid(email)) {
-      throw InvalidParamError("email")
-    }
+      if (!emailValidator.valid(email)) {
+        throw InvalidParamError("email")
+      }
 
-    const foundUser = userRepository.getByEmail(email)
+      const foundUser = userRepository.getByEmail(email)
 
-    if (!foundUser) {
-      throw InternalError("user not found")
-    }
+      if (!foundUser) {
+        throw InternalError("user not found")
+      }
 
-    const isRightPassword = encrypter.compare(password, foundUser.password)
+      const isRightPassword = encrypter.compare(password, foundUser.password)
 
-    if (!isRightPassword) {
-      throw InternalError("wrong email/password")
-    }
+      if (!isRightPassword) {
+        throw InternalError("wrong email/password")
+      }
 
-    return {
-      body: { token: "any_token" }
+      return {
+        body: { token: "any_token" }
+      }
+    } catch (error) {
+      if (error.stack?.includes("TypeError")) {
+        throw InternalError()
+      }
+      throw error ?? InternalError()
     }
   }
   return { sign }
