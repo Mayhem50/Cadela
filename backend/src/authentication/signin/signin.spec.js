@@ -33,7 +33,7 @@ describe("Signin", () => {
 
   it("Fail if no credential provided", () => {
     const signinService = makeSigninService()
-    expect(signinService.sign).toThrow(InvalidParamError("credential"))
+    expect(() => signinService.sign()).toThrow(InvalidParamError("credential"))
   })
 
   it("Fail if no credential does not contain email", () => {
