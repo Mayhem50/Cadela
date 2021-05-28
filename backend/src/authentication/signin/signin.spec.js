@@ -229,4 +229,17 @@ describe("Signin", () => {
 
     expect(tokenGenerator.generate).toBeCalledWith(USER_ID)
   })
+
+  it("Fail if token generator is not provided", () => {
+    const signinService = makeSigninService(
+      emailValidator,
+      userRepository,
+      encrypter
+    )
+    const credential = {
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+    expect(() => signinService.sign(credential)).toThrow(InternalError())
+  })
 })
