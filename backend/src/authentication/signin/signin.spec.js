@@ -1,5 +1,6 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InternalError, InvalidParamError } from "../../shared/errors"
+import { EmailValidatorContract } from "./email-validator.contract"
 import { EncrypterContract } from "./encrypter.contract"
 import { makeSigninService } from "./signin-service"
 import { TokenGeneratorContract } from "./token-generator.contract"
@@ -214,15 +215,5 @@ describe("Signin", () => {
   UserRepositoryContract(makeUserRepository(true))
   TokenGeneratorContract(makeTokenGenerator())
   EncrypterContract(makeEncrypter())
-  describe("Email Validator Contract", () => {
-    it("Return true when email is valid", () => {
-      const isValid = emailValidator.valid("any_email@mail.com")
-      expect(isValid).toBe(true)
-    })
-
-    it("Return false when email is not valid", () => {
-      const isValid = emailValidator.valid("any_email")
-      expect(isValid).toBe(false)
-    })
-  })
+  EmailValidatorContract(makeEmailValidator())
 })
