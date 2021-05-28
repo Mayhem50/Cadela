@@ -1,5 +1,4 @@
-import { InternalError } from "../signup/internal-error"
-import { InvalidParamError } from "../signup/invalid-param-error"
+import { InternalError, InvalidParamError } from "../../shared/errors"
 
 export const makeSigninService = (
   emailValidator,

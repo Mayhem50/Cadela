@@ -1,5 +1,4 @@
-import { InternalError } from "./internal-error"
-import { InvalidParamError } from "./invalid-param-error"
+import { InternalError, InvalidParamError } from "../../shared/errors"
 
 export const makeSignupService = (
   userRepository,

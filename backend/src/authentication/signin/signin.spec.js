@@ -1,6 +1,5 @@
 import { jest, beforeEach } from "@jest/globals"
-import { InternalError } from "../signup/internal-error"
-import { InvalidParamError } from "../signup/invalid-param-error"
+import { InternalError, InvalidParamError } from "../../shared/errors"
 import { makeSigninService } from "./signin-service"
 
 const makeEmailValidator = (isValid = true) => {
