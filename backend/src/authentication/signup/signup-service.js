@@ -1,4 +1,8 @@
-import { InternalError, InvalidParamError } from "../../shared/errors"
+import {
+  InternalError,
+  InvalidParamError,
+  throwAppError
+} from "../../shared/errors"
 
 export const makeSignupService = ({
   userRepository,
@@ -49,10 +53,7 @@ export const makeSignupService = ({
         }
       }
     } catch (error) {
-      if (error.stack?.includes("TypeError")) {
-        throw InternalError()
-      }
-      throw error ?? InternalError()
+      throwAppError(error)
     }
   }
 

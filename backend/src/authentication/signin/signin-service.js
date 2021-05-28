@@ -1,4 +1,8 @@
-import { InternalError, InvalidParamError } from "../../shared/errors"
+import {
+  InternalError,
+  InvalidParamError,
+  throwAppError
+} from "../../shared/errors"
 
 export const makeSigninService = ({
   emailValidator,
@@ -20,10 +24,7 @@ export const makeSigninService = ({
         body: { token, user: { ...foundUser } }
       }
     } catch (error) {
-      if (error.stack?.includes("TypeError")) {
-        throw InternalError()
-      }
-      throw error ?? InternalError()
+      throwAppError(error)
     }
   }
   return { sign }
