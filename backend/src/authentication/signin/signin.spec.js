@@ -1,6 +1,7 @@
+import { InternalError } from "../signup/internal-error"
 import { InvalidParamError } from "../signup/invalid-param-error"
 
-const makeSigninService = (emailValidator) => {
+const makeSigninService = (emailValidator, userRepository) => {
   const sign = (credential) => {
     if (!credential) {
       throw InvalidParamError("credential")
@@ -17,6 +18,12 @@ const makeSigninService = (emailValidator) => {
       throw InvalidParamError("email")
     }
 
+    const foundUser = userRepository.getByEmail(email)
+
+    if (!foundUser) {
+      throw InternalError("user not found")
+    }
+
     return {
       body: { token: "any_token" }
     }
@@ -31,11 +38,19 @@ const makeEmailValidator = (isValid = true) => {
   return { valid }
 }
 
+const makeUserRepository = (found = true) => {
+  const getByEmail = (email) => {
+    return found ? { id: "any_user_id" } : undefined
+  }
+  return { getByEmail }
+}
+
 const emailValidator = makeEmailValidator()
+const userRepository = makeUserRepository()
 
 describe("Signin", () => {
   it("Sign a user when email & password are provided and return a token", () => {
-    const signinService = makeSigninService(emailValidator)
+    const signinService = makeSigninService(emailValidator, userRepository)
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -80,6 +95,18 @@ describe("Signin", () => {
     }
     expect(() => signinService.sign(credential)).toThrow(
       InvalidParamError("email")
+    )
+  })
+
+  it("Fail if email does not exit in db", () => {
+    const userRepository = makeUserRepository(false)
+    const signinService = makeSigninService(emailValidator, userRepository)
+    const credential = {
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+    expect(() => signinService.sign(credential)).toThrow(
+      InternalError("user not found")
     )
   })
 })
