@@ -49,7 +49,9 @@ const makeHandler = (signinService) => {
       const response = await signinService.sign(request.credential)
       return HttpResponse.ok(response.body)
     } catch (error) {
-      return HttpResponse.requestError({ error })
+      return error.name === "InvalidParamError"
+        ? HttpResponse.requestError({ error })
+        : HttpResponse.internalError({ error })
     }
   }
 
@@ -98,6 +100,21 @@ describe("Signin", () => {
       expect(response.body.error).toBeDefined()
       expect(response.body.error).toEqual(InvalidParamError("credential"))
       expect(response.statusCode).toBe(400)
+    })
+
+    it("Return 500 if service throw an InternalError", async () => {
+      const signinService = makeSigninService()
+      const handler = makeHandler(signinService)
+
+      const request = {
+        credential: { email: USER_EMAIL, password: "any_password" }
+      }
+      const response = await handler.execute(request)
+
+      expect(response.body).toBeDefined()
+      expect(response.body.error).toBeDefined()
+      expect(response.body.error).toEqual(InternalError())
+      expect(response.statusCode).toBe(500)
     })
   })
 
