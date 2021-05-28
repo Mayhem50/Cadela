@@ -9,9 +9,9 @@ import {
   USER_ID
 } from "./user-repository.contract"
 
-const makeEmailValidator = (isValid = true) => {
-  const valid = () => {
-    return isValid
+const makeEmailValidator = () => {
+  const valid = (email) => {
+    return email.includes("@")
   }
   return { valid }
 }
@@ -100,14 +100,13 @@ describe("Signin", () => {
   })
 
   it("Fail if email provided is not valid", async () => {
-    const emailValidator = makeEmailValidator(false)
     const signinService = makeSigninService(
       emailValidator,
       userRepository,
       encrypter
     )
     const credential = {
-      email: "any_email@mail.com",
+      email: "invalid_email",
       password: "any_password"
     }
     await expect(signinService.sign(credential)).rejects.toEqual(
@@ -219,6 +218,11 @@ describe("Signin", () => {
     it("Return true when email is valid", () => {
       const isValid = emailValidator.valid("any_email@mail.com")
       expect(isValid).toBe(true)
+    })
+
+    it("Return false when email is not valid", () => {
+      const isValid = emailValidator.valid("any_email")
+      expect(isValid).toBe(false)
     })
   })
 })
