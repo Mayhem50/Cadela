@@ -73,12 +73,12 @@ describe("Signup", () => {
   describe("Signup Http Handler", () => {
     let signupService
     beforeEach(() => {
-      signupService = makeSignupService(
+      signupService = makeSignupService({
         userRepository,
         emailValidator,
         tokenGenerator,
         encrypter
-      )
+      })
     })
     it("Return 200 and a token if it succes when a complete user is sent", async () => {
       const handler = makeHandler(signupService)
@@ -118,12 +118,12 @@ describe("Signup", () => {
   })
 
   it("Save user and return token", async () => {
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
     const user = COMPLETE_USER
     const ret = await signupService.signup(user)
 
@@ -136,12 +136,12 @@ describe("Signup", () => {
   })
 
   it("Throw an error if user already exists", async () => {
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
     const user = {
       firstName: "John",
       lastName: "McLane",
@@ -171,12 +171,12 @@ describe("Signup", () => {
     userRepository = {}
     tokenGenerator = {}
     emailValidator = {}
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
 
     const user = {
       firstName: "John",
@@ -189,12 +189,12 @@ describe("Signup", () => {
   })
 
   it("Throw an error if user is undefined", async () => {
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
 
     await expect(signupService.signup()).rejects.toEqual(
       InvalidParamError("user")
@@ -202,12 +202,12 @@ describe("Signup", () => {
   })
 
   it("Throw an error if user.firstName is empty", async () => {
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
     const user = {}
     await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("firstName")
@@ -215,12 +215,12 @@ describe("Signup", () => {
   })
 
   it("Throw an error if user.lastName is empty", async () => {
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
     const user = { firstName: "John" }
     await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("lastName")
@@ -228,12 +228,12 @@ describe("Signup", () => {
   })
 
   it("Throw an error if user.email is empty", async () => {
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
     const user = { firstName: "John", lastName: "McLane" }
     await expect(signupService.signup(user)).rejects.toEqual(
       InvalidParamError("email")
@@ -241,12 +241,12 @@ describe("Signup", () => {
   })
 
   it("Throw an error if user.password is empty", async () => {
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
     const user = {
       firstName: "John",
       lastName: "McLane",
@@ -259,12 +259,12 @@ describe("Signup", () => {
 
   it("Throw an error if user.email is not valid", async () => {
     const emailValidator = makeEmailValidator({ isValid: false })
-    const signupService = makeSignupService(
+    const signupService = makeSignupService({
       userRepository,
       emailValidator,
       tokenGenerator,
       encrypter
-    )
+    })
     const user = {
       firstName: "John",
       lastName: "McLane",
