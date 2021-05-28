@@ -65,6 +65,7 @@ describe("Signin", () => {
     expect(ret.body).toHaveProperty("token")
     expect(ret.body.token).not.toBe("")
     expect(ret.body.token).toBeDefined()
+    expect(ret.body.user).toBeDefined()
   })
 
   it("Fail if no credential provided", async () => {

@@ -41,7 +41,7 @@ export const makeSigninService = ({
       const token = tokenGenerator.generate(foundUser.id)
 
       return {
-        body: { token }
+        body: { token, user: { ...foundUser } }
       }
     } catch (error) {
       if (error.stack?.includes("TypeError")) {
