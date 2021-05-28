@@ -1,6 +1,7 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InternalError, InvalidParamError } from "../../shared/errors"
 import { makeSigninService } from "./signin-service"
+import { UserRepositoryContract } from "./user-repository.contract"
 
 const makeEmailValidator = (isValid = true) => {
   const valid = () => {
@@ -203,14 +204,5 @@ describe("Signin", () => {
     )
   })
 
-  describe("User Repository Contract", () => {
-    it("Return user by email", async () => {
-      const userRepository = makeUserRepository(true)
-      const email = "any_email@mail.com"
-      const user = await userRepository.getByEmail(email)
-      const expectedUser = { id: USER_ID, password: "any_password", email }
-
-      expect(user).toEqual(expectedUser)
-    })
-  })
+  UserRepositoryContract(makeUserRepository(true), USER_ID)
 })
