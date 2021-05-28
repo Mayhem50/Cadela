@@ -11,7 +11,7 @@ const makeEmailValidator = (isValid = true) => {
 
 const makeUserRepository = (found = true) => {
   const getByEmail = async (email) => {
-    return found ? { id: USER_ID, password: "any_password" } : undefined
+    return found ? { id: USER_ID, password: "any_password", email } : undefined
   }
   return { getByEmail }
 }
@@ -201,5 +201,16 @@ describe("Signin", () => {
     await expect(signinService.sign(credential)).rejects.toEqual(
       InternalError()
     )
+  })
+
+  describe("User Repository Contract", () => {
+    it("Return user by email", async () => {
+      const userRepository = makeUserRepository(true)
+      const email = "any_email@mail.com"
+      const user = await userRepository.getByEmail(email)
+      const expectedUser = { id: USER_ID, password: "any_password", email }
+
+      expect(user).toEqual(expectedUser)
+    })
   })
 })
