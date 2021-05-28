@@ -6,6 +6,9 @@ const makeSigninService = (emailValidator, userRepository) => {
     if (!credential) {
       throw InvalidParamError("credential")
     }
+    if (!emailValidator) {
+      throw InternalError()
+    }
     const { email, password } = credential
     if (!email) {
       throw InvalidParamError("email")
@@ -96,6 +99,15 @@ describe("Signin", () => {
     expect(() => signinService.sign(credential)).toThrow(
       InvalidParamError("email")
     )
+  })
+
+  it("Fail if email validator is not provided", () => {
+    const signinService = makeSigninService()
+    const credential = {
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+    expect(() => signinService.sign(credential)).toThrow(InternalError())
   })
 
   it("Fail if email does not exit in db", () => {
