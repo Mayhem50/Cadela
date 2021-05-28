@@ -1,27 +1,28 @@
 import { InternalError, InvalidParamError } from "../../shared/errors"
 
+function validateInput(email, password, emailValidator) {
+  if (!email) {
+    throw InvalidParamError("email")
+  }
+  if (!password) {
+    throw InvalidParamError("password")
+  }
+
+  if (!emailValidator.valid(email)) {
+    throw InvalidParamError("email")
+  }
+}
+
 export const makeSigninService = ({
   emailValidator,
   userRepository,
   encrypter,
   tokenGenerator
 } = {}) => {
-  const sign = async (credential) => {
+  const sign = async (credential = {}) => {
     try {
-      if (!credential) {
-        throw InvalidParamError("credential")
-      }
       const { email, password } = credential
-      if (!email) {
-        throw InvalidParamError("email")
-      }
-      if (!password) {
-        throw InvalidParamError("password")
-      }
-
-      if (!emailValidator.valid(email)) {
-        throw InvalidParamError("email")
-      }
+      validateInput(email, password, emailValidator)
 
       const foundUser = await userRepository.getByEmail(email)
 

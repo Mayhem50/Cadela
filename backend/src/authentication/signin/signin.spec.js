@@ -71,7 +71,7 @@ describe("Signin", () => {
   it("Fail if no credential provided", async () => {
     const signinService = makeSigninService()
     await expect(signinService.sign()).rejects.toEqual(
-      InvalidParamError("credential")
+      expect.objectContaining({ name: InvalidParamError().name })
     )
   })
 

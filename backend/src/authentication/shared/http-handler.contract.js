@@ -37,7 +37,9 @@ export const HttpPostHandlerContract = (
 
       expect(response.body).toBeDefined()
       expect(response.body.error).toBeDefined()
-      expect(response.body.error).toEqual(InvalidParamError(key))
+      expect(response.body.error).toEqual(
+        expect.objectContaining({ name: InvalidParamError().name })
+      )
       expect(response.statusCode).toBe(400)
     })
 
