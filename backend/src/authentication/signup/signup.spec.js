@@ -10,6 +10,7 @@ import { EmailValidatorContract } from "./email-validator.contract"
 import { TokenGeneratorContract } from "./token-generator.contract"
 import { EncrypterContract } from "./encrypter.contract"
 import { makeHandler } from "./request-handler"
+import { HttpPostHandlerContract } from "../shared/http-handler.contract"
 
 const makeUserRepository = () => {
   let users = []
@@ -58,63 +59,16 @@ const makeEncrypter = () => {
 }
 
 describe("Signup", () => {
-  let userRepository
-  let emailValidator
-  let tokenGenerator
-  let encrypter
+  let userRepository = makeUserRepository()
+  let emailValidator = makeEmailValidator()
+  let tokenGenerator = makeTokenGenerator()
+  let encrypter = makeEncrypter()
 
   beforeEach(() => {
     userRepository = makeUserRepository()
     emailValidator = makeEmailValidator()
     tokenGenerator = makeTokenGenerator()
     encrypter = makeEncrypter()
-  })
-
-  describe("Signup Http Handler", () => {
-    let signupService
-    beforeEach(() => {
-      signupService = makeSignupService({
-        userRepository,
-        emailValidator,
-        tokenGenerator,
-        encrypter
-      })
-    })
-    it("Return 200 and a token if it succes when a complete user is sent", async () => {
-      const handler = makeHandler(signupService)
-
-      const request = { user: { ...COMPLETE_USER } }
-      const response = await handler.execute(request)
-
-      expect(response.body).toBeDefined()
-      expect(response.body.token).toBeDefined()
-      expect(response.statusCode).toBe(200)
-    })
-
-    it("Return 400 if service throw an InvalidParamError", async () => {
-      const handler = makeHandler(signupService)
-
-      const request = { user: undefined }
-      const response = await handler.execute(request)
-
-      expect(response.body).toBeDefined()
-      expect(response.body.error).toBeDefined()
-      expect(response.body.error).toEqual(InvalidParamError("user"))
-      expect(response.statusCode).toBe(400)
-    })
-
-    it("Return 500 if service throw an InternalError", async () => {
-      const signupService = makeSignupService()
-      const handler = makeHandler(signupService)
-
-      const request = { user: { ...COMPLETE_USER } }
-      const response = await handler.execute(request)
-
-      expect(response.body).toBeDefined()
-      expect(response.body.error).toBeDefined()
-      expect(response.body.error).toEqual(InternalError())
-      expect(response.statusCode).toBe(500)
-    })
   })
 
   it("Save user and return token", async () => {
@@ -276,6 +230,17 @@ describe("Signup", () => {
     )
   })
 
+  HttpPostHandlerContract("Signup", {
+    handlerUnderTestFactory: makeHandler,
+    serviceFactory: makeSignupService,
+    serviceFactoryParameters: {
+      userRepository,
+      emailValidator,
+      tokenGenerator,
+      encrypter
+    },
+    defaultPayload: { user: { ...COMPLETE_USER } }
+  })
   UserRepositoryContract(makeUserRepository())
   EmailValidatorContract(makeEmailValidator())
   TokenGeneratorContract(makeTokenGenerator())

@@ -1,5 +1,6 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InternalError, InvalidParamError } from "../../shared/errors"
+import { HttpPostHandlerContract } from "../shared/http-handler.contract"
 import { HttpResponse } from "../signup/http-response"
 import { EmailValidatorContract } from "./email-validator.contract"
 import { EncrypterContract } from "./encrypter.contract"
@@ -64,60 +65,6 @@ const encrypter = makeEncrypter()
 const tokenGenerator = makeTokenGenerator()
 
 describe("Signin", () => {
-  describe("Signin Http Handler", () => {
-    let signinService
-
-    beforeEach(() => {
-      signinService = makeSigninService({
-        emailValidator,
-        encrypter,
-        userRepository,
-        tokenGenerator
-      })
-    })
-
-    it("Return 200 and a token if it succes when a complete user is sent", async () => {
-      const handler = makeHandler(signinService)
-
-      const request = {
-        credential: { email: USER_EMAIL, password: "any_password" }
-      }
-
-      const response = await handler.execute(request)
-
-      expect(response.body).toBeDefined()
-      expect(response.body.token).toBeDefined()
-      expect(response.statusCode).toBe(200)
-    })
-
-    it("Return 400 if service throw an InvalidParamError", async () => {
-      const handler = makeHandler(signinService)
-
-      const request = { credential: undefined }
-      const response = await handler.execute(request)
-
-      expect(response.body).toBeDefined()
-      expect(response.body.error).toBeDefined()
-      expect(response.body.error).toEqual(InvalidParamError("credential"))
-      expect(response.statusCode).toBe(400)
-    })
-
-    it("Return 500 if service throw an InternalError", async () => {
-      const signinService = makeSigninService()
-      const handler = makeHandler(signinService)
-
-      const request = {
-        credential: { email: USER_EMAIL, password: "any_password" }
-      }
-      const response = await handler.execute(request)
-
-      expect(response.body).toBeDefined()
-      expect(response.body.error).toBeDefined()
-      expect(response.body.error).toEqual(InternalError())
-      expect(response.statusCode).toBe(500)
-    })
-  })
-
   it("Sign a user when email & password are provided and return a token", async () => {
     const signinService = makeSigninService({
       emailValidator,
@@ -282,6 +229,19 @@ describe("Signin", () => {
     )
   })
 
+  HttpPostHandlerContract("Signin", {
+    handlerUnderTestFactory: makeHandler,
+    serviceFactory: makeSigninService,
+    serviceFactoryParameters: {
+      emailValidator,
+      userRepository,
+      encrypter,
+      tokenGenerator
+    },
+    defaultPayload: {
+      credential: { email: USER_EMAIL, password: "any_password" }
+    }
+  })
   UserRepositoryContract(makeUserRepository(true))
   TokenGeneratorContract(makeTokenGenerator())
   EncrypterContract(makeEncrypter())
