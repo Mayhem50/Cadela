@@ -215,4 +215,10 @@ describe("Signin", () => {
   UserRepositoryContract(makeUserRepository(true))
   TokenGeneratorContract(makeTokenGenerator())
   EncrypterContract(makeEncrypter())
+  describe("Email Validator Contract", () => {
+    it("Return true when email is valid", () => {
+      const isValid = emailValidator.valid("any_email@mail.com")
+      expect(isValid).toBe(true)
+    })
+  })
 })
