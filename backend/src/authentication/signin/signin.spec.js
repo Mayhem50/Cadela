@@ -4,11 +4,7 @@ import { EmailValidatorContract } from "./email-validator.contract"
 import { EncrypterContract } from "./encrypter.contract"
 import { makeSigninService } from "./signin-service"
 import { TokenGeneratorContract } from "./token-generator.contract"
-import {
-  UserRepositoryContract,
-  USER_EMAIL,
-  USER_ID
-} from "./user-repository.contract"
+import { UserRepositoryContract, USER_ID } from "./user-repository.contract"
 
 const makeEmailValidator = () => {
   const valid = (email) => {
