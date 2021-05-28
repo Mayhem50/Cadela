@@ -1,6 +1,12 @@
 import { client } from "./mongo-client"
 
 export const makeUserRepository = (client) => {
+  const prettyfyUser = (user) => {
+    if (user) {
+      user.id = user._id
+      delete user._id
+    }
+  }
   const save = async (user) => {
     const collection = await client.db(process.env.DB_NAME).collection("users")
     const result = await collection.insertOne({ ...user })
@@ -10,8 +16,7 @@ export const makeUserRepository = (client) => {
   const getByEmail = async (email) => {
     const collection = await client.db(process.env.DB_NAME).collection("users")
     const user = await collection.findOne({ email })
-    user.id = user._id
-    delete user._id
+    prettyfyUser(user)
     return user
   }
 
