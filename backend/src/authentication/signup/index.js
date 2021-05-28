@@ -1,5 +1,5 @@
 import { mongDbUserRepository } from "../shared/user-repository"
-import { makeEmailValidator } from "./email-validator"
+import { makeEmailValidator } from "../shared/email-validator"
 import { makeEncrypter } from "../shared/encrypter"
 import { makeTokenGenerator } from "../shared/token-generator"
 import { makeSignupService } from "./signup-service"
