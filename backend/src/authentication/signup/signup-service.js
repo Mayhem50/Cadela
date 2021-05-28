@@ -40,7 +40,13 @@ export const makeSignupService = ({
       const userId = await userRepository.save(userToSave)
       const token = tokenGenerator.generate(userId)
       return {
-        body: { token }
+        body: {
+          token,
+          user: {
+            ...user,
+            id: userId
+          }
+        }
       }
     } catch (error) {
       if (error.stack?.includes("TypeError")) {

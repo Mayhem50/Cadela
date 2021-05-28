@@ -87,6 +87,7 @@ describe("Signup", () => {
       userRepository.getUserId()
     )
     expect(ret.body).toHaveProperty("token")
+    expect(ret.body.user).toMatchObject(COMPLETE_USER)
   })
 
   it("Throw an error if user already exists", async () => {
