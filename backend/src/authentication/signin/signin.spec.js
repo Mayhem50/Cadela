@@ -6,7 +6,7 @@ const makeSigninService = (emailValidator, userRepository) => {
     if (!credential) {
       throw InvalidParamError("credential")
     }
-    if (!emailValidator) {
+    if (!emailValidator || !userRepository) {
       throw InternalError()
     }
     const { email, password } = credential
@@ -70,7 +70,7 @@ describe("Signin", () => {
   })
 
   it("Fail if no credential does not contain email", () => {
-    const signinService = makeSigninService(emailValidator)
+    const signinService = makeSigninService(emailValidator, userRepository)
     const credential = {
       password: "any_password"
     }
@@ -79,8 +79,8 @@ describe("Signin", () => {
     )
   })
 
-  it("Fail if no credential does not contain email", () => {
-    const signinService = makeSigninService(emailValidator)
+  it("Fail if no credential does not contain password", () => {
+    const signinService = makeSigninService(emailValidator, userRepository)
     const credential = {
       email: "any_email@mail.com"
     }
@@ -91,7 +91,7 @@ describe("Signin", () => {
 
   it("Fail if email provided is not valid", () => {
     const emailValidator = makeEmailValidator(false)
-    const signinService = makeSigninService(emailValidator)
+    const signinService = makeSigninService(emailValidator, userRepository)
     const credential = {
       email: "any_email@mail.com",
       password: "any_password"
@@ -120,5 +120,14 @@ describe("Signin", () => {
     expect(() => signinService.sign(credential)).toThrow(
       InternalError("user not found")
     )
+  })
+
+  it("Fail if user repository is not provided", () => {
+    const signinService = makeSigninService(emailValidator)
+    const credential = {
+      email: "any_email@mail.com",
+      password: "any_password"
+    }
+    expect(() => signinService.sign(credential)).toThrow(InternalError())
   })
 })
