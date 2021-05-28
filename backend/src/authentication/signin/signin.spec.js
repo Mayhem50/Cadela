@@ -52,7 +52,7 @@ describe("Signin", () => {
   })
 
   it("Fail if no credential does not contain email", () => {
-    const signinService = makeSigninService()
+    const signinService = makeSigninService(emailValidator)
     const credential = {
       password: "any_password"
     }
@@ -62,7 +62,7 @@ describe("Signin", () => {
   })
 
   it("Fail if no credential does not contain email", () => {
-    const signinService = makeSigninService()
+    const signinService = makeSigninService(emailValidator)
     const credential = {
       email: "any_email@mail.com"
     }
