@@ -10,7 +10,8 @@
       "program": "${workspaceFolder}/src/index.js",
       "cwd": "${workspaceFolder}",
       "env": {
-        "NODE_OPTIONS": "--experimental-vm-modules --es-module-specifier-resolution=node"
+        "NODE_OPTIONS": "--experimental-vm-modules --es-module-specifier-resolution=node",
+        "MONGO_URL": "mongodb://cadela-user:abc@localhost:27017/cadela"
       }
     }
     {
