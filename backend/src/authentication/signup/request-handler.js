@@ -1,4 +1,4 @@
-import { HttpResponse } from "./http-response"
+import { HttpResponse } from "../../shared/http-response"
 
 export const makeHandler = (signupService) => {
   const execute = async (request) => {
