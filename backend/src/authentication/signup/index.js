@@ -1,19 +1,21 @@
-import { makeUserRepository } from "./user-repository"
+import { mongDbUserRepository } from "./user-repository"
 import { makeEmailValidator } from "./email-validator"
 import { makeEncrypter } from "./encrypter"
 import { makeTokenGenerator } from "./token-generator"
 import { makeSignupService } from "./signup-service"
+import { makeHandler } from "./request-handler"
 
-const userRepository = makeUserRepository()
 const emailValidator = makeEmailValidator()
 const tokenGenerator = makeTokenGenerator()
 const encrypter = makeEncrypter()
 
-const SignupService = makeSignupService(
-  userRepository,
+const signupService = makeSignupService(
+  mongDbUserRepository,
   emailValidator,
   tokenGenerator,
   encrypter
 )
 
-export { SignupService }
+const signupHandler = makeHandler(signupService)
+
+export { signupHandler }

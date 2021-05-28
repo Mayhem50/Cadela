@@ -12,7 +12,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-app.use("/api", router)
+app.use("/", router)
 
 app.use((req, res, next) => {
   next(createError(404))
