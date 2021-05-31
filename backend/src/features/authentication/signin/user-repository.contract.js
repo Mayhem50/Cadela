@@ -13,6 +13,6 @@ export const UserRepositoryContract = (repoUnderTest, beforeEach) =>
         email: USER_EMAIL
       }
 
-      expect(user).toEqual(expectedUser)
+      expect(user).toMatchObject(expectedUser)
     })
   })
