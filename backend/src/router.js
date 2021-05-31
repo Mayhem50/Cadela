@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { AuthRouter } from "./authentication"
+import { AuthRouter } from "./features/authentication"
 
 export const router = Router()
 

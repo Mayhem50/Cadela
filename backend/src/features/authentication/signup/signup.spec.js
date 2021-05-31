@@ -1,5 +1,5 @@
 import { jest, beforeEach } from "@jest/globals"
-import { InternalError, InvalidParamError } from "../../shared/errors"
+import { InternalError, InvalidParamError } from "../../../shared/errors"
 import { makeSignupService } from "./signup-service"
 import {
   UserRepositoryContract,

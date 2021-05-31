@@ -3,7 +3,7 @@ import {
   InvalidParamError,
   InternalError,
   throwAppError
-} from "../shared/errors"
+} from "../../shared/errors"
 
 const RAW_DATA = {}
 

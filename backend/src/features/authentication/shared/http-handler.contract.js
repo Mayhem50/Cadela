@@ -1,4 +1,4 @@
-import { InternalError, InvalidParamError } from "../../shared/errors"
+import { InternalError, InvalidParamError } from "../../../shared/errors"
 
 export const HttpPostHandlerContract = (
   serviceName,

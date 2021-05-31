@@ -1,7 +1,7 @@
 import { Router } from "express"
 import { signupHandler } from "./signup"
 import { signinHandler } from "./signin"
-import { makeCallback } from "../shared/make-callback"
+import { makeCallback } from "../../shared/make-callback"
 
 export const router = Router()
 

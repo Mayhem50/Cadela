@@ -1,10 +1,9 @@
-import { HttpResponse } from "../../shared/http-response"
+import { HttpResponse } from "../../../shared/http-response"
 
-export const makeHandler = (signupService) => {
+export const makeHandler = (signinService) => {
   const execute = async (request) => {
     try {
-      const response = await signupService.signup(request.user)
-
+      const response = await signinService.sign(request.credential)
       return HttpResponse.ok(response.body)
     } catch (error) {
       return error.name === "InvalidParamError"

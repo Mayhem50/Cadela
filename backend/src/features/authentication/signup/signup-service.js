@@ -2,7 +2,7 @@ import {
   InternalError,
   InvalidParamError,
   throwAppError
-} from "../../shared/errors"
+} from "../../../shared/errors"
 
 export const makeSignupService = ({
   userRepository,
