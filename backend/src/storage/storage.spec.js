@@ -1,5 +1,10 @@
+import { InvalidParamError } from "../shared/errors"
+
 const makeStoreService = () => {
   const store = (data) => {
+    if (!data) {
+      throw InvalidParamError("data")
+    }
     return { body: { success: true } }
   }
 
@@ -11,5 +16,10 @@ describe("Storage", () => {
     const storageService = makeStoreService()
     const response = storageService.store({})
     expect(response.body.success).toBe(true)
+  })
+
+  it("Throw  an invalid parameter error if no data provided", () => {
+    const storageService = makeStoreService()
+    expect(storageService.store).toThrow(InvalidParamError("data"))
   })
 })
