@@ -1,6 +1,7 @@
 import { InternalError } from "./internal-error"
 
 export * from "./internal-error"
+export * from "./unauthorized-error"
 export * from "./invalid-param-error"
 
 export const throwAppError = (error) => {
