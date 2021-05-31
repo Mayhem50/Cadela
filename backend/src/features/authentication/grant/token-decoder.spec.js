@@ -1,20 +1,7 @@
 import { jest } from "@jest/globals"
 import { InternalError } from "@utils/errors"
-import Jwt from "jsonwebtoken"
+import { makeTokenDecoder } from "./token-decoder"
 import { TokenDecoderContract } from "./token-decoder.contract"
-
-const makeTokenDecoder = () => {
-  const decode = async (token) => {
-    try {
-      const { userId } = Jwt.decode(token, process.env.JWT_SECRET)
-      return userId
-    } catch (error) {
-      throw InternalError()
-    }
-  }
-
-  return { decode }
-}
 
 const makeMockTokenDecoder = () => {
   const tokenDecoder = makeTokenDecoder()
