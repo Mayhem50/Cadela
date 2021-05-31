@@ -1,7 +1,7 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InvalidParamError, InternalError } from "@utils/errors"
-import { HttpResponse } from "@utils/http-response"
 import { HttpPostHandlerContract } from "../shared/http-handler.contract"
+import { makeHandler } from "./request-handler"
 import { makeStoreService } from "./store-service"
 
 const RAW_DATA = {}
@@ -10,22 +10,6 @@ const USER_ID = 1664
 const makeRepository = () => {
   const save = jest.fn(async (userId, data) => {})
   return { save }
-}
-
-const makeHandler = (storageService) => {
-  const execute = async (request) => {
-    try {
-      const response = await storageService.store(request.userId, request.data)
-
-      return HttpResponse.ok(response.body)
-    } catch (error) {
-      return error.name === "InvalidParamError"
-        ? HttpResponse.requestError({ error })
-        : HttpResponse.internalError({ error })
-    }
-  }
-
-  return { execute }
 }
 
 const dataRepository = makeRepository()
