@@ -1,4 +1,4 @@
-import { client } from "./mongo-client"
+import { client } from "../../shared/mongo-client"
 
 export const makeUserRepository = (client) => {
   const prettyfyUser = (user) => {

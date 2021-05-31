@@ -1,6 +1,6 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InvalidParamError, InternalError } from "@utils/errors"
-import { HttpPostHandlerContract } from "../shared/http-handler.contract"
+import { HttpPostHandlerContract } from "../../shared/http-handler.contract"
 import { makeHandler } from "./request-handler"
 import { makeStoreService } from "./store-service"
 
