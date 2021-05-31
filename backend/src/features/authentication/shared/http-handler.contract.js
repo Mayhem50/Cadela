@@ -6,7 +6,8 @@ export const HttpPostHandlerContract = (
     handlerUnderTestFactory,
     serviceFactory,
     serviceFactoryParameters,
-    defaultPayload
+    defaultPayload,
+    keysToBeDefined = []
   }
 ) =>
   describe(`${serviceName} Http POST Handler`, () => {
@@ -24,7 +25,9 @@ export const HttpPostHandlerContract = (
       const response = await handler.execute(request)
 
       expect(response.body).toBeDefined()
-      expect(response.body.token).toBeDefined()
+      keysToBeDefined.forEach((key) => {
+        expect(response.body[key]).toBeDefined()
+      })
       expect(response.statusCode).toBe(200)
     })
 

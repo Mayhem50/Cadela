@@ -226,7 +226,8 @@ describe("Signin", () => {
     },
     defaultPayload: {
       credential: { email: USER_EMAIL, password: "any_password" }
-    }
+    },
+    keysToBeDefined: ["token"]
   })
   UserRepositoryContract(makeUserRepository(true))
   TokenGeneratorContract(makeTokenGenerator())

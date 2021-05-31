@@ -1,31 +1,31 @@
 import { jest, beforeEach } from "@jest/globals"
-import { InvalidParamError, InternalError, throwAppError } from "@utils/errors"
+import { InvalidParamError, InternalError } from "@utils/errors"
+import { HttpResponse } from "@utils/http-response"
+import { HttpPostHandlerContract } from "../authentication/shared/http-handler.contract"
+import { makeStoreService } from "./store-service"
 
 const RAW_DATA = {}
 const USER_ID = 1664
 
-const makeStoreService = ({ dataRepository } = {}) => {
-  const store = async (userId, data) => {
-    try {
-      if (!userId) {
-        throw InvalidParamError("userId")
-      }
-      if (!data) {
-        throw InvalidParamError("data")
-      }
-      await dataRepository.save(userId, data)
-      return { body: { success: true } }
-    } catch (error) {
-      throwAppError(error)
-    }
-  }
-
-  return { store }
-}
-
 const makeRepository = () => {
   const save = jest.fn(async (userId, data) => {})
   return { save }
+}
+
+const makeHandler = (storageService) => {
+  const execute = async (request) => {
+    try {
+      const response = await storageService.store(request.userId, request.data)
+
+      return HttpResponse.ok(response.body)
+    } catch (error) {
+      return error.name === "InvalidParamError"
+        ? HttpResponse.requestError({ error })
+        : HttpResponse.internalError({ error })
+    }
+  }
+
+  return { execute }
 }
 
 const dataRepository = makeRepository()
@@ -57,5 +57,13 @@ describe("Storage", () => {
     await expect(storageService.store(USER_ID, RAW_DATA)).rejects.toEqual(
       InternalError()
     )
+  })
+
+  HttpPostHandlerContract("Storage", {
+    handlerUnderTestFactory: makeHandler,
+    serviceFactory: makeStoreService,
+    defaultPayload: { userId: USER_ID, data: RAW_DATA },
+    serviceFactoryParameters: { dataRepository },
+    keysToBeDefined: ["success"]
   })
 })

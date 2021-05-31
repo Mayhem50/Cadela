@@ -240,7 +240,8 @@ describe("Signup", () => {
       tokenGenerator,
       encrypter
     },
-    defaultPayload: { user: { ...COMPLETE_USER } }
+    defaultPayload: { user: { ...COMPLETE_USER } },
+    keysToBeDefined: ["token"]
   })
   UserRepositoryContract(makeUserRepository())
   EmailValidatorContract(makeEmailValidator())
