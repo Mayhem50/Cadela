@@ -1,8 +1,4 @@
-import {
-  InternalError,
-  InvalidParamError,
-  throwAppError
-} from "../../../shared/errors"
+import { InternalError, InvalidParamError, throwAppError } from "@utils/errors"
 
 export const makeSigninService = ({
   emailValidator,

@@ -10,5 +10,8 @@ export default {
 
   testMatch: ["**/*.test.js", "**/*.spec.js"],
   preset: "@shelf/jest-mongodb",
-  watchPathIgnorePatterns: ["node_modules", "output", "globalConfig"]
+  watchPathIgnorePatterns: ["node_modules", "output", "globalConfig"],
+  moduleNameMapper: {
+    "^@utils(.*)$": "<rootDir>/src/utils$1"
+  }
 }

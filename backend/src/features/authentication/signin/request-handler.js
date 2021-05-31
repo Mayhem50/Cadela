@@ -1,4 +1,4 @@
-import { HttpResponse } from "../../../shared/http-response"
+import { HttpResponse } from "@utils/http-response"
 
 export const makeHandler = (signinService) => {
   const execute = async (request) => {

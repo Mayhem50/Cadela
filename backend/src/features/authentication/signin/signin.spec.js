@@ -1,5 +1,5 @@
 import { jest, beforeEach } from "@jest/globals"
-import { InternalError, InvalidParamError } from "../../../shared/errors"
+import { InternalError, InvalidParamError } from "@utils/errors"
 import { HttpPostHandlerContract } from "../shared/http-handler.contract"
 import { EmailValidatorContract } from "./email-validator.contract"
 import { EncrypterContract } from "./encrypter.contract"
