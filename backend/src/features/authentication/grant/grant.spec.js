@@ -1,24 +1,9 @@
 import { jest, beforeEach } from "@jest/globals"
-import { InternalError, InvalidParamError, throwAppError } from "@utils/errors"
+import { InternalError, InvalidParamError } from "@utils/errors"
+import { makeGrantService } from "./grant-service"
 
 const TOKEN = "any_token"
 const USER_ID = "any_user_id"
-
-const makeGrantService = (encrypter) => {
-  const grant = async (token) => {
-    try {
-      if (!token) {
-        throw InvalidParamError("token")
-      }
-      const userId = await encrypter.descrypt(token)
-      return { userId }
-    } catch (error) {
-      throwAppError(error)
-    }
-  }
-
-  return { grant }
-}
 
 const makeEncrypter = (isValid = true) => {
   const descrypt = jest.fn(async (token) => {
