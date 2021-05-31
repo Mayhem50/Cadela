@@ -1,11 +1,14 @@
 import { jest, beforeEach } from "@jest/globals"
-import { InternalError } from "@utils/errors"
+import { InternalError, InvalidParamError } from "@utils/errors"
 
 const TOKEN = "any_token"
 const USER_ID = "any_user_id"
 
 const makeGrantService = (encrypter) => {
   const grant = async (token) => {
+    if (!token) {
+      throw InvalidParamError("token")
+    }
     const userId = await encrypter.descrypt(token)
     return { userId }
   }
@@ -38,5 +41,12 @@ describe("Grant user", () => {
     const encrypter = makeEncrypter(false)
     const grantService = makeGrantService(encrypter)
     await expect(grantService.grant(TOKEN)).rejects.toEqual(InternalError())
+  })
+
+  it("Throw invalid parameter error if fail no token", async () => {
+    const grantService = makeGrantService(encrypter)
+    await expect(grantService.grant()).rejects.toEqual(
+      InvalidParamError("token")
+    )
   })
 })
