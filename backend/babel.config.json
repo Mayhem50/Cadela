@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./src"],
+      "alias": {
+        "@utils": "./src/utils"
+      }
+    }]
+  ],
+  "sourceMaps": "inline",
+  "ignore": ["**/*.test.js", "**/*.spec.js"]
+}

@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "Backend for Cadela",
   "scripts": {
+    "build": "npx babel src --out-dir dist",
     "start": "node --experimental-vm-modules ./src",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests --forceExit",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests --forceExit --detectOpenHandles",
     "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch --silent --verbose --detectOpenHandles",
     "prepare": "cd .. && husky install backend/.husky"
   },
@@ -23,7 +24,11 @@
   "homepage": "https://github.com/Mayhem50/Cadela#readme",
   "type": "module",
   "devDependencies": {
+    "@babel/cli": "^7.14.3",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
     "@types/jest": "^26.0.23",
+    "babel-plugin-module-resolver": "^4.1.0",
     "cd": "^0.3.3",
     "husky": "^6.0.0",
     "jest": "^27.0.1",
