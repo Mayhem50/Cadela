@@ -4,7 +4,7 @@
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,    
     "paths": {
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["./src/utils/*"]
     }
   },
   "include": [
