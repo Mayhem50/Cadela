@@ -7,6 +7,9 @@ const USER_ID = 1664
 const makeStoreService = ({ dataRepository } = {}) => {
   const store = async (userId, data) => {
     try {
+      if (!userId) {
+        throw InvalidParamError("userId")
+      }
       if (!data) {
         throw InvalidParamError("data")
       }
@@ -37,8 +40,15 @@ describe("Storage", () => {
 
   it("Throw  an invalid parameter error if no data provided", async () => {
     const storageService = makeStoreService({ dataRepository })
-    await expect(storageService.store()).rejects.toEqual(
+    await expect(storageService.store(USER_ID)).rejects.toEqual(
       InvalidParamError("data")
+    )
+  })
+
+  it("Throw  an invalid parameter error if no userId provided", async () => {
+    const storageService = makeStoreService({ dataRepository })
+    await expect(storageService.store()).rejects.toEqual(
+      InvalidParamError("userId")
     )
   })
 
