@@ -49,4 +49,11 @@ describe("Grant user", () => {
       InvalidParamError("token")
     )
   })
+
+  it("Throw invalid parameter error if fail token is empty string", async () => {
+    const grantService = makeGrantService(encrypter)
+    await expect(grantService.grant("")).rejects.toEqual(
+      InvalidParamError("token")
+    )
+  })
 })
