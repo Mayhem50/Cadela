@@ -1,4 +1,5 @@
 import { jest, beforeEach } from "@jest/globals"
+import { InternalError } from "@utils/errors"
 
 const TOKEN = "any_token"
 const USER_ID = "any_user_id"
@@ -12,8 +13,11 @@ const makeGrantService = (encrypter) => {
   return { grant }
 }
 
-const makeEncrypter = () => {
+const makeEncrypter = (isValid = true) => {
   const descrypt = jest.fn(async (token) => {
+    if (!isValid) {
+      throw InternalError()
+    }
     return USER_ID
   })
 
@@ -28,5 +32,11 @@ describe("Grant user", () => {
     const response = await grantService.grant(TOKEN)
     expect(encrypter.descrypt).toBeCalledWith(TOKEN)
     expect(response.userId).toEqual(USER_ID)
+  })
+
+  it("Throw internal error if fail to decode", async () => {
+    const encrypter = makeEncrypter(false)
+    const grantService = makeGrantService(encrypter)
+    await expect(grantService.grant(TOKEN)).rejects.toEqual(InternalError())
   })
 })
