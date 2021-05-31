@@ -4,7 +4,7 @@
   "description": "Backend for Cadela",
   "scripts": {
     "build": "npx babel src --out-dir dist",
-    "start": "node --experimental-vm-modules ./src",
+    "start": "node --experimental-vm-modules ./dist",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests --forceExit --detectOpenHandles",
     "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watch --silent --verbose --detectOpenHandles",
     "prepare": "cd .. && husky install backend/.husky"
