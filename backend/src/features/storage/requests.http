@@ -1,4 +1,4 @@
-POST http://{{host}}/api/store HTTP/1.1
+POST {{host}}/api/store HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
