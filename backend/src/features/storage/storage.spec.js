@@ -8,7 +8,9 @@ const RAW_DATA = {}
 const USER_ID = 1664
 
 const makeRepository = () => {
-  const save = jest.fn(async (userId, data) => {})
+  const save = jest.fn(async (userId, data) => {
+    return true
+  })
   return { save }
 }
 
