@@ -17,7 +17,7 @@ describe("MongoDB User Repository", () => {
   UserRepositoryContract(
     makeUserRepository(client),
     beforeEach(async () => {
-      await client.connect()
+      !client.isConnected() && (await client.connect())
       const collection = await client
         .db(process.env.DB_NAME)
         .collection("users")
