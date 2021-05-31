@@ -7,7 +7,7 @@ const USER_ID = "any_user_id"
 
 const makeTokenDecoder = (isValid = true) => {
   const decode = jest.fn(async (token) => {
-    if (!isValid) {
+    if (!token || !isValid) {
       throw InternalError()
     }
     return USER_ID
@@ -56,6 +56,11 @@ describe("Grant user", () => {
       const tokenDecoder = makeTokenDecoder()
       const userId = await tokenDecoder.decode(TOKEN)
       expect(userId).toBe(USER_ID)
+    })
+
+    it("Throw an exception if no token provided", async () => {
+      const tokenDecoder = makeTokenDecoder()
+      await expect(tokenDecoder.decode()).rejects.toEqual(InternalError())
     })
   })
 })
