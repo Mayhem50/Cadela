@@ -62,5 +62,10 @@ describe("Grant user", () => {
       const tokenDecoder = makeTokenDecoder()
       await expect(tokenDecoder.decode()).rejects.toEqual(InternalError())
     })
+
+    it("Throw an exception if token provided is empty", async () => {
+      const tokenDecoder = makeTokenDecoder()
+      await expect(tokenDecoder.decode("")).rejects.toEqual(InternalError())
+    })
   })
 })
