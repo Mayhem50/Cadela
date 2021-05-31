@@ -6,7 +6,7 @@ export const makeGrantService = (encrypter) => {
       if (!token) {
         throw InvalidParamError("token")
       }
-      const userId = await encrypter.descrypt(token)
+      const userId = await encrypter.decode(token)
       return { userId }
     } catch (error) {
       throwAppError(error)
