@@ -1,18 +1,23 @@
 import { jest, beforeEach } from "@jest/globals"
-import { InvalidParamError, InternalError } from "../shared/errors"
+import {
+  InvalidParamError,
+  InternalError,
+  throwAppError
+} from "../shared/errors"
 
 const RAW_DATA = {}
 
 const makeStoreService = ({ dataRepository } = {}) => {
   const store = async (data) => {
-    if (!dataRepository) {
-      throw InternalError()
+    try {
+      if (!data) {
+        throw InvalidParamError("data")
+      }
+      await dataRepository.save(data)
+      return { body: { success: true } }
+    } catch (error) {
+      throwAppError(error)
     }
-    if (!data) {
-      throw InvalidParamError("data")
-    }
-    dataRepository.save(data)
-    return { body: { success: true } }
   }
 
   return { store }
