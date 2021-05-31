@@ -5,15 +5,17 @@ export const makeCallback = (handler) => (req, res) => {
     .catch((response) => res.status(response.statusCode).json(response.body))
 }
 
-export const makeAuthCallback = async (grantService, handler) => (req, res) => {
+export const makeAuthCallback = (grantService, handler) => async (req, res) => {
   try {
-    const userId = await grantService.grant(
-      req.header["Authorization"].split(" ")[1]
-    )
+    const token = req.headers["authorization"].split(" ")[1]
+    const { userId } = await grantService.grant(token)
     if (!userId) {
       return res.status(400).json({ message: "Unautorized" })
     }
 
+    req.body = { ...req.body, userId }
     return makeCallback(handler)(req, res)
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json(error)
+  }
 }

@@ -9,7 +9,7 @@ export const makeStoreService = ({ dataRepository } = {}) => {
       if (!data) {
         throw InvalidParamError("data")
       }
-      await dataRepository.save(userId, data)
+      await dataRepository.store(userId, data)
       return { body: { success: true } }
     } catch (error) {
       throwAppError(error)

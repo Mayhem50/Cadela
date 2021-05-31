@@ -8,10 +8,10 @@ const RAW_DATA = {}
 const USER_ID = 1664
 
 const makeRepository = () => {
-  const save = jest.fn(async (userId, data) => {
+  const store = jest.fn(async (userId, data) => {
     return true
   })
-  return { save }
+  return { store }
 }
 
 const dataRepository = makeRepository()
@@ -20,7 +20,7 @@ describe("Storage", () => {
   it("Return success true if it success to store data", async () => {
     const storageService = makeStoreService({ dataRepository })
     const response = await storageService.store(USER_ID, RAW_DATA)
-    expect(dataRepository.save).toBeCalledWith(USER_ID, RAW_DATA)
+    expect(dataRepository.store).toBeCalledWith(USER_ID, RAW_DATA)
     expect(response.body.success).toBe(true)
   })
 
