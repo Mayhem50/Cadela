@@ -10,7 +10,7 @@ import { EmailValidatorContract } from "./email-validator.contract"
 import { TokenGeneratorContract } from "./token-generator.contract"
 import { EncrypterContract } from "./encrypter.contract"
 import { makeHandler } from "./request-handler"
-import { HttpPostHandlerContract } from "../shared/http-handler.contract"
+import { HttpPostHandlerContract } from "../../shared/http-handler.contract"
 
 const makeUserRepository = () => {
   let users = []

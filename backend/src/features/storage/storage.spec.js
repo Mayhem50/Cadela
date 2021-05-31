@@ -1,7 +1,7 @@
 import { jest, beforeEach } from "@jest/globals"
 import { InvalidParamError, InternalError } from "@utils/errors"
 import { HttpResponse } from "@utils/http-response"
-import { HttpPostHandlerContract } from "../authentication/shared/http-handler.contract"
+import { HttpPostHandlerContract } from "../shared/http-handler.contract"
 import { makeStoreService } from "./store-service"
 
 const RAW_DATA = {}
