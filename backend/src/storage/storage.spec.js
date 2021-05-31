@@ -1,10 +1,13 @@
 import { jest, beforeEach } from "@jest/globals"
-import { InvalidParamError } from "../shared/errors"
+import { InvalidParamError, InternalError } from "../shared/errors"
 
 const RAW_DATA = {}
 
 const makeStoreService = (dataRepository) => {
   const store = async (data) => {
+    if (!dataRepository) {
+      throw InternalError()
+    }
     if (!data) {
       throw InvalidParamError("data")
     }
@@ -31,9 +34,16 @@ describe("Storage", () => {
   })
 
   it("Throw  an invalid parameter error if no data provided", async () => {
-    const storageService = makeStoreService()
+    const storageService = makeStoreService(dataRepository)
     await expect(storageService.store()).rejects.toEqual(
       InvalidParamError("data")
+    )
+  })
+
+  it("Throw  an internal error if no repository provided", async () => {
+    const storageService = makeStoreService()
+    await expect(storageService.store(RAW_DATA)).rejects.toEqual(
+      InternalError()
     )
   })
 })
