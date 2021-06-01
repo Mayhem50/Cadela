@@ -7,6 +7,8 @@ import io.mockk.impl.annotations.SpyK
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.io.IOException
+import java.lang.Exception
 import java.security.InvalidParameterException
 
 /**
@@ -44,7 +46,7 @@ class SigninService(private val api: Api, private val tokenRepository: TokenRepo
 class SinginTest {
     private val api = spyk<Api>()
     private val tokenRepository = spyk<TokenRepository>()
-    private val sut = SigninService(api, tokenRepository)
+    private var sut = SigninService(api, tokenRepository)
 
     private val email = "any_email@mail.com"
     private val password = "any_password"
@@ -70,4 +72,14 @@ class SinginTest {
         val exception = assertThrows<InvalidParameterException> { sut.signin(email, "") }
         assertEquals("Empty password", exception.message)
     }
+
+    @Test
+    fun `Throw exception if api fails`(){
+        val failApi = mockk<Api>()
+        every { failApi.signin(email, password) } throws  ApiException()
+        sut = SigninService(failApi, tokenRepository)
+        assertThrows<ApiException> { sut.signin(email, password) }
+    }
 }
+
+class ApiException : Exception() {}
