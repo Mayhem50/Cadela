@@ -17,7 +17,10 @@ import java.security.InvalidParameterException
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 
+class ApiException : Exception() {}
+
 class Api {
+
     fun signin(email: String, password: String): String {
         return "any_token"
     }
@@ -89,5 +92,3 @@ class SinginTest {
         assertThrows<IOException> { sut.signin(email, password) }
     }
 }
-
-class ApiException : Exception() {}
