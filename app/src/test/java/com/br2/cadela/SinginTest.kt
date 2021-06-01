@@ -32,6 +32,9 @@ class SigninService(private val api: Api, private val tokenRepository: TokenRepo
         if(email.isEmpty()){
             throw InvalidParameterException("Empty email")
         }
+        if(password.isEmpty()){
+            throw InvalidParameterException("Empty password")
+        }
         val response = api.signin(email, password)
         tokenRepository.save(response)
         return response
@@ -57,8 +60,14 @@ class SinginTest {
     }
 
     @Test
-    fun `Throw exception if email `(){
+    fun `Throw exception if email empty`(){
         val exception = assertThrows<InvalidParameterException> { sut.signin("", password) }
         assertEquals("Empty email", exception.message)
+    }
+
+    @Test
+    fun `Throw exception if password empty `(){
+        val exception = assertThrows<InvalidParameterException> { sut.signin(email, "") }
+        assertEquals("Empty password", exception.message)
     }
 }
