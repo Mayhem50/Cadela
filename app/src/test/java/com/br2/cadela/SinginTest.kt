@@ -12,7 +12,6 @@ import java.security.InvalidParameterException
 class ApiException : Exception() {}
 
 class Api {
-
     fun signin(email: String, password: String): String {
         return "any_token"
     }
@@ -32,9 +31,9 @@ class SigninService(private val api: Api, private val tokenRepository: TokenRepo
         if(password.isEmpty()){
             throw InvalidParameterException("Empty password")
         }
-        val response = api.signin(email, password)
-        tokenRepository.save(response)
-        return response
+        val token = api.signin(email, password)
+        tokenRepository.save(token)
+        return token
     }
 }
 
