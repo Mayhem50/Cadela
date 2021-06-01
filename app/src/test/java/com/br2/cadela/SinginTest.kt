@@ -23,7 +23,9 @@ class Api {
 
 class TokenRepository {
     fun save(token: String, userId: String) {
-
+        if(userId.isEmpty()){
+            throw InvalidParameterException("Empty user id")
+        }
     }
 }
 
@@ -89,9 +91,16 @@ class SinginServiceTest {
 }
 
 class TokenRepositoryTest {
+    private val sut =  TokenRepository()
+
     @Test
     fun `Save token for specific user id`(){
-        val sut =  TokenRepository()
         assertDoesNotThrow { sut.save("any_token", "any_user_id") }
+    }
+
+    @Test
+    fun `Throw if user id is empty`(){
+        val exception = assertThrows<InvalidParameterException> { sut.save("any_token", "") }
+        assertEquals("Empty user id", exception.message)
     }
 }
