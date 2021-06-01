@@ -42,12 +42,12 @@ class SigninService(private val api: Api, private val tokenRepository: TokenRepo
 }
 
 class SinginTest {
-    val api = spyk<Api>()
-    val tokenRepository = spyk<TokenRepository>()
-    val sut = SigninService(api, tokenRepository)
+    private val api = spyk<Api>()
+    private val tokenRepository = spyk<TokenRepository>()
+    private val sut = SigninService(api, tokenRepository)
 
-    val email = "any_email@mail.com"
-    val password = "any_password"
+    private val email = "any_email@mail.com"
+    private val password = "any_password"
 
     @Test
     fun `Save token for userId if valid email & password provided`() {
