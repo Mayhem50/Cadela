@@ -80,6 +80,14 @@ class SinginTest {
         sut = SigninService(failApi, tokenRepository)
         assertThrows<ApiException> { sut.signin(email, password) }
     }
+
+    @Test
+    fun `Throw exception if repository fails`(){
+        val failRepository = mockk<TokenRepository>()
+        sut = SigninService(api, failRepository)
+        every { failRepository.save("any_token") } throws  IOException()
+        assertThrows<IOException> { sut.signin(email, password) }
+    }
 }
 
 class ApiException : Exception() {}
