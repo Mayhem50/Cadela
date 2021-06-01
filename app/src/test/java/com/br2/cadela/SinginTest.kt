@@ -19,18 +19,7 @@ class Api {
     }
 }
 
-class TokenRepository {
-    fun save(token: String, userId: String) {
-        if (userId.isEmpty()) {
-            throw InvalidParameterException("Empty user id")
-        }
-        if (token.isEmpty()) {
-            throw InvalidParameterException("Empty token")
-        }
-    }
-}
-
-class SigninService(private val api: Api, private val tokenRepository: TokenRepository) {
+class SigninService(private val api: Api, private val spyTokenRepository: TokenRepository) {
     fun signin(email: String, password: String): String {
         if (email.isEmpty()) {
             throw InvalidParameterException("Empty email")
@@ -39,14 +28,24 @@ class SigninService(private val api: Api, private val tokenRepository: TokenRepo
             throw InvalidParameterException("Empty password")
         }
         val response = api.signin(email, password)
-        tokenRepository.save(response.token, response.user.id)
+        spyTokenRepository.save(response.token, response.user.id)
         return response.token
+    }
+}
+
+object MockTokenRepository {
+    val repository = mockk<TokenRepository>()
+
+    init {
+        every { repository.save(any(), any()) } returns mockk()
+        every { repository.save("", any()) } throws InvalidParameterException("Empty token")
+        every { repository.save(any(), "") } throws InvalidParameterException("Empty user id")
     }
 }
 
 class SinginServiceTest {
     private val api = spyk<Api>()
-    private val tokenRepository = spyk<TokenRepository>()
+    private val tokenRepository = MockTokenRepository.repository
     private var sut = SigninService(api, tokenRepository)
 
     private val email = "any_email@mail.com"
@@ -92,5 +91,5 @@ class SinginServiceTest {
 }
 
 class MockTokenRepositoryContract : TokenRepositoryContract() {
-    override val sut = TokenRepository()
+    override val sut = MockTokenRepository.repository
 }

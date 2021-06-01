@@ -6,7 +6,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.security.InvalidParameterException
 
-abstract class TokenRepositoryContract() {
+abstract class TokenRepositoryContract {
     protected abstract val sut: TokenRepository
 
     @Test
