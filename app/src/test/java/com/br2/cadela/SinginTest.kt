@@ -2,20 +2,12 @@ package com.br2.cadela
 
 
 import io.mockk.*
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.SpyK
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.IOException
 import java.lang.Exception
 import java.security.InvalidParameterException
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 
 class ApiException : Exception() {}
 
