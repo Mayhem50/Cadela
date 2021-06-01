@@ -4,21 +4,25 @@ package com.br2.cadela
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.io.IOException
 import java.lang.Exception
 import java.security.InvalidParameterException
 
+data class User(val id: String, val firstName: String, val lastName: String)
+data class SigninResponse(val user: User, val token: String)
+
 class ApiException : Exception() {}
 
 class Api {
-    fun signin(email: String, password: String): String {
-        return "any_token"
+    fun signin(email: String, password: String): SigninResponse {
+        return SigninResponse(User("any_user_id", "John", "McLane"), "any_token")
     }
 }
 
 class TokenRepository {
-    fun save(token: String) {
+    fun save(token: String, userId: String) {
 
     }
 }
@@ -31,13 +35,13 @@ class SigninService(private val api: Api, private val tokenRepository: TokenRepo
         if(password.isEmpty()){
             throw InvalidParameterException("Empty password")
         }
-        val token = api.signin(email, password)
-        tokenRepository.save(token)
-        return token
+        val response = api.signin(email, password)
+        tokenRepository.save(response.token, response.user.id)
+        return response.token
     }
 }
 
-class SinginTest {
+class SinginServiceTest {
     private val api = spyk<Api>()
     private val tokenRepository = spyk<TokenRepository>()
     private var sut = SigninService(api, tokenRepository)
@@ -50,7 +54,7 @@ class SinginTest {
         val token = sut.signin(email, password)
         verify {
             api.signin(email, password)
-            tokenRepository.save(token)
+            tokenRepository.save(token, "any_user_id")
         }
         assertEquals(token, "any_token")
     }
@@ -79,7 +83,15 @@ class SinginTest {
     fun `Throw exception if repository fails`(){
         val failRepository = mockk<TokenRepository>()
         sut = SigninService(api, failRepository)
-        every { failRepository.save("any_token") } throws  IOException()
+        every { failRepository.save("any_token", "any_user_id") } throws  IOException()
         assertThrows<IOException> { sut.signin(email, password) }
+    }
+}
+
+class TokenRepositoryTest {
+    @Test
+    fun `Save token for specific user id`(){
+        val sut =  TokenRepository()
+        assertDoesNotThrow { sut.save("any_token", "any_user_id") }
     }
 }
