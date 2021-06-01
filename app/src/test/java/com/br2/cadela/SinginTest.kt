@@ -26,6 +26,9 @@ class TokenRepository {
         if(userId.isEmpty()){
             throw InvalidParameterException("Empty user id")
         }
+        if(token.isEmpty()){
+            throw InvalidParameterException("Empty token")
+        }
     }
 }
 
@@ -102,5 +105,11 @@ class TokenRepositoryTest {
     fun `Throw if user id is empty`(){
         val exception = assertThrows<InvalidParameterException> { sut.save("any_token", "") }
         assertEquals("Empty user id", exception.message)
+    }
+
+    @Test
+    fun `Throw if token is empty`(){
+        val exception = assertThrows<InvalidParameterException> { sut.save("", "any_user_id") }
+        assertEquals("Empty token", exception.message)
     }
 }
