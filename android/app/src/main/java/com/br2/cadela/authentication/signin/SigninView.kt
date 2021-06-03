@@ -3,16 +3,19 @@ package com.br2.cadela.authentication.signin
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import com.br2.cadela.R
 import com.br2.cadela.authentication.AuthenticationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,18 +34,25 @@ fun SigninView() {
         )
     ) {
         OutlinedTextField(
+            label = { Text(stringResource(id = R.string.email)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             value = email,
             onValueChange = { email = it },
             modifier = Modifier.padding(Dp(8.0f))
         )
         OutlinedTextField(
+            label = { Text(stringResource(id = R.string.password)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = PasswordVisualTransformation(),
             value = password,
             onValueChange = { password = it },
-            modifier = Modifier.padding(Dp(8.0f))
+            modifier = Modifier.padding(Dp(8.0f)),
         )
-        Button(onClick = { callService(email, password) },
-                modifier = Modifier.padding(Dp(8.0f))) {
-            Text(text = "Signin")
+        Button(
+            onClick = { callService(email, password) },
+            modifier = Modifier.padding(Dp(8.0f))
+        ) {
+            Text(text = stringResource(id = R.string.signin))
         }
     }
 }

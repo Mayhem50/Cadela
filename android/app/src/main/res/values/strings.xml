@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Cadela</string>
     <string name="database_name">cadela-db</string>
+
+    <string name="password">password</string>
+    <string name="email">email</string>
+    <string name="signin">signin</string>
 </resources>
