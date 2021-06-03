@@ -8,10 +8,8 @@ import com.br2.cadela.shared.Api
 import com.br2.cadela.shared.SigninResponse
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.io.IOException
 import java.security.InvalidParameterException
@@ -93,29 +91,8 @@ class SinginServiceTest {
     }
 }
 
-class SigninApiTest {
-
-    private val sut = Mocks.api
-
-    @Test
-    fun `Get signin response for specific user email`() = runBlocking  {
-        val response = sut.signin("any_email@email.com", "any_password")
-        assertEquals("any_token", response.token)
-        assertEquals(Mocks.DEFAULT_USER, response.user)
-    }
-
-    @Test
-    fun `Throw if email is empty`() = runBlocking  {
-        val exception = assertThrows<InvalidParameterException> { sut.signin("", "any_password") }
-        assertEquals("Empty email", exception.message)
-    }
-
-    @Test
-    fun `Throw if token is empty`() = runBlocking  {
-        val exception =
-            assertThrows<InvalidParameterException> { sut.signin("any_email@mail.com", "") }
-        assertEquals("Empty password", exception.message)
-    }
+class MockApiTest : SigninApiContract() {
+    override val sut = Mocks.api
 }
 
 class MockTokenRepositoryContract : TokenRepositoryContract() {
