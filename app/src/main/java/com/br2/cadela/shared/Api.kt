@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.security.InvalidParameterException
 import java.util.concurrent.TimeUnit
 
-class Api(signinClass: Class<SigninApi>, baseUrl: HttpUrl = HttpUrl.get("http://localhost:3000/api/")) {
+class Api(signinClass: Class<SigninApi>, baseUrl: HttpUrl = HttpUrl.get("https://cadela.herokuapp.com/")) {
     private var token: String? = null
     private val okHttpClient = OkHttpClient.Builder().readTimeout(5000, TimeUnit.MILLISECONDS)
         .connectTimeout(5000, TimeUnit.MILLISECONDS).build()
@@ -20,6 +20,7 @@ class Api(signinClass: Class<SigninApi>, baseUrl: HttpUrl = HttpUrl.get("http://
 
 
     private val signinApi = client.create(signinClass)
+
     suspend fun signin(email: String, password: String): SigninResponse {
         if (email.isEmpty()) {
             throw InvalidParameterException("Empty email")
