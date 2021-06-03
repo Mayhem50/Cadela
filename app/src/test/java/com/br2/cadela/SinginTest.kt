@@ -3,7 +3,9 @@ package com.br2.cadela
 
 import com.br2.cadela.authentication.signin.SigninService
 import com.br2.cadela.authentication.signin.TokenRepository
+import com.br2.cadela.authentication.signin.User
 import com.br2.cadela.shared.Api
+import com.br2.cadela.shared.SigninResponse
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -15,16 +17,24 @@ class ApiException : Exception() {}
 
 object Mocks {
     val repository = mockk<TokenRepository>()
+    val api = mockk<Api>()
 
     init {
         every { repository.save(any(), any()) } returns mockk()
         every { repository.save("", any()) } throws InvalidParameterException("Empty token")
         every { repository.save(any(), "") } throws InvalidParameterException("Empty user id")
+
+        every { api.signin(any(), any()) } returns SigninResponse(
+            User("any_user_id", "John", "McLane"),
+            "any_token"
+        )
+        every { api.signin("", any()) } throws InvalidParameterException("Empty email")
+        every { api.signin(any(), "") } throws InvalidParameterException("Empty password")
     }
 }
 
 class SinginServiceTest {
-    private val api = spyk<Api>()
+    private val api = Mocks.api
     private val tokenRepository = Mocks.repository
     private var sut = SigninService(api, tokenRepository)
 
