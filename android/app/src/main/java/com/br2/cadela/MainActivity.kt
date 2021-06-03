@@ -23,16 +23,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         bootstrap()
 
-
-
         setContent {
             CadelaTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    NavHost(navController = rememberNavController(), startDestination = "authentication" ){
-                        composable("authentication") {
-                            AuthView()
-                        }
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = "splash-screen"
+                    ) {
+                        composable("splash-screen") { SplashScreen(navController) }
+                        composable("authentication") { AuthView() }
                     }
                 }
             }
