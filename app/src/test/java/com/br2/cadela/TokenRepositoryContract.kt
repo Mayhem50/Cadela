@@ -1,5 +1,6 @@
 package com.br2.cadela
 
+import com.br2.cadela.authentication.signin.TokenRepository
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

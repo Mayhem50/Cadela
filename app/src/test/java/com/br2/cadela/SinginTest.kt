@@ -1,39 +1,19 @@
 package com.br2.cadela
 
 
+import com.br2.cadela.authentication.signin.SigninService
+import com.br2.cadela.authentication.signin.TokenRepository
+import com.br2.cadela.shared.Api
 import io.mockk.*
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.io.IOException
-import java.lang.Exception
 import java.security.InvalidParameterException
-
-data class User(val id: String, val firstName: String, val lastName: String)
-data class SigninResponse(val user: User, val token: String)
 
 class ApiException : Exception() {}
 
-class Api {
-    fun signin(email: String, password: String): SigninResponse {
-        return SigninResponse(User("any_user_id", "John", "McLane"), "any_token")
-    }
-}
-
-class SigninService(private val api: Api, private val spyTokenRepository: TokenRepository) {
-    fun signin(email: String, password: String): String {
-        if (email.isEmpty()) {
-            throw InvalidParameterException("Empty email")
-        }
-        if (password.isEmpty()) {
-            throw InvalidParameterException("Empty password")
-        }
-        val response = api.signin(email, password)
-        spyTokenRepository.save(response.token, response.user.id)
-        return response.token
-    }
-}
-
-object MockTokenRepository {
+object Mocks {
     val repository = mockk<TokenRepository>()
 
     init {
@@ -45,7 +25,7 @@ object MockTokenRepository {
 
 class SinginServiceTest {
     private val api = spyk<Api>()
-    private val tokenRepository = MockTokenRepository.repository
+    private val tokenRepository = Mocks.repository
     private var sut = SigninService(api, tokenRepository)
 
     private val email = "any_email@mail.com"
@@ -91,5 +71,5 @@ class SinginServiceTest {
 }
 
 class MockTokenRepositoryContract : TokenRepositoryContract() {
-    override val sut = MockTokenRepository.repository
+    override val sut = Mocks.repository
 }
