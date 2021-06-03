@@ -10,6 +10,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.br2.cadela.ui.theme.Red200
@@ -40,8 +41,8 @@ fun SplashScreen(navController: NavController) {
                 painter = painterResource(id = R.drawable.logo_without_gradient),
                 contentDescription = null,
                 Modifier
-                    .width(Dp(120f))
-                    .height(Dp(120f)),
+                    .width(120f.dp)
+                    .height(120f.dp),
                 alignment = Alignment.Center,
                 alpha = infinitelyAnimatedFloat.value
             )
