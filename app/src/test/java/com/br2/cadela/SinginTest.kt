@@ -7,6 +7,7 @@ import com.br2.cadela.authentication.signin.User
 import com.br2.cadela.shared.Api
 import com.br2.cadela.shared.SigninResponse
 import io.mockk.*
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -28,11 +29,11 @@ object Mocks {
         every { repository.save("", any()) } throws InvalidParameterException("Empty token")
         every { repository.save(any(), "") } throws InvalidParameterException("Empty user id")
 
-        every { api.signin(any(), any()) } returns SigninResponse(
+        coEvery { api.signin(any(), any()) } returns SigninResponse(
             DEFAULT_USER, "any_token"
         )
-        every { api.signin("", any()) } throws InvalidParameterException("Empty email")
-        every { api.signin(any(), "") } throws InvalidParameterException("Empty password")
+        coEvery { api.signin("", any()) } throws InvalidParameterException("Empty email")
+        coEvery { api.signin(any(), "") } throws InvalidParameterException("Empty password")
     }
 }
 
@@ -45,9 +46,9 @@ class SinginServiceTest {
     private val password = "any_password"
 
     @Test
-    fun `Save token for userId if valid email & password provided`() {
+    fun `Save token for userId if valid email & password provided`() = runBlocking {
         val token = sut.signin(email, password)
-        verify {
+        coVerify {
             api.signin(email, password)
             tokenRepository.save(token, "any_user_id")
         }
@@ -55,27 +56,27 @@ class SinginServiceTest {
     }
 
     @Test
-    fun `Throw exception if email empty`() {
+    fun `Throw exception if email empty`() = runBlocking  {
         val exception = assertThrows<InvalidParameterException> { sut.signin("", password) }
         assertEquals("Empty email", exception.message)
     }
 
     @Test
-    fun `Throw exception if password empty `() {
+    fun `Throw exception if password empty `() = runBlocking  {
         val exception = assertThrows<InvalidParameterException> { sut.signin(email, "") }
         assertEquals("Empty password", exception.message)
     }
 
     @Test
-    fun `Throw exception if api fails`() {
+    fun `Throw exception if api fails`() = runBlocking  {
         val failApi = mockk<Api>()
-        every { failApi.signin(email, password) } throws ApiException()
+        coEvery { failApi.signin(email, password) } throws ApiException()
         sut = SigninService(failApi, tokenRepository)
         assertThrows<ApiException> { sut.signin(email, password) }
     }
 
     @Test
-    fun `Throw exception if repository fails`() {
+    fun `Throw exception if repository fails`() = runBlocking  {
         val failRepository = mockk<TokenRepository>()
         sut = SigninService(api, failRepository)
         every { failRepository.save("any_token", "any_user_id") } throws IOException()
@@ -83,10 +84,10 @@ class SinginServiceTest {
     }
 
     @Test
-    fun `Trim email`(){
+    fun `Trim email`() = runBlocking {
         val nonTrimmedEmail = " any_email@mail.com "
         sut.signin(nonTrimmedEmail, password)
-        verify {
+        coVerify {
             api.signin("any_email@mail.com", password)
         }
     }
@@ -97,20 +98,20 @@ class SigninApiTest {
     private val sut = Mocks.api
 
     @Test
-    fun `Get signin response for specific user email`() {
+    fun `Get signin response for specific user email`() = runBlocking  {
         val response = sut.signin("any_email@email.com", "any_password")
         assertEquals("any_token", response.token)
         assertEquals(Mocks.DEFAULT_USER, response.user)
     }
 
     @Test
-    fun `Throw if email is empty`() {
+    fun `Throw if email is empty`() = runBlocking  {
         val exception = assertThrows<InvalidParameterException> { sut.signin("", "any_password") }
         assertEquals("Empty email", exception.message)
     }
 
     @Test
-    fun `Throw if token is empty`() {
+    fun `Throw if token is empty`() = runBlocking  {
         val exception =
             assertThrows<InvalidParameterException> { sut.signin("any_email@mail.com", "") }
         assertEquals("Empty password", exception.message)
