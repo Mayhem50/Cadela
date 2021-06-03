@@ -5,7 +5,7 @@ import com.br2.cadela.authentication.signin.SigninResponse
 import com.br2.cadela.authentication.signin.SigninService
 import com.br2.cadela.authentication.signin.TokenRepository
 import com.br2.cadela.authentication.signin.User
-import com.br2.cadela.shared.Api
+import com.br2.cadela.authentication.signin.SigninApi
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -18,7 +18,7 @@ class ApiException : Exception() {}
 
 object Mocks {
     val repository = mockk<TokenRepository>()
-    val api = mockk<Api>()
+    val api = mockk<SigninApi>()
 
     val DEFAULT_USER = User("any_user_id", "John", "McLane")
 
@@ -67,7 +67,7 @@ class SinginServiceTest {
 
     @Test
     fun `Throw exception if api fails`() = runBlocking  {
-        val failApi = mockk<Api>()
+        val failApi = mockk<SigninApi>()
         coEvery { failApi.signin(email, password) } throws ApiException()
         sut = SigninService(failApi, tokenRepository)
         assertThrows<ApiException> { sut.signin(email, password) }

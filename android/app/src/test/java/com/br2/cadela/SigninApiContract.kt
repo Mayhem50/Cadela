@@ -1,6 +1,6 @@
 package com.br2.cadela
 
-import com.br2.cadela.shared.Api
+import com.br2.cadela.authentication.signin.SigninApi
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.assertThrows
 import java.security.InvalidParameterException
 
 abstract class SigninApiContract {
-    protected abstract val sut: Api
+    protected abstract val sut: SigninApi
 
     @Test
     fun `Get signin response for specific user email`() = runBlocking {

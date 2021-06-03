@@ -1,22 +1,20 @@
 package com.br2.cadela
 
+import com.br2.cadela.authentication.signin.SigninApiService
 import com.br2.cadela.authentication.signin.SigninApi
-import com.br2.cadela.shared.Api
-import okhttp3.HttpUrl
-import okhttp3.HttpUrl.Companion.toHttpUrl
+import com.br2.cadela.shared.ApiClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.Before
 import org.junit.jupiter.api.*
 import java.net.HttpURLConnection
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SigninApiTest: SigninApiContract() {
-    override val sut: Api
+    override val sut: SigninApi
         get() = _sut
 
         private val mockServer = MockWebServer()
-        private lateinit var _sut: Api
+        private lateinit var _sut: SigninApi
 
         @BeforeAll
         fun setup(){
@@ -34,7 +32,8 @@ class SigninApiTest: SigninApiContract() {
                         "  }\n" +
                         "}")
             mockServer.enqueue(mockResponse)
-            _sut = Api(SigninApi::class.java, mockServer.url("/"))
+            val apiClient = ApiClient(mockServer.url("/"))
+            _sut = SigninApi(apiClient)
         }
 
         @AfterAll

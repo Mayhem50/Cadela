@@ -1,9 +1,8 @@
 package com.br2.cadela.authentication.signin
 
-import com.br2.cadela.shared.Api
 import java.security.InvalidParameterException
 
-class SigninService(private val api: Api, private val tokenRepository: TokenRepository) {
+class SigninService(private val api: SigninApi, private val tokenRepository: TokenRepository) {
     suspend fun signin(email: String, password: String): String {
         if (email.isEmpty()) {
             throw InvalidParameterException("Empty email")
