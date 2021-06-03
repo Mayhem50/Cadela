@@ -11,7 +11,7 @@ class SigninService(private val api: Api, private val spyTokenRepository: TokenR
         if (password.isEmpty()) {
             throw InvalidParameterException("Empty password")
         }
-        val response = api.signin(email, password)
+        val response = api.signin(email.trim(), password)
         spyTokenRepository.save(response.token, response.user.id)
         return response.token
     }

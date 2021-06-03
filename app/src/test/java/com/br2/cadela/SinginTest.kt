@@ -81,6 +81,15 @@ class SinginServiceTest {
         every { failRepository.save("any_token", "any_user_id") } throws IOException()
         assertThrows<IOException> { sut.signin(email, password) }
     }
+
+    @Test
+    fun `Trim email`(){
+        val nonTrimmedEmail = " any_email@mail.com "
+        sut.signin(nonTrimmedEmail, password)
+        verify {
+            api.signin("any_email@mail.com", password)
+        }
+    }
 }
 
 class SigninApiTest {
@@ -97,14 +106,14 @@ class SigninApiTest {
     @Test
     fun `Throw if email is empty`() {
         val exception = assertThrows<InvalidParameterException> { sut.signin("", "any_password") }
-        Assertions.assertEquals("Empty email", exception.message)
+        assertEquals("Empty email", exception.message)
     }
 
     @Test
     fun `Throw if token is empty`() {
         val exception =
             assertThrows<InvalidParameterException> { sut.signin("any_email@mail.com", "") }
-        Assertions.assertEquals("Empty password", exception.message)
+        assertEquals("Empty password", exception.message)
     }
 }
 
