@@ -1,11 +1,11 @@
 package com.br2.cadela
 
 
+import com.br2.cadela.authentication.signin.SigninResponse
 import com.br2.cadela.authentication.signin.SigninService
 import com.br2.cadela.authentication.signin.TokenRepository
 import com.br2.cadela.authentication.signin.User
 import com.br2.cadela.shared.Api
-import com.br2.cadela.shared.SigninResponse
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals

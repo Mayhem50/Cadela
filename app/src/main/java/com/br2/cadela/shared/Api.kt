@@ -1,35 +1,33 @@
 package com.br2.cadela.shared
 
-import com.br2.cadela.authentication.signin.User
+import com.br2.cadela.authentication.signin.*
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.http.Body
-import retrofit2.http.POST
-import java.util.*
+import retrofit2.converter.gson.GsonConverterFactory
+import java.security.InvalidParameterException
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashMap
 
-data class SigninResponse(val user: User, val token: String)
-
-private object ApiResources {
+class Api(signinClass: Class<SigninApi>, baseUrl: HttpUrl = HttpUrl.get("http://localhost:3000/api/")) {
     private var token: String? = null
     private val okHttpClient = OkHttpClient.Builder().readTimeout(5000, TimeUnit.MILLISECONDS)
         .connectTimeout(5000, TimeUnit.MILLISECONDS).build()
-    val client =
-        Retrofit.Builder().client(okHttpClient).baseUrl("https://cadela.herokuapp.com/api").build()
-}
+    private val client =
+        Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl)
+            .addConverterFactory(
+                GsonConverterFactory.create()
+            ).build()
 
-class Api {
-    private data class Credentials(val email: String, val password: String)
-    private interface SigninApi {
-        @POST("/auth/signin")
-        suspend fun signin(@Body credentials: HashMap<String, Credentials>): SigninResponse
-    }
 
-    private val signinApi = ApiResources.client.create(SigninApi::class.java)
+    private val signinApi = client.create(signinClass)
     suspend fun signin(email: String, password: String): SigninResponse {
-        val body = HashMap<String, Credentials>()
-        body["credential"] = Credentials(email, password)
+        if (email.isEmpty()) {
+            throw InvalidParameterException("Empty email")
+        }
+        if (password.isEmpty()) {
+            throw InvalidParameterException("Empty password")
+        }
+        val body = SigninBody(Credentials(email, password))
         return signinApi.signin(body)
     }
 }
