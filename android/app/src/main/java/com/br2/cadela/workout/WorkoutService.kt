@@ -4,6 +4,8 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 class WorkoutService {
+    private val TWO_WEEKS = 2
+
     fun createNewSession(sessionResult: SessionResult? = null): Session {
         return when (sessionResult?.name) {
             "1st Level Test" -> nextSessionAfterFirstLevelTest(sessionResult)
@@ -16,8 +18,6 @@ class WorkoutService {
     private fun nextSessionAfterOnlyBTest(sessionResult: SessionResult): Session {
         return Session.FIRST_PROGRAM_WITH_B1
     }
-
-    private val TWO_WEEKS = 2
 
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
         if(sessionIsStartedSince2Weeks(sessionResult)) {
