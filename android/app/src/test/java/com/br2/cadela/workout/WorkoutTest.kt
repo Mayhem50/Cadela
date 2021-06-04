@@ -40,7 +40,7 @@ class WorkoutTest {
     fun `When session result on test session is under 4 for exercise B next session wil be First Program`() {
         val sessionResult = SessionResult(
             name = "1st Level Test",
-            exercises = listOf(Exercise("B", 3), Exercise("C", 1))
+            exercises = listOf(Exercise("B", Series(1, listOf(3))), Exercise("C", Series(1, listOf(1))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -48,6 +48,10 @@ class WorkoutTest {
         assertEquals(
             listOf("A", "D", "C1", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
+        )
+        assertEquals(
+            List(7) { 2 },
+            session.exercises.stream().map { it.series.count }.toList()
         )
         assertEquals(
             List(6) { 120 },
@@ -59,7 +63,7 @@ class WorkoutTest {
     fun `When session result on test session is under 4 for exercise B and C is 0 next session wil be First Program with C4 instead of C1`() {
         val sessionResult = SessionResult(
             name = "1st Level Test",
-            exercises = listOf(Exercise("B", 3), Exercise("C", 0))
+            exercises = listOf(Exercise("B", Series(1, listOf(3))), Exercise("C", Series(1, listOf(0))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -78,7 +82,7 @@ class WorkoutTest {
     fun `When session result on first program session is under 12 on first series for C4 next session wil be First Program with C4 again`() {
         val sessionResult = SessionResult(
             name = "1st Program",
-            exercises = listOf(Exercise("C4", 11))
+            exercises = listOf(Exercise("C4", Series(1, listOf(11))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -97,7 +101,7 @@ class WorkoutTest {
     fun `When session result on first program session is 12 on first series for C4 next session wil be First Program with C5 instead of C4`() {
         val sessionResult = SessionResult(
             name = "1st Program",
-            exercises = listOf(Exercise("C4", 12))
+            exercises = listOf(Exercise("C4", Series(1, listOf(12))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -116,7 +120,7 @@ class WorkoutTest {
     fun `When session result on first program session is under 12 on first series for C5 next session wil be First Program with C5 again`() {
         val sessionResult = SessionResult(
             name = "1st Program",
-            exercises = listOf(Exercise("C5", 11))
+            exercises = listOf(Exercise("C5", Series(1, listOf(11))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -135,7 +139,7 @@ class WorkoutTest {
     fun `When session result on first program session is 12 on first series for C5 next session wil be First Program with C6 instead of C5`() {
         val sessionResult = SessionResult(
             name = "1st Program",
-            exercises = listOf(Exercise("C5", 12))
+            exercises = listOf(Exercise("C5", Series(1, listOf(12))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -154,7 +158,7 @@ class WorkoutTest {
     fun `When session result on first program session is under 12 on first series for C6 next session wil be First Program with C6 again`() {
         val sessionResult = SessionResult(
             name = "1st Program",
-            exercises = listOf(Exercise("C6", 11))
+            exercises = listOf(Exercise("C6", Series(1, listOf(11))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -173,7 +177,7 @@ class WorkoutTest {
     fun `When session result on first program session is 12 on first series for C6 next session wil be First Program with C6 instead of C1`() {
         val sessionResult = SessionResult(
             name = "1st Program",
-            exercises = listOf(Exercise("C6", 12))
+            exercises = listOf(Exercise("C6", Series(1, listOf(12))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -192,7 +196,7 @@ class WorkoutTest {
     fun `When session result on test session is over or equal 4 for exercise B next session wil be First Program`() {
         val sessionResult = SessionResult(
             name = "1st Level Test",
-            exercises = listOf(Exercise("B", 4))
+            exercises = listOf(Exercise("B", Series(1, listOf(4))))
         )
         val session = sut.createNewSession(sessionResult)
 
@@ -219,22 +223,22 @@ class WorkoutService {
 
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
         sessionResult.exercises.find { it.name == "C4" }?.let {
-            return if (it.repetitions < 12) Session.FIRST_PROGRAM_WITH_C4 else Session.FIRST_PROGRAM_WITH_C5
+            return if (it.series.repetitions[0] < 12) Session.FIRST_PROGRAM_WITH_C4 else Session.FIRST_PROGRAM_WITH_C5
         }
         sessionResult.exercises.find { it.name == "C5" }?.let {
-            return if (it.repetitions < 12) Session.FIRST_PROGRAM_WITH_C5 else Session.FIRST_PROGRAM_WITH_C6
+            return if (it.series.repetitions[0] < 12) Session.FIRST_PROGRAM_WITH_C5 else Session.FIRST_PROGRAM_WITH_C6
         }
         sessionResult.exercises.find { it.name == "C6" }?.let {
-            return if(it.repetitions < 12) Session.FIRST_PROGRAM_WITH_C6 else Session.FIRST_PROGRAM
+            return if(it.series.repetitions[0] < 12) Session.FIRST_PROGRAM_WITH_C6 else Session.FIRST_PROGRAM
         }
         return Session.FIRST_PROGRAM_WITH_C4
     }
 
     private fun nextSessionAfterFirstLevelTest(sessionResult: SessionResult): Session {
         val repetitionsForB =
-            sessionResult.exercises.find { it.name == "B" }?.repetitions ?: 0
+            sessionResult.exercises.find { it.name == "B" }?.series?.repetitions?.elementAt(0) ?: 0
         val repetitionsForC =
-            sessionResult.exercises.find { it.name == "C" }?.repetitions ?: 0
+            sessionResult.exercises.find { it.name == "C" }?.series?.repetitions?.elementAt(0) ?: 0
         return if (repetitionsForB < 4) {
             return if (repetitionsForC > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
         } else {

@@ -9,10 +9,10 @@ data class Session(
         val FIRST_LEVEL_TEST = Session(
             name = "1st Level Test",
             exercises = listOf(
-                Exercise(name = "A"),
-                Exercise(name = "B"),
-                Exercise(name = "C"),
-                Exercise(name = "A1")
+                Exercise(name = "A", series = Series(1)),
+                Exercise(name = "B", series = Series(1)),
+                Exercise(name = "C", series = Series(1)),
+                Exercise(name = "A1", series = Series(1))
             ),
             restsBetweenExercises = listOf(
                 Rest(duration = 180),
@@ -23,13 +23,13 @@ data class Session(
         val FIRST_PROGRAM = Session(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A"),
-                Exercise(name = "D"),
-                Exercise(name = "C1"),
-                Exercise(name = "E"),
-                Exercise(name = "F"),
-                Exercise(name = "G"),
-                Exercise(name = "K2")
+                Exercise(name = "A", series = Series(2)),
+                Exercise(name = "D", series = Series(2)),
+                Exercise(name = "C1", series = Series(2)),
+                Exercise(name = "E", series = Series(2)),
+                Exercise(name = "F", series = Series(2)),
+                Exercise(name = "G", series = Series(2)),
+                Exercise(name = "K2", series = Series(2))
             ),
             restsBetweenExercises = listOf(
                 Rest(duration = 120),
@@ -44,13 +44,13 @@ data class Session(
         val FIRST_PROGRAM_WITH_C4 = Session(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A"),
-                Exercise(name = "D"),
-                Exercise(name = "C4"),
-                Exercise(name = "E"),
-                Exercise(name = "F"),
-                Exercise(name = "G"),
-                Exercise(name = "K2")
+                Exercise(name = "A", series = Series(1)),
+                Exercise(name = "D", series = Series(1)),
+                Exercise(name = "C4", series = Series(1)),
+                Exercise(name = "E", series = Series(1)),
+                Exercise(name = "F", series = Series(1)),
+                Exercise(name = "G", series = Series(1)),
+                Exercise(name = "K2", series = Series(1))
             ),
             restsBetweenExercises = listOf(
                 Rest(duration = 120),
@@ -65,13 +65,13 @@ data class Session(
         val FIRST_PROGRAM_WITH_C5 = Session(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A"),
-                Exercise(name = "D"),
-                Exercise(name = "C5"),
-                Exercise(name = "E"),
-                Exercise(name = "F"),
-                Exercise(name = "G"),
-                Exercise(name = "K2")
+                Exercise(name = "A", series = Series(1)),
+                Exercise(name = "D", series = Series(1)),
+                Exercise(name = "C5", series = Series(1)),
+                Exercise(name = "E", series = Series(1)),
+                Exercise(name = "F", series = Series(1)),
+                Exercise(name = "G", series = Series(1)),
+                Exercise(name = "K2", series = Series(1))
             ),
             restsBetweenExercises = listOf(
                 Rest(duration = 120),
@@ -86,13 +86,13 @@ data class Session(
         val FIRST_PROGRAM_WITH_C6 = Session(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A"),
-                Exercise(name = "D"),
-                Exercise(name = "C6"),
-                Exercise(name = "E"),
-                Exercise(name = "F"),
-                Exercise(name = "G"),
-                Exercise(name = "K2")
+                Exercise(name = "A", series = Series(1)),
+                Exercise(name = "D", series = Series(1)),
+                Exercise(name = "C6", series = Series(1)),
+                Exercise(name = "E", series = Series(1)),
+                Exercise(name = "F", series = Series(1)),
+                Exercise(name = "G", series = Series(1)),
+                Exercise(name = "K2", series = Series(1))
             ),
             restsBetweenExercises = listOf(
                 Rest(duration = 120),
@@ -107,14 +107,14 @@ data class Session(
         val SECOND_PROGRAM = Session(
             name = "2nd Program",
             exercises = listOf(
-                Exercise(name = "B"),
-                Exercise(name = "A1"),
-                Exercise(name = "D"),
-                Exercise(name = "C1"),
-                Exercise(name = "E"),
-                Exercise(name = "F"),
-                Exercise(name = "G"),
-                Exercise(name = "K2")
+                Exercise(name = "B", series = Series(1)),
+                Exercise(name = "A1", series = Series(1)),
+                Exercise(name = "D", series = Series(1)),
+                Exercise(name = "C1", series = Series(1)),
+                Exercise(name = "E", series = Series(1)),
+                Exercise(name = "F", series = Series(1)),
+                Exercise(name = "G", series = Series(1)),
+                Exercise(name = "K2", series = Series(1))
             ),
             restsBetweenExercises = listOf(
                 Rest(duration = 120),
