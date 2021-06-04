@@ -23,7 +23,7 @@ class WorkoutService {
         changeExercise("A3", "A4", 8, exercises)
 
         exercises.find { it.name == "A2" }?.let {
-            if(it.series.repetitions[0] >= 8) {
+            if(it.series.repetitions[0] >= 8 && exercises.find { it.name == "A4" } == null) {
                 exercises.add(0, Exercise("A3", Series(2)))
                 restBetweenExercises.add(0, Rest(120))
             }
