@@ -1,6 +1,5 @@
-package com.br2.cadela
+package com.br2.cadela.authentication.signin
 
-import com.br2.cadela.authentication.signin.SigninApi
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

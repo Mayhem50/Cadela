@@ -1,8 +1,5 @@
-package com.br2.cadela
+package com.br2.cadela.authentication.signin
 
-import com.br2.cadela.authentication.signin.TokenDao
-import com.br2.cadela.authentication.signin.TokenRecord
-import com.br2.cadela.authentication.signin.TokenRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

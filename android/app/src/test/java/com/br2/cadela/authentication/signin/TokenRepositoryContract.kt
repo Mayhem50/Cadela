@@ -1,4 +1,4 @@
-package com.br2.cadela
+package com.br2.cadela.authentication.signin
 
 import com.br2.cadela.authentication.signin.TokenRepository
 import org.junit.jupiter.api.Assertions

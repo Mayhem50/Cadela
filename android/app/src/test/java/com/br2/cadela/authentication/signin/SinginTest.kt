@@ -1,11 +1,6 @@
-package com.br2.cadela
+package com.br2.cadela.authentication.signin
 
 
-import com.br2.cadela.authentication.signin.SigninResponse
-import com.br2.cadela.authentication.signin.SigninService
-import com.br2.cadela.authentication.signin.TokenRepository
-import com.br2.cadela.authentication.signin.User
-import com.br2.cadela.authentication.signin.SigninApi
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -71,6 +66,7 @@ class SinginServiceTest {
         coEvery { failApi.signin(email, password) } throws ApiException()
         sut = SigninService(failApi, tokenRepository)
         assertThrows<ApiException> { sut.signin(email, password) }
+        return@runBlocking
     }
 
     @Test
@@ -79,6 +75,7 @@ class SinginServiceTest {
         sut = SigninService(api, failRepository)
         every { failRepository.save("any_token", "any_user_id") } throws IOException()
         assertThrows<IOException> { sut.signin(email, password) }
+        return@runBlocking
     }
 
     @Test

@@ -1,7 +1,5 @@
-package com.br2.cadela
+package com.br2.cadela.authentication.signin
 
-import com.br2.cadela.authentication.signin.SigninApiService
-import com.br2.cadela.authentication.signin.SigninApi
 import com.br2.cadela.shared.ApiClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
