@@ -425,17 +425,8 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val today = LocalDate.now()
         val twoWeekBefore = today.minus(2, ChronoUnit.WEEKS)
         val sessionResult = SessionResult(
-            name = "1st Program",
-            exercises = listOf(
-                Exercise(name = "B1", series = Series(2)),
-                Exercise(name = "A6", series = Series(2)),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))),
+            name = Session.FIRST_PROGRAM_WITH_B1.name,
+            exercises = Session.FIRST_PROGRAM_WITH_B1.exercises,
             levelStartedAt = twoWeekBefore
         )
         val session = sut.createNewSession(sessionResult)
