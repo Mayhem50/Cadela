@@ -3,11 +3,13 @@ package com.br2.cadela.workout
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
+import kotlin.streams.toList
 
 class WorkoutTest {
+    private val sut = WorkoutService()
+
     @Test
     fun `When creating a new Session a session that contains all exercises & rest between exercises  return`() {
-        val sut = WorkoutService()
         val session = sut.createNewSession()
         assertFalse(session.exercises.isEmpty())
         assertFalse(session.restsBetweenExercises.isEmpty())
@@ -15,38 +17,74 @@ class WorkoutTest {
 
     @Test
     fun `The new session contains n exercises and n-1 rest between them`() {
-        val sut = WorkoutService()
         val session = sut.createNewSession()
         assertEquals(1, session.exercises.size - session.restsBetweenExercises.size)
     }
 
     @Test
     fun `The first session is a Test session that contains exercise A, B, C, A1 and rests between are 3min`() {
-        val sut = WorkoutService()
         val session = sut.createNewSession()
 
-        assertEquals(4, session.exercises.size)
-        assertEquals("A", session.exercises[0].name)
-        assertEquals("B", session.exercises[1].name)
-        assertEquals("C", session.exercises[2].name)
-        assertEquals("A1", session.exercises[3].name)
+        assertEquals("1st Level Test", session.name)
+        assertEquals(
+            listOf("A", "B", "C", "A1"),
+            session.exercises.stream().map { it.name }.toList()
+        )
+        assertEquals(
+            listOf(180, 180, 180),
+            session.restsBetweenExercises.stream().map { it.duration }.toList()
+        )
+    }
 
-        assertEquals(180, session.restsBetweenExercises[0].duration)
-        assertEquals(180, session.restsBetweenExercises[1].duration)
-        assertEquals(180, session.restsBetweenExercises[2].duration)
+    @Test
+    fun `When session result on test session is under 4 for exercise B next session wil be First Program`() {
+        val sessionResult = SessionResult()
+        val session = sut.createNewSession(sessionResult)
+
+        assertEquals("1st Program", session.name)
+        assertEquals(
+            listOf("A", "D", "C1", "E", "F", "G", "K2"),
+            session.exercises.stream().map { it.name }.toList()
+        )
+        assertEquals(
+            List(6) { 120 },
+            session.restsBetweenExercises.stream().map { it.duration }.toList()
+        )
     }
 }
 
 class WorkoutService {
-    fun createNewSession(): Session {
+    fun createNewSession(sessionResult: SessionResult? = null): Session {
+        if(sessionResult != null) {
+            return Session(
+                name = "1st Program",
+                exercises = listOf(
+                    Exercise(name = "A"),
+                    Exercise(name = "D"),
+                    Exercise(name = "C1"),
+                    Exercise(name = "E"),
+                    Exercise(name = "F"),
+                    Exercise(name = "G"),
+                    Exercise(name = "K2")
+                ),
+                restsBetweenExercises = listOf(
+                    Rest(duration = 120),
+                    Rest(duration = 120),
+                    Rest(duration = 120),
+                    Rest(duration = 120),
+                    Rest(duration = 120),
+                    Rest(duration = 120)
+                ))
+        }
         return Session(
-            listOf(
+            name = "1st Level Test",
+            exercises = listOf(
                 Exercise(name = "A"),
                 Exercise(name = "B"),
                 Exercise(name = "C"),
                 Exercise(name = "A1")
             ),
-            listOf(
+            restsBetweenExercises = listOf(
                 Rest(duration = 180),
                 Rest(duration = 180),
                 Rest(duration = 180)
@@ -55,7 +93,12 @@ class WorkoutService {
     }
 }
 
-data class Session(val exercises: List<Exercise>, val restsBetweenExercises: List<Rest>)
+class SessionResult {}
+data class Session(
+    val name: String,
+    val exercises: List<Exercise>,
+    val restsBetweenExercises: List<Rest>
+)
 
 data class Rest(val duration: Int)
 data class Exercise(val name: String)
