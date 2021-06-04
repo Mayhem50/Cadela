@@ -15,7 +15,7 @@ class WorkoutService {
         val exercises = sessionResult.exercises.toMutableList()
         val restBetweenExercises = Session.FIRST_PROGRAM.restsBetweenExercises.toMutableList()
 
-        var index = sessionResult.exercises.indexOfFirst { it.name == "C4" }
+        var index = exercises.indexOfFirst { it.name == "C4" }
         if(index >= 0 ){
             val exercise = exercises[index]
             if (exercise.series.repetitions[0] >= 12) {
@@ -23,7 +23,7 @@ class WorkoutService {
             }
         }
 
-        index = sessionResult.exercises.indexOfFirst { it.name == "C5" }
+        index = exercises.indexOfFirst { it.name == "C5" }
         if(index >= 0 ){
             val exercise = exercises[index]
             if (exercise.series.repetitions[0] >= 12) {
@@ -31,7 +31,7 @@ class WorkoutService {
             }
         }
 
-        index = sessionResult.exercises.indexOfFirst { it.name == "C6" }
+        index = exercises.indexOfFirst { it.name == "C6" }
         if(index >= 0 ){
             val exercise = exercises[index]
             if (exercise.series.repetitions[0] >= 12) {
@@ -39,7 +39,7 @@ class WorkoutService {
             }
         }
 
-        index = sessionResult.exercises.indexOfFirst { it.name == "A1" }
+        index = exercises.indexOfFirst { it.name == "A1" }
         if(index >= 0 ){
             val exercise = exercises[index]
             if (exercise.series.repetitions[0] >= 8) {
@@ -47,9 +47,11 @@ class WorkoutService {
             }
         }
 
-        sessionResult.exercises.find { it.name == "A2" }?.let {
-            exercises.add(0, Exercise("A3", Series(2)))
-            restBetweenExercises.add(0, Rest(120))
+        exercises.find { it.name == "A2" }?.let {
+            if(it.series.repetitions[0] >= 8) {
+                exercises.add(0, Exercise("A3", Series(2)))
+                restBetweenExercises.add(0, Rest(120))
+            }
         }
 
         return Session(sessionResult.name, exercises.stream().map {
