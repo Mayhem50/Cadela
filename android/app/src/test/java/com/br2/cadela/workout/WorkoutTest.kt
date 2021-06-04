@@ -170,6 +170,25 @@ class WorkoutTest {
     }
 
     @Test
+    fun `When session result on first program session is 12 on first series for C6 next session wil be First Program with C6 instead of C1`() {
+        val sessionResult = SessionResult(
+            name = "1st Program",
+            exercises = listOf(Exercise("C6", 12))
+        )
+        val session = sut.createNewSession(sessionResult)
+
+        assertEquals("1st Program", session.name)
+        assertEquals(
+            listOf("A", "D", "C1", "E", "F", "G", "K2"),
+            session.exercises.stream().map { it.name }.toList()
+        )
+        assertEquals(
+            List(6) { 120 },
+            session.restsBetweenExercises.stream().map { it.duration }.toList()
+        )
+    }
+
+    @Test
     fun `When session result on test session is over or equal 4 for exercise B next session wil be First Program`() {
         val sessionResult = SessionResult(
             name = "1st Level Test",
@@ -206,7 +225,7 @@ class WorkoutService {
             return if (it.repetitions < 12) Session.FIRST_PROGRAM_WITH_C5 else Session.FIRST_PROGRAM_WITH_C6
         }
         sessionResult.exercises.find { it.name == "C6" }?.let {
-            return Session.FIRST_PROGRAM_WITH_C6
+            return if(it.repetitions < 12) Session.FIRST_PROGRAM_WITH_C6 else Session.FIRST_PROGRAM
         }
         return Session.FIRST_PROGRAM_WITH_C4
     }
