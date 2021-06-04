@@ -38,12 +38,28 @@ class WorkoutTest {
 
     @Test
     fun `When session result on test session is under 4 for exercise B next session wil be First Program`() {
-        val sessionResult = SessionResult(listOf(Exercise("B", 3)))
+        val sessionResult = SessionResult(listOf(Exercise("B", 3), Exercise("C", 1)))
         val session = sut.createNewSession(sessionResult)
 
         assertEquals("1st Program", session.name)
         assertEquals(
             listOf("A", "D", "C1", "E", "F", "G", "K2"),
+            session.exercises.stream().map { it.name }.toList()
+        )
+        assertEquals(
+            List(6) { 120 },
+            session.restsBetweenExercises.stream().map { it.duration }.toList()
+        )
+    }
+
+    @Test
+    fun `When session result on test session is under 4 for exercise B and C is 0 next session wil be First Program with C4 instead of C1`(){
+        val sessionResult = SessionResult(listOf(Exercise("B", 3), Exercise("C", 0)))
+        val session = sut.createNewSession(sessionResult)
+
+        assertEquals("1st Program", session.name)
+        assertEquals(
+            listOf("A", "D", "C4", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         assertEquals(
@@ -72,9 +88,10 @@ class WorkoutTest {
 class WorkoutService {
     fun createNewSession(sessionResult: SessionResult? = null): Session {
         sessionResult?.let {
-            val repetitions = sessionResult.exercises.find { it.name == "B" }?.repetitions ?: 0
-            return if (repetitions < 4) {
-                Session.FIRST_PROGRAM
+            val repetitionsForB = sessionResult.exercises.find { it.name == "B" }?.repetitions ?: 0
+            val repetitionsForC = sessionResult.exercises.find { it.name == "C" }?.repetitions ?: 0
+            return if (repetitionsForB < 4) {
+                return if (repetitionsForC > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
             } else {
                 Session.SECOND_PROGRAM
             }
