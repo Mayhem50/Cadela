@@ -19,6 +19,12 @@ class WorkoutService {
         sessionResult.exercises.find { it.name == "C6" }?.let {
             return if(it.series.repetitions[0] < 12) Session.FIRST_PROGRAM_WITH_C6 else Session.FIRST_PROGRAM
         }
+        sessionResult.exercises.find { it.name == "A1" }?.let {
+            return if(it.series.repetitions[0] < 8) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_A2
+        }
+        sessionResult.exercises.find { it.name == "A2" }?.let {
+            return if(it.series.repetitions[0] < 8) Session.FIRST_PROGRAM_WITH_A2 else Session.FIRST_PROGRAM_WITH_A3
+        }
         return Session.FIRST_PROGRAM
     }
 
