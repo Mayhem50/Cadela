@@ -12,11 +12,18 @@ class WorkoutTest {
         assertFalse(session.exercises.isEmpty())
         assertFalse(session.restsBetweenExercises.isEmpty())
     }
+
+    @Test
+    fun `The new session contains n exercises and n-1 rest between them`(){
+        val sut = WorkoutService()
+        val session = sut.createNewSession()
+        assertEquals(1, session.exercises.size - session.restsBetweenExercises.size)
+    }
 }
 
 class WorkoutService {
     fun createNewSession(): Session {
-        return Session(listOf(Exercise()), listOf(Rest()))
+        return Session(listOf(Exercise(), Exercise()), listOf(Rest()))
     }
 }
 
