@@ -118,4 +118,23 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             session.restsBetweenExercises.stream().map { it.duration }.toList()
         )
     }
+
+    @Test
+    fun `A1 session result is less than 8, next session will be the same`() {
+        val sessionResult = SessionResult(
+            name = "1st Program",
+            exercises = listOf(Exercise("A1", Series(1, listOf(7))))
+        )
+        val session = sut.createNewSession(sessionResult)
+
+        Assertions.assertEquals("1st Program", session.name)
+        Assertions.assertEquals(
+            listOf("A1", "D", "C1", "E", "F", "G", "K2"),
+            session.exercises.stream().map { it.name }.toList()
+        )
+        Assertions.assertEquals(
+            List(6) { 120 },
+            session.restsBetweenExercises.stream().map { it.duration }.toList()
+        )
+    }
 }
