@@ -15,37 +15,10 @@ class WorkoutService {
         val exercises = sessionResult.exercises.toMutableList()
         val restBetweenExercises = Session.FIRST_PROGRAM.restsBetweenExercises.toMutableList()
 
-        var index = exercises.indexOfFirst { it.name == "C4" }
-        if(index >= 0 ){
-            val exercise = exercises[index]
-            if (exercise.series.repetitions[0] >= 12) {
-                exercises[index] = Exercise("C5", Series(exercise.series.count))
-            }
-        }
-
-        index = exercises.indexOfFirst { it.name == "C5" }
-        if(index >= 0 ){
-            val exercise = exercises[index]
-            if (exercise.series.repetitions[0] >= 12) {
-                exercises[index] = Exercise("C6", Series(exercise.series.count))
-            }
-        }
-
-        index = exercises.indexOfFirst { it.name == "C6" }
-        if(index >= 0 ){
-            val exercise = exercises[index]
-            if (exercise.series.repetitions[0] >= 12) {
-                exercises[index] = Exercise("C1", Series(exercise.series.count))
-            }
-        }
-
-        index = exercises.indexOfFirst { it.name == "A1" }
-        if(index >= 0 ){
-            val exercise = exercises[index]
-            if (exercise.series.repetitions[0] >= 8) {
-                exercises[index] = Exercise("A2", Series(exercise.series.count))
-            }
-        }
+        changeExercise("C4", "C5", 12, exercises)
+        changeExercise("C5", "C6", 12, exercises)
+        changeExercise("C6", "C1", 12, exercises)
+        changeExercise("A1", "A2", 8, exercises)
 
         exercises.find { it.name == "A2" }?.let {
             if(it.series.repetitions[0] >= 8) {
@@ -57,6 +30,21 @@ class WorkoutService {
         return Session(sessionResult.name, exercises.stream().map {
             Exercise(it.name, Series(it.series.count))
         }.toList(), restBetweenExercises)
+    }
+
+    private fun changeExercise(
+        searchName: String,
+        replaceBy: String,
+        threshold: Int,
+        exercises: MutableList<Exercise>
+    ) {
+        val index = exercises.indexOfFirst { it.name == searchName }
+        if (index >= 0) {
+            val exercise = exercises[index]
+            if (exercise.series.repetitions[0] >= threshold) {
+                exercises[index] = Exercise(replaceBy, Series(exercise.series.count))
+            }
+        }
     }
 
     private fun nextSessionAfterFirstLevelTest(sessionResult: SessionResult): Session {
