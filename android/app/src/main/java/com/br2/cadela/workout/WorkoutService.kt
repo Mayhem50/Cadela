@@ -5,8 +5,36 @@ class WorkoutService {
         return when (sessionResult?.name) {
             "1st Level Test" -> nextSessionAfterFirstLevelTest(sessionResult)
             "1st Program" -> nextSessionAfter1stProgram(sessionResult)
+            "Only B Test" -> nextSessionAfterOnlyBTest(sessionResult)
             else -> Session.FIRST_LEVEL_TEST
         }
+    }
+
+    private fun nextSessionAfterOnlyBTest(sessionResult: SessionResult): Session {
+        return Session(
+            name = "1st Program",
+            exercises = listOf(
+                Exercise(name = "B1", series = Series(3)),
+                Exercise(name = "A6", series = Series(3)),
+                Exercise(name = "A2", series = Series(3)),
+                Exercise(name = "D", series = Series(3)),
+                Exercise(name = "C1", series = Series(3)),
+                Exercise(name = "E", series = Series(3)),
+                Exercise(name = "F", series = Series(3)),
+                Exercise(name = "G", series = Series(3)),
+                Exercise(name = "K2", series = Series(3))
+            ),
+            restsBetweenExercises = listOf(
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120)
+            )
+        )
     }
 
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
