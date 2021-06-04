@@ -1,7 +1,5 @@
 package com.br2.cadela.workout
 
-import kotlin.streams.toList
-
 class WorkoutService {
     fun createNewSession(sessionResult: SessionResult? = null): Session {
         return when (sessionResult?.name) {
@@ -25,11 +23,7 @@ class WorkoutService {
         changeExercise("A5", "A6", 8, exercises)
 
         exercises.find { it.name == "A2" }?.let {
-            if (it.series.repetitions[0] >= 8 && exercises.find {
-                    listOf("A4", "A5", "A6").contains(
-                        it.name
-                    )
-                } == null) {
+            if (shouldReplaceA2(it, exercises)) {
                 exercises.add(0, Exercise("A3", Series(2)))
                 restBetweenExercises.add(0, Rest(120))
             }
@@ -37,18 +31,23 @@ class WorkoutService {
 
         exercises.find { it.name == "A6" }?.let {
             if (it.series.repetitions[0] >= 8) {
-                return Session(
-                    name = "Only B Test", exercises = listOf(
-                        Exercise(name = "B", series = Series(1)),
-                    ), listOf()
-                )
+                return Session.ONLY_B_TEST
             }
         }
 
-        return Session(sessionResult.name, exercises.stream().map {
+        return Session(sessionResult.name, exercises.map {
             Exercise(it.name, Series(it.series.count))
         }.toList(), restBetweenExercises)
     }
+
+    private fun shouldReplaceA2(
+        exercise: Exercise,
+        exercises: List<Exercise>
+    ) = exercise.series.repetitions[0] >= 8 && exercises.find {
+        listOf("A4", "A5", "A6").contains(
+            it.name
+        )
+    } == null
 
     private fun changeExercise(
         searchName: String,
