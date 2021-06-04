@@ -1,3 +1,5 @@
 package com.br2.cadela.workout
 
-data class SessionResult(val name: String, val exercises: List<Exercise>)
+import java.time.LocalDate
+
+data class SessionResult(val name: String, val exercises: List<Exercise>, val levelStartedAt: LocalDate = LocalDate.now())

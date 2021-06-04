@@ -2,6 +2,10 @@ package com.br2.cadela.workout
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.time.Instant
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import java.util.*
 import kotlin.streams.toList
 
 class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
@@ -414,6 +418,28 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         )
         val session = sut.createNewSession(sessionResult)
         assertSession(session, 3, "B1", "A6", "A2", "D", "C1", "E", "F", "G", "K2")
+    }
+
+    @Test
+    fun `Go to 2nd Program if user do 1st Program with B1 since 2 weeks`(){
+        val today = LocalDate.now()
+        val twoWeekBefore = today.minus(2, ChronoUnit.WEEKS)
+        val sessionResult = SessionResult(
+            name = "1st Program",
+            exercises = listOf(
+                Exercise(name = "B1", series = Series(2)),
+                Exercise(name = "A6", series = Series(2)),
+                Exercise(name = "A2", series = Series(2)),
+                Exercise(name = "D", series = Series(2)),
+                Exercise(name = "C1", series = Series(2)),
+                Exercise(name = "E", series = Series(2)),
+                Exercise(name = "F", series = Series(2)),
+                Exercise(name = "G", series = Series(2)),
+                Exercise(name = "K2", series = Series(2))),
+            levelStartedAt = twoWeekBefore
+        )
+        val session = sut.createNewSession(sessionResult)
+        Assertions.assertEquals(Session.SECOND_PROGRAM, session)
     }
 
     @Test

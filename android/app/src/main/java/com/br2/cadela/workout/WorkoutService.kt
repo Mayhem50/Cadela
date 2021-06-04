@@ -1,5 +1,8 @@
 package com.br2.cadela.workout
 
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+
 class WorkoutService {
     fun createNewSession(sessionResult: SessionResult? = null): Session {
         return when (sessionResult?.name) {
@@ -11,33 +14,13 @@ class WorkoutService {
     }
 
     private fun nextSessionAfterOnlyBTest(sessionResult: SessionResult): Session {
-        return Session(
-            name = "1st Program",
-            exercises = listOf(
-                Exercise(name = "B1", series = Series(3)),
-                Exercise(name = "A6", series = Series(3)),
-                Exercise(name = "A2", series = Series(3)),
-                Exercise(name = "D", series = Series(3)),
-                Exercise(name = "C1", series = Series(3)),
-                Exercise(name = "E", series = Series(3)),
-                Exercise(name = "F", series = Series(3)),
-                Exercise(name = "G", series = Series(3)),
-                Exercise(name = "K2", series = Series(3))
-            ),
-            restsBetweenExercises = listOf(
-                Rest(duration = 120),
-                Rest(duration = 120),
-                Rest(duration = 120),
-                Rest(duration = 120),
-                Rest(duration = 120),
-                Rest(duration = 120),
-                Rest(duration = 120),
-                Rest(duration = 120)
-            )
-        )
+        return Session.FIRST_PROGRAM_WITH_B1
     }
 
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
+        if(ChronoUnit.WEEKS.between(sessionResult.levelStartedAt, LocalDate.now()) >= 2) {
+            return Session.SECOND_PROGRAM
+        }
         val exercises = sessionResult.exercises.toMutableList()
         val restBetweenExercises = MutableList(exercises.size - 1) { Rest(120) }
 

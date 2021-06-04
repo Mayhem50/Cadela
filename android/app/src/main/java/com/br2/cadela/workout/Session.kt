@@ -70,6 +70,31 @@ data class Session(
             restsBetweenExercises = listOf()
         )
 
+        val FIRST_PROGRAM_WITH_B1 = Session(
+            name = "1st Program",
+            exercises = listOf(
+                Exercise(name = "B1", series = Series(3)),
+                Exercise(name = "A6", series = Series(3)),
+                Exercise(name = "A2", series = Series(3)),
+                Exercise(name = "D", series = Series(3)),
+                Exercise(name = "C1", series = Series(3)),
+                Exercise(name = "E", series = Series(3)),
+                Exercise(name = "F", series = Series(3)),
+                Exercise(name = "G", series = Series(3)),
+                Exercise(name = "K2", series = Series(3))
+            ),
+            restsBetweenExercises = listOf(
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120)
+            )
+        )
+
         val SECOND_PROGRAM = Session(
             name = "2nd Program",
             exercises = listOf(
