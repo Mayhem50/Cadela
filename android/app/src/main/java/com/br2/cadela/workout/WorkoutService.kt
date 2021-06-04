@@ -17,8 +17,10 @@ class WorkoutService {
         return Session.FIRST_PROGRAM_WITH_B1
     }
 
+    private val TWO_WEEKS = 2
+
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
-        if(ChronoUnit.WEEKS.between(sessionResult.levelStartedAt, LocalDate.now()) >= 2) {
+        if(sessionIsStartedSince2Weeks(sessionResult)) {
             return Session.SECOND_PROGRAM
         }
         val exercises = sessionResult.exercises.toMutableList()
@@ -50,6 +52,9 @@ class WorkoutService {
             Exercise(it.name, Series(it.series.count))
         }.toList(), restBetweenExercises)
     }
+
+    private fun sessionIsStartedSince2Weeks(sessionResult: SessionResult) =
+        ChronoUnit.WEEKS.between(sessionResult.levelStartedAt, LocalDate.now()) >= TWO_WEEKS
 
     private fun shouldReplaceA2(
         exercise: Exercise,
