@@ -116,7 +116,8 @@ class WorkoutTest {
     fun `When session result on test session is over or equal 4 for exercise B next session wil be First Program`() {
         val sessionResult = SessionResult(
             name = "1st Level Test",
-            exercises = listOf(Exercise("B", 4)))
+            exercises = listOf(Exercise("B", 4))
+        )
         val session = sut.createNewSession(sessionResult)
 
         assertEquals("2nd Program", session.name)
@@ -133,26 +134,29 @@ class WorkoutTest {
 
 class WorkoutService {
     fun createNewSession(sessionResult: SessionResult? = null): Session {
-        sessionResult?.let {
-            if(sessionResult.name == "1st Level Test") {
-                val repetitionsForB =
-                    sessionResult.exercises.find { it.name == "B" }?.repetitions ?: 0
-                val repetitionsForC =
-                    sessionResult.exercises.find { it.name == "C" }?.repetitions ?: 0
-                return if (repetitionsForB < 4) {
-                    return if (repetitionsForC > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
-                } else {
-                    Session.SECOND_PROGRAM
-                }
-            }
-            if(sessionResult.name == "1st Program"){
-                val repetitionsForC4 =
-                    sessionResult.exercises.find { it.name == "C4" }?.repetitions ?: 0
-                return if(repetitionsForC4 < 12) Session.FIRST_PROGRAM_WITH_C4 else Session.FIRST_PROGRAM_WITH_C5
-            }
+        return when (sessionResult?.name) {
+            "1st Level Test" -> nextSessionAfterFirstLevelTest(sessionResult)
+            "1st Program" -> nextSessionAfter1stProgram(sessionResult)
+            else -> Session.FIRST_LEVEL_TEST
         }
+    }
 
-        return Session.FIRST_LEVEL_TEST
+    private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
+        val repetitionsForC4 =
+            sessionResult.exercises.find { it.name == "C4" }?.repetitions ?: 0
+        return if (repetitionsForC4 < 12) Session.FIRST_PROGRAM_WITH_C4 else Session.FIRST_PROGRAM_WITH_C5
+    }
+
+    private fun nextSessionAfterFirstLevelTest(sessionResult: SessionResult): Session {
+        val repetitionsForB =
+            sessionResult.exercises.find { it.name == "B" }?.repetitions ?: 0
+        val repetitionsForC =
+            sessionResult.exercises.find { it.name == "C" }?.repetitions ?: 0
+        return if (repetitionsForB < 4) {
+            return if (repetitionsForC > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
+        } else {
+            Session.SECOND_PROGRAM
+        }
     }
 }
 
