@@ -13,7 +13,7 @@ class WorkoutService {
 
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
         val exercises = sessionResult.exercises.toMutableList()
-        val restBetweenExercises = Session.FIRST_PROGRAM.restsBetweenExercises.toMutableList()
+        val restBetweenExercises = MutableList(exercises.size - 1){ Rest(120) }
 
         changeExercise("C4", "C5", 12, exercises)
         changeExercise("C5", "C6", 12, exercises)
