@@ -75,6 +75,25 @@ class WorkoutTest {
     }
 
     @Test
+    fun `When session result on first program session is under 12 on first series for C4 next session wil be First Program with C4 again`() {
+        val sessionResult = SessionResult(
+            name = "1st Program",
+            exercises = listOf(Exercise("C4", 11))
+        )
+        val session = sut.createNewSession(sessionResult)
+
+        assertEquals("1st Program", session.name)
+        assertEquals(
+            listOf("A", "D", "C4", "E", "F", "G", "K2"),
+            session.exercises.stream().map { it.name }.toList()
+        )
+        assertEquals(
+            List(6) { 120 },
+            session.restsBetweenExercises.stream().map { it.duration }.toList()
+        )
+    }
+
+    @Test
     fun `When session result on first program session is 12 on first series for C4 next session wil be First Program with C5 instead of C4`() {
         val sessionResult = SessionResult(
             name = "1st Program",
@@ -94,16 +113,16 @@ class WorkoutTest {
     }
 
     @Test
-    fun `When session result on first program session is under 12 on first series for C4 next session wil be First Program with C4 again`() {
+    fun `When session result on first program session is under 12 on first series for C5 next session wil be First Program with C5 again`() {
         val sessionResult = SessionResult(
             name = "1st Program",
-            exercises = listOf(Exercise("C4", 11))
+            exercises = listOf(Exercise("C5", 11))
         )
         val session = sut.createNewSession(sessionResult)
 
         assertEquals("1st Program", session.name)
         assertEquals(
-            listOf("A", "D", "C4", "E", "F", "G", "K2"),
+            listOf("A", "D", "C5", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         assertEquals(
@@ -142,9 +161,13 @@ class WorkoutService {
     }
 
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
-        val repetitionsForC4 =
-            sessionResult.exercises.find { it.name == "C4" }?.repetitions ?: 0
-        return if (repetitionsForC4 < 12) Session.FIRST_PROGRAM_WITH_C4 else Session.FIRST_PROGRAM_WITH_C5
+        sessionResult.exercises.find { it.name == "C4" }?.let {
+            return if (it.repetitions < 12) Session.FIRST_PROGRAM_WITH_C4 else Session.FIRST_PROGRAM_WITH_C5
+        }
+        sessionResult.exercises.find { it.name == "C5" }?.let {
+            return Session.FIRST_PROGRAM_WITH_C5
+        }
+        return Session.FIRST_PROGRAM_WITH_C4
     }
 
     private fun nextSessionAfterFirstLevelTest(sessionResult: SessionResult): Session {
