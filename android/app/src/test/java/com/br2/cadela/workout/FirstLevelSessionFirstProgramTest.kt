@@ -6,7 +6,7 @@ import kotlin.streams.toList
 
 class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
-    fun `C4 session result is under 12, next session wil be the same`() {
+    fun `C4 session result is less than 12, next session will be the same`() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(Exercise("C4", Series(1, listOf(11))))
@@ -15,7 +15,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         Assertions.assertEquals("1st Program", session.name)
         Assertions.assertEquals(
-            listOf("A", "D", "C4", "E", "F", "G", "K2"),
+            listOf("A1", "D", "C4", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         Assertions.assertEquals(
@@ -25,7 +25,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     }
 
     @Test
-    fun `C4 session result is 12 or over, next session replace C4 by C5`() {
+    fun `C4 session result is 12 or more, next session replace C4 by C5`() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(Exercise("C4", Series(1, listOf(12))))
@@ -34,7 +34,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         Assertions.assertEquals("1st Program", session.name)
         Assertions.assertEquals(
-            listOf("A", "D", "C5", "E", "F", "G", "K2"),
+            listOf("A1", "D", "C5", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         Assertions.assertEquals(
@@ -44,7 +44,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     }
 
     @Test
-    fun `C5 session result is under 12 next session wil be the same`() {
+    fun `C5 session result is less than 12 next session will be the same`() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(Exercise("C5", Series(1, listOf(11))))
@@ -53,7 +53,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         Assertions.assertEquals("1st Program", session.name)
         Assertions.assertEquals(
-            listOf("A", "D", "C5", "E", "F", "G", "K2"),
+            listOf("A1", "D", "C5", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         Assertions.assertEquals(
@@ -63,7 +63,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     }
 
     @Test
-    fun `C5 session result is 12 or over, next session replace C5 by C6`() {
+    fun `C5 session result is 12 or more, next session replace C5 by C6`() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(Exercise("C5", Series(1, listOf(12))))
@@ -72,7 +72,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         Assertions.assertEquals("1st Program", session.name)
         Assertions.assertEquals(
-            listOf("A", "D", "C6", "E", "F", "G", "K2"),
+            listOf("A1", "D", "C6", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         Assertions.assertEquals(
@@ -82,7 +82,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     }
 
     @Test
-    fun `C6 session result is under 12 next session wil be the same`() {
+    fun `C6 session result is less than 12 next session will be the same`() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(Exercise("C6", Series(1, listOf(11))))
@@ -91,7 +91,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         Assertions.assertEquals("1st Program", session.name)
         Assertions.assertEquals(
-            listOf("A", "D", "C6", "E", "F", "G", "K2"),
+            listOf("A1", "D", "C6", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         Assertions.assertEquals(
@@ -101,7 +101,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     }
 
     @Test
-    fun `C6 session result is 12 or over, next session replace C6 by C1`() {
+    fun `C6 session result is 12 or more, next session replace C6 by C1`() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(Exercise("C6", Series(1, listOf(12))))
@@ -110,7 +110,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         Assertions.assertEquals("1st Program", session.name)
         Assertions.assertEquals(
-            listOf("A", "D", "C1", "E", "F", "G", "K2"),
+            listOf("A1", "D", "C1", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         Assertions.assertEquals(

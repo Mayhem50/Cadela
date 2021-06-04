@@ -23,7 +23,7 @@ data class Session(
         val FIRST_PROGRAM = Session(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A", series = Series(2)),
+                Exercise(name = "A1", series = Series(2)),
                 Exercise(name = "D", series = Series(2)),
                 Exercise(name = "C1", series = Series(2)),
                 Exercise(name = "E", series = Series(2)),
@@ -44,7 +44,7 @@ data class Session(
         val FIRST_PROGRAM_WITH_C4 = Session(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A", series = Series(1)),
+                Exercise(name = "A1", series = Series(1)),
                 Exercise(name = "D", series = Series(1)),
                 Exercise(name = "C4", series = Series(1)),
                 Exercise(name = "E", series = Series(1)),
@@ -65,7 +65,7 @@ data class Session(
         val FIRST_PROGRAM_WITH_C5 = Session(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A", series = Series(1)),
+                Exercise(name = "A1", series = Series(1)),
                 Exercise(name = "D", series = Series(1)),
                 Exercise(name = "C5", series = Series(1)),
                 Exercise(name = "E", series = Series(1)),
@@ -86,7 +86,7 @@ data class Session(
         val FIRST_PROGRAM_WITH_C6 = Session(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A", series = Series(1)),
+                Exercise(name = "A1", series = Series(1)),
                 Exercise(name = "D", series = Series(1)),
                 Exercise(name = "C6", series = Series(1)),
                 Exercise(name = "E", series = Series(1)),

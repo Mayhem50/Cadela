@@ -33,7 +33,7 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
 
         Assertions.assertEquals("1st Program", session.name)
         Assertions.assertEquals(
-            listOf("A", "D", "C1", "E", "F", "G", "K2"),
+            listOf("A1", "D", "C1", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         Assertions.assertEquals(
@@ -59,7 +59,7 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
 
         Assertions.assertEquals("1st Program", session.name)
         Assertions.assertEquals(
-            listOf("A", "D", "C4", "E", "F", "G", "K2"),
+            listOf("A1", "D", "C4", "E", "F", "G", "K2"),
             session.exercises.stream().map { it.name }.toList()
         )
         Assertions.assertEquals(
@@ -69,7 +69,7 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
     }
 
     @Test
-    fun `B session result is 4 or over, next session wil be Second Program`() {
+    fun `B session result is 4 or more, next session wil be Second Program`() {
         val sessionResult = SessionResult(
             name = "1st Level Test",
             exercises = listOf(Exercise("B", Series(1, listOf(4))))

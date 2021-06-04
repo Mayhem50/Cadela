@@ -19,7 +19,7 @@ class WorkoutService {
         sessionResult.exercises.find { it.name == "C6" }?.let {
             return if(it.series.repetitions[0] < 12) Session.FIRST_PROGRAM_WITH_C6 else Session.FIRST_PROGRAM
         }
-        return Session.FIRST_PROGRAM_WITH_C4
+        return Session.FIRST_PROGRAM
     }
 
     private fun nextSessionAfterFirstLevelTest(sessionResult: SessionResult): Session {
