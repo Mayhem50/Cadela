@@ -193,7 +193,7 @@ class WorkoutTest {
     }
 
     @Test
-    fun `When session result on test session is over or equal 4 for exercise B next session wil be First Program`() {
+    fun `When session result on test session is over or equal 4 for exercise B next session wil be Second Program`() {
         val sessionResult = SessionResult(
             name = "1st Level Test",
             exercises = listOf(Exercise("B", Series(1, listOf(4))))
