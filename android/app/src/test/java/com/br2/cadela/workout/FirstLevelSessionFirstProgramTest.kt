@@ -340,6 +340,24 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     }
 
     @Test
+    fun `Session result is A2-8 A5-10, next session will replace A5 by A6`() {
+        val sessionResult = SessionResult(
+            name = "1st Program",
+            exercises = listOf(
+                Exercise(name = "A5", series = Series(2, listOf(10))),
+                Exercise(name = "A2", series = Series(2, listOf(8))),
+                Exercise(name = "D", series = Series(2)),
+                Exercise(name = "C1", series = Series(2)),
+                Exercise(name = "E", series = Series(2)),
+                Exercise(name = "F", series = Series(2)),
+                Exercise(name = "G", series = Series(2)),
+                Exercise(name = "K2", series = Series(2)))
+        )
+        val session = sut.createNewSession(sessionResult)
+        assertSession(session, "A6", "A2", "D", "C1", "E", "F", "G", "K2")
+    }
+
+    @Test
     fun `Session result is A2-8 C4-12, next session will add A3 and replace C4 by C5`() {
         val sessionResult = SessionResult(
             name = "1st Program",

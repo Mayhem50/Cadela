@@ -25,7 +25,7 @@ class WorkoutService {
         changeExercise("A5", "A6", 8, exercises)
 
         exercises.find { it.name == "A2" }?.let {
-            if(it.series.repetitions[0] >= 8 && exercises.find { listOf("A4", "A5").contains(it.name) } == null) {
+            if(it.series.repetitions[0] >= 8 && exercises.find { listOf("A4", "A5", "A6").contains(it.name) } == null) {
                 exercises.add(0, Exercise("A3", Series(2)))
                 restBetweenExercises.add(0, Rest(120))
             }
