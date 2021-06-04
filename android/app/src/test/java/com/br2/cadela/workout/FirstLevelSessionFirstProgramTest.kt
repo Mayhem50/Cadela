@@ -5,6 +5,23 @@ import org.junit.jupiter.api.Test
 import kotlin.streams.toList
 
 class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
+
+    private fun assertSession(session: Session, vararg exerciseNames: String) {
+        Assertions.assertEquals("1st Program", session.name)
+        Assertions.assertEquals(
+            exerciseNames.toList(),
+            session.exercises.stream().map { it.name }.toList()
+        )
+        Assertions.assertEquals(
+            List(session.exercises.size) { Series(2) },
+            session.exercises.stream().map { it.series }.toList()
+        )
+        Assertions.assertEquals(
+            List(session.exercises.size - 1) { 120 },
+            session.restsBetweenExercises.stream().map { it.duration }.toList()
+        )
+    }
+
     @Test
     fun `C4 session result is less than 12, next session will be the same`() {
         val sessionResult = SessionResult(
@@ -20,15 +37,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         )
         val session = sut.createNewSession(sessionResult)
 
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A1", "D", "C4", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(6) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A1", "D", "C4", "E", "F", "G", "K2")
     }
 
     @Test
@@ -46,16 +55,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             )
         )
         val session = sut.createNewSession(sessionResult)
-
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A1", "D", "C5", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(6) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A1", "D", "C5", "E", "F", "G", "K2")
     }
 
     @Test
@@ -73,15 +73,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         )
         val session = sut.createNewSession(sessionResult)
 
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A1", "D", "C5", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(6) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A1", "D", "C5", "E", "F", "G", "K2")
     }
 
     @Test
@@ -98,16 +90,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
                 Exercise(name = "K2", series = Series(2)))
         )
         val session = sut.createNewSession(sessionResult)
-
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A1", "D", "C6", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(6) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A1", "D", "C6", "E", "F", "G", "K2")
     }
 
     @Test
@@ -124,16 +107,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
                 Exercise(name = "K2", series = Series(2)))
         )
         val session = sut.createNewSession(sessionResult)
-
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A1", "D", "C6", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(6) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A1", "D", "C6", "E", "F", "G", "K2")
     }
 
     @Test
@@ -150,16 +124,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
                 Exercise(name = "K2", series = Series(2)))
         )
         val session = sut.createNewSession(sessionResult)
-
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A1", "D", "C1", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(6) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A1", "D", "C1", "E", "F", "G", "K2")
     }
 
     @Test
@@ -176,16 +141,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
                 Exercise(name = "K2", series = Series(2)))
         )
         val session = sut.createNewSession(sessionResult)
-
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A1", "D", "C1", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(6) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A1", "D", "C1", "E", "F", "G", "K2")
     }
 
     @Test
@@ -202,16 +158,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
                 Exercise(name = "K2", series = Series(2)))
         )
         val session = sut.createNewSession(sessionResult)
-
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A2", "D", "C1", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(6) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A2", "D", "C1", "E", "F", "G", "K2")
     }
 
     @Test
@@ -228,16 +175,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
                 Exercise(name = "K2", series = Series(2)))
         )
         val session = sut.createNewSession(sessionResult)
-
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A3", "A2", "D", "C1", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(7) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A3", "A2", "D", "C1", "E", "F", "G", "K2")
     }
 
     @Test
@@ -255,15 +193,6 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             )
         )
         val session = sut.createNewSession(sessionResult)
-
-        Assertions.assertEquals("1st Program", session.name)
-        Assertions.assertEquals(
-            listOf("A3", "A2", "D", "C5", "E", "F", "G", "K2"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        Assertions.assertEquals(
-            List(7) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertSession(session, "A3", "A2", "D", "C5", "E", "F", "G", "K2")
     }
 }

@@ -1,5 +1,7 @@
 package com.br2.cadela.workout
 
+import kotlin.streams.toList
+
 class WorkoutService {
     fun createNewSession(sessionResult: SessionResult? = null): Session {
         return when (sessionResult?.name) {
@@ -50,7 +52,9 @@ class WorkoutService {
             restBetweenExercises.add(0, Rest(120))
         }
 
-        return Session(sessionResult.name, exercises.toList(), restBetweenExercises)
+        return Session(sessionResult.name, exercises.stream().map {
+            Exercise(it.name, Series(it.series.count))
+        }.toList(), restBetweenExercises)
     }
 
     private fun nextSessionAfterFirstLevelTest(sessionResult: SessionResult): Session {
