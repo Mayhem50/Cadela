@@ -21,6 +21,7 @@ class WorkoutService {
 
         changeExercise("A1", "A2", 8, exercises)
         changeExercise("A3", "A4", 8, exercises)
+        changeExercise("A4", "A5", 8, exercises)
 
         exercises.find { it.name == "A2" }?.let {
             if(it.series.repetitions[0] >= 8 && exercises.find { it.name == "A4" } == null) {
