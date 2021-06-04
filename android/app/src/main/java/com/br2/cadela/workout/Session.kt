@@ -62,6 +62,27 @@ data class Session(
             )
         )
 
+        val FIRST_PROGRAM_WITH_C5 = Session(
+            name = "1st Program",
+            exercises = listOf(
+                Exercise(name = "A"),
+                Exercise(name = "D"),
+                Exercise(name = "C5"),
+                Exercise(name = "E"),
+                Exercise(name = "F"),
+                Exercise(name = "G"),
+                Exercise(name = "K2")
+            ),
+            restsBetweenExercises = listOf(
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120),
+                Rest(duration = 120)
+            )
+        )
+
         val SECOND_PROGRAM = Session(
             name = "2nd Program",
             exercises = listOf(
