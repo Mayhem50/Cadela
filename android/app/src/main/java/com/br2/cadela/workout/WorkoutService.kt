@@ -13,7 +13,7 @@ class WorkoutService {
 
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
         val exercises = sessionResult.exercises.toMutableList()
-        val restBetweenExercises = MutableList(exercises.size - 1){ Rest(120) }
+        val restBetweenExercises = MutableList(exercises.size - 1) { Rest(120) }
 
         changeExercise("C4", "C5", 12, exercises)
         changeExercise("C5", "C6", 12, exercises)
@@ -25,9 +25,23 @@ class WorkoutService {
         changeExercise("A5", "A6", 8, exercises)
 
         exercises.find { it.name == "A2" }?.let {
-            if(it.series.repetitions[0] >= 8 && exercises.find { listOf("A4", "A5", "A6").contains(it.name) } == null) {
+            if (it.series.repetitions[0] >= 8 && exercises.find {
+                    listOf("A4", "A5", "A6").contains(
+                        it.name
+                    )
+                } == null) {
                 exercises.add(0, Exercise("A3", Series(2)))
                 restBetweenExercises.add(0, Rest(120))
+            }
+        }
+
+        exercises.find { it.name == "A6" }?.let {
+            if (it.series.repetitions[0] >= 8) {
+                return Session(
+                    name = "Only B Test", exercises = listOf(
+                        Exercise(name = "B", series = Series(1)),
+                    ), listOf()
+                )
             }
         }
 

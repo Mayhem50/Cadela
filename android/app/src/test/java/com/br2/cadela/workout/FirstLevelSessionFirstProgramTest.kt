@@ -376,6 +376,36 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     }
 
     @Test
+    fun `A6 session result is 8 or more, next session is a test on only B`() {
+        val sessionResult = SessionResult(
+            name = "1st Program",
+            exercises = listOf(
+                Exercise(name = "A6", series = Series(2, listOf(8))),
+                Exercise(name = "A2", series = Series(2)),
+                Exercise(name = "D", series = Series(2)),
+                Exercise(name = "C1", series = Series(2)),
+                Exercise(name = "E", series = Series(2)),
+                Exercise(name = "F", series = Series(2)),
+                Exercise(name = "G", series = Series(2)),
+                Exercise(name = "K2", series = Series(2)))
+        )
+        val session = sut.createNewSession(sessionResult)
+        Assertions.assertEquals("Only B Test", session.name)
+        Assertions.assertEquals(
+            listOf("B"),
+            session.exercises.stream().map { it.name }.toList()
+        )
+        Assertions.assertEquals(
+            List(session.exercises.size) { Series(1) },
+            session.exercises.stream().map { it.series }.toList()
+        )
+        Assertions.assertEquals(
+            List(session.exercises.size - 1) { 120 },
+            session.restsBetweenExercises.stream().map { it.duration }.toList()
+        )
+    }
+
+    @Test
     fun `Session result is A2-8 C4-12, next session will add A3 and replace C4 by C5`() {
         val sessionResult = SessionResult(
             name = "1st Program",
