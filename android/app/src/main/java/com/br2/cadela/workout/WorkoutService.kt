@@ -10,22 +10,47 @@ class WorkoutService {
     }
 
     private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
-        sessionResult.exercises.find { it.name == "C4" }?.let {
-            return if (it.series.repetitions[0] < 12) Session.FIRST_PROGRAM_WITH_C4 else Session.FIRST_PROGRAM_WITH_C5
+        val exercises = sessionResult.exercises.toMutableList()
+        val restBetweenExercises = Session.FIRST_PROGRAM.restsBetweenExercises.toMutableList()
+
+        var index = sessionResult.exercises.indexOfFirst { it.name == "C4" }
+        if(index >= 0 ){
+            val exercise = exercises[index]
+            if (exercise.series.repetitions[0] >= 12) {
+                exercises[index] = Exercise("C5", Series(exercise.series.count))
+            }
         }
-        sessionResult.exercises.find { it.name == "C5" }?.let {
-            return if (it.series.repetitions[0] < 12) Session.FIRST_PROGRAM_WITH_C5 else Session.FIRST_PROGRAM_WITH_C6
+
+        index = sessionResult.exercises.indexOfFirst { it.name == "C5" }
+        if(index >= 0 ){
+            val exercise = exercises[index]
+            if (exercise.series.repetitions[0] >= 12) {
+                exercises[index] = Exercise("C6", Series(exercise.series.count))
+            }
         }
-        sessionResult.exercises.find { it.name == "C6" }?.let {
-            return if(it.series.repetitions[0] < 12) Session.FIRST_PROGRAM_WITH_C6 else Session.FIRST_PROGRAM
+
+        index = sessionResult.exercises.indexOfFirst { it.name == "C6" }
+        if(index >= 0 ){
+            val exercise = exercises[index]
+            if (exercise.series.repetitions[0] >= 12) {
+                exercises[index] = Exercise("C1", Series(exercise.series.count))
+            }
         }
-        sessionResult.exercises.find { it.name == "A1" }?.let {
-            return if(it.series.repetitions[0] < 8) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_A2
+
+        index = sessionResult.exercises.indexOfFirst { it.name == "A1" }
+        if(index >= 0 ){
+            val exercise = exercises[index]
+            if (exercise.series.repetitions[0] >= 8) {
+                exercises[index] = Exercise("A2", Series(exercise.series.count))
+            }
         }
+
         sessionResult.exercises.find { it.name == "A2" }?.let {
-            return if(it.series.repetitions[0] < 8) Session.FIRST_PROGRAM_WITH_A2 else Session.FIRST_PROGRAM_WITH_A3
+            exercises.add(0, Exercise("A3", Series(2)))
+            restBetweenExercises.add(0, Rest(120))
         }
-        return Session.FIRST_PROGRAM
+
+        return Session(sessionResult.name, exercises.toList(), restBetweenExercises)
     }
 
     private fun nextSessionAfterFirstLevelTest(sessionResult: SessionResult): Session {
