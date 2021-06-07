@@ -29,10 +29,10 @@ class WorkoutTest : WorkoutTestBase() {
     @Test
     fun `Start new session`() {
         sut = spyk(WorkoutService(sessionRepository))
-        val session = sut.startNewSession()
+        sut.startNewSession()
         verify { sessionRepository.getLastSession() }
         verify { sut.createNewSession(null) }
-        assertNotNull(session)
+        assertNotNull(sut.currentSession)
     }
 }
 

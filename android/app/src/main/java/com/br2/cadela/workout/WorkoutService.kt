@@ -5,6 +5,10 @@ import java.time.temporal.ChronoUnit
 
 class WorkoutService(private val sessionRepository: SessionRepository) {
     private val TWO_WEEKS = 2
+    private var _currentSession: Session? = null
+
+    val currentSession: Session?
+        get() = _currentSession
 
     fun createNewSession(previousSession: Session? = null): Session {
         return when (previousSession?.name) {
@@ -15,9 +19,9 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         }
     }
 
-    fun startNewSession(): Session {
+    fun startNewSession() {
         val lastSession = sessionRepository.getLastSession()
-        return createNewSession(lastSession)
+        _currentSession = createNewSession(lastSession)
     }
 
     private fun nextSessionAfterOnlyBTest(previousSession: Session): Session {
