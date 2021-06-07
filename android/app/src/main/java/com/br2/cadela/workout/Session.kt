@@ -98,14 +98,14 @@ data class Session(
         val SECOND_PROGRAM = Session(
             name = "2nd Program",
             exercises = listOf(
-                Exercise(name = "B", series = Series(1)),
-                Exercise(name = "A1", series = Series(1)),
+                Exercise(name = "B", series = Series(3)),
+                Exercise(name = "A1", series = Series(3)),
                 Exercise(name = "D", series = Series(1)),
-                Exercise(name = "C1", series = Series(1)),
-                Exercise(name = "E", series = Series(1)),
-                Exercise(name = "F", series = Series(1)),
-                Exercise(name = "G", series = Series(1)),
-                Exercise(name = "K2", series = Series(1))
+                Exercise(name = "C1", series = Series(3)),
+                Exercise(name = "E", series = Series(3)),
+                Exercise(name = "F", series = Series(3)),
+                Exercise(name = "G", series = Series(3)),
+                Exercise(name = "K2", series = Series(3))
             ),
             restsBetweenExercises = listOf(
                 Rest(duration = 120),
