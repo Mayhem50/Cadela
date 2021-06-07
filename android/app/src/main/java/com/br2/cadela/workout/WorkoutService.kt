@@ -30,7 +30,6 @@ class WorkoutService {
             return Session.SECOND_PROGRAM
         }
         val exercises = sessionResult.exercises.toMutableList()
-        val restBetweenExercises = MutableList(exercises.size - 1) { Rest(120) }
 
         changeExercise("C4", "C5", 12, exercises)
         changeExercise("C5", "C6", 12, exercises)
@@ -43,8 +42,7 @@ class WorkoutService {
 
         exercises.find { it.name == "A2" }?.let {
             if (shouldReplaceA2(it, exercises)) {
-                exercises.add(0, Exercise("A3", Series(2)))
-                restBetweenExercises.add(0, Rest(120))
+                exercises.add(0, Exercise("A3", Series(2), Rest(120)))
             }
         }
 
@@ -55,8 +53,8 @@ class WorkoutService {
         }
 
         return Session(sessionResult.name, exercises.map {
-            Exercise(it.name, Series(it.series.count))
-        }.toList(), restBetweenExercises)
+            Exercise(it.name, Series(it.series.count), it.restAfter)
+        }.toList())
     }
 
     private fun sessionIsStartedSince2Weeks(sessionResult: SessionResult) =
@@ -81,7 +79,7 @@ class WorkoutService {
         if (index >= 0) {
             val exercise = exercises[index]
             if (exercise.series.repetitions[0] >= threshold) {
-                exercises[index] = Exercise(replaceBy, Series(exercise.series.count))
+                exercises[index] = Exercise(replaceBy, Series(exercise.series.count), exercise.restAfter)
             }
         }
     }

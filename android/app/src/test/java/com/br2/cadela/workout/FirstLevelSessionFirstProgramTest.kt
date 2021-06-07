@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import kotlin.streams.toList
 
 class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
@@ -15,15 +14,15 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         assertEquals("1st Program", session.name)
         assertEquals(
             exerciseNames.toList(),
-            session.exercises.stream().map { it.name }.toList()
+            session.exercises.map { it.name }.toList()
         )
         assertEquals(
             List(session.exercises.size) { Series(2) },
-            session.exercises.stream().map { it.series }.toList()
+            session.exercises.map { it.series }.toList()
         )
         assertEquals(
             List(session.exercises.size - 1) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
+            session.exercises.mapNotNull { it.restAfter?.duration }.toList()
         )
     }
 
@@ -32,13 +31,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C4", series = Series(2, listOf(11))),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C4", series = Series(2, listOf(11)), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -54,13 +53,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C4", series = Series(2, listOf(12))),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C4", series = Series(2, listOf(12)), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -75,13 +74,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C5", series = Series(2, listOf(11))),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C5", series = Series(2, listOf(11)), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -97,13 +96,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C5", series = Series(2, listOf(12))),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C5", series = Series(2, listOf(12)), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -118,13 +117,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C6", series = Series(2, listOf(11))),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C6", series = Series(2, listOf(11)), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -139,13 +138,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C6", series = Series(2, listOf(12))),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C6", series = Series(2, listOf(12)), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -160,13 +159,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2, listOf(7))),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A1", series = Series(2, listOf(7)), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -182,13 +181,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2, listOf(8))),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A1", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -204,13 +203,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A2", series = Series(2, listOf(7))),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A2", series = Series(2, listOf(7)), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -225,13 +224,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A2", series = Series(2, listOf(8))),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A2", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -246,14 +245,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A3", series = Series(2, listOf(7))),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A3", series = Series(2, listOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -268,14 +267,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A3", series = Series(2, listOf(8))),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A3", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -290,14 +289,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A3", series = Series(2, listOf(10))),
-                Exercise(name = "A2", series = Series(2, listOf(8))),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A3", series = Series(2, listOf(10)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -312,14 +311,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A4", series = Series(2, listOf(7))),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A4", series = Series(2, listOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -334,14 +333,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A4", series = Series(2, listOf(8))),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A4", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -356,14 +355,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A4", series = Series(2, listOf(10))),
-                Exercise(name = "A2", series = Series(2, listOf(8))),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A4", series = Series(2, listOf(10)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -378,14 +377,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A5", series = Series(2, listOf(7))),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A5", series = Series(2, listOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -400,14 +399,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A5", series = Series(2, listOf(8))),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A5", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -422,14 +421,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A5", series = Series(2, listOf(10))),
-                Exercise(name = "A2", series = Series(2, listOf(8))),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A5", series = Series(2, listOf(10)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -444,14 +443,14 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A6", series = Series(2, listOf(7))),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A6", series = Series(2, listOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -466,30 +465,18 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A6", series = Series(2, listOf(8))),
-                Exercise(name = "A2", series = Series(2)),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C1", series = Series(2)),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A6", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
-        assertEquals("Only B Test", session.name)
-        assertEquals(
-            listOf("B"),
-            session.exercises.stream().map { it.name }.toList()
-        )
-        assertEquals(
-            List(session.exercises.size) { Series(1) },
-            session.exercises.stream().map { it.series }.toList()
-        )
-        assertEquals(
-            List(session.exercises.size - 1) { 120 },
-            session.restsBetweenExercises.stream().map { it.duration }.toList()
-        )
+        assertEquals(Session.ONLY_B_TEST, session)
     }
 
     @Test
@@ -497,11 +484,11 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = Session.ONLY_B_TEST.name,
             exercises = listOf(
-                Exercise(name = "B", series = Series(1, listOf(4)))
+                Exercise(name = "B", series = Series(1, listOf(4)), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
-        assertEquals( Session.FIRST_PROGRAM_WITH_B1, session)
+        assertEquals(Session.FIRST_PROGRAM_WITH_B1, session)
     }
 
     @Test
@@ -509,7 +496,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = Session.ONLY_B_TEST.name,
             exercises = listOf(
-                Exercise(name = "B", series = Series(1, listOf(7)))
+                Exercise(name = "B", series = Series(1, listOf(7)), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -521,7 +508,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = Session.ONLY_B_TEST.name,
             exercises = listOf(
-                Exercise(name = "B", series = Series(1, listOf(8)))
+                Exercise(name = "B", series = Series(1, listOf(8)), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
@@ -546,13 +533,13 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val sessionResult = SessionResult(
             name = "1st Program",
             exercises = listOf(
-                Exercise(name = "A2", series = Series(2, listOf(8))),
-                Exercise(name = "D", series = Series(2)),
-                Exercise(name = "C4", series = Series(2, listOf(12))),
-                Exercise(name = "E", series = Series(2)),
-                Exercise(name = "F", series = Series(2)),
-                Exercise(name = "G", series = Series(2)),
-                Exercise(name = "K2", series = Series(2))
+                Exercise(name = "A2", series = Series(2, listOf(8)), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C4", series = Series(2, listOf(12)), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2), restAfter = null)
             )
         )
         val session = sut.createNewSession(sessionResult)
