@@ -3,33 +3,33 @@ package com.br2.cadela.workout
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-class WorkoutService {
+class WorkoutService(private val sessionRepository: SessionRepository) {
     private val TWO_WEEKS = 2
 
-    fun createNewSession(sessionResult: SessionResult? = null): Session {
-        return when (sessionResult?.name) {
-            "1st Level Test" -> nextSessionAfterFirstLevelTest(sessionResult)
-            "1st Program" -> nextSessionAfter1stProgram(sessionResult)
-            "Only B Test" -> nextSessionAfterOnlyBTest(sessionResult)
+    fun createNewSession(previousSession: Session? = null): Session {
+        return when (previousSession?.name) {
+            "1st Level Test" -> nextSessionAfterFirstLevelTest(previousSession)
+            "1st Program" -> nextSessionAfter1stProgram(previousSession)
+            "Only B Test" -> nextSessionAfterOnlyBTest(previousSession)
             else -> Session.FIRST_LEVEL_TEST
         }
     }
 
-    private fun nextSessionAfterOnlyBTest(sessionResult: SessionResult): Session {
-        if(sessionResult.exercises[0].series.repetitions[0] >= 8){
+    private fun nextSessionAfterOnlyBTest(previousSession: Session): Session {
+        if(previousSession.exercises[0].series.repetitions[0] >= 8){
             return Session.SECOND_LEVEL
         }
-        if(sessionResult.exercises[0].series.repetitions[0] > 5) {
+        if(previousSession.exercises[0].series.repetitions[0] > 5) {
             return Session.SECOND_PROGRAM
         }
         return Session.FIRST_PROGRAM_WITH_B1
     }
 
-    private fun nextSessionAfter1stProgram(sessionResult: SessionResult): Session {
-        if(sessionIsStartedSince2Weeks(sessionResult)) {
+    private fun nextSessionAfter1stProgram(previousSession: Session): Session {
+        if(sessionIsStartedSince2Weeks(previousSession)) {
             return Session.SECOND_PROGRAM
         }
-        val exercises = sessionResult.exercises.toMutableList()
+        val exercises = previousSession.exercises.toMutableList()
 
         changeExercise("C4", "C5", 12, exercises)
         changeExercise("C5", "C6", 12, exercises)
@@ -52,13 +52,13 @@ class WorkoutService {
             }
         }
 
-        return Session(sessionResult.name, exercises.map {
+        return Session(previousSession.name, exercises.map {
             Exercise(it.name, Series(it.series.count), it.restAfter)
         }.toList())
     }
 
-    private fun sessionIsStartedSince2Weeks(sessionResult: SessionResult) =
-        ChronoUnit.WEEKS.between(sessionResult.levelStartedAt, LocalDate.now()) >= TWO_WEEKS
+    private fun sessionIsStartedSince2Weeks(previousSession: Session) =
+        ChronoUnit.WEEKS.between(previousSession.levelStartedAt, LocalDate.now()) >= TWO_WEEKS
 
     private fun shouldReplaceA2(
         exercise: Exercise,
@@ -84,15 +84,20 @@ class WorkoutService {
         }
     }
 
-    private fun nextSessionAfterFirstLevelTest(sessionResult: SessionResult): Session {
+    private fun nextSessionAfterFirstLevelTest(previousSession: Session): Session {
         val repetitionsForB =
-            sessionResult.exercises.find { it.name == "B" }?.series?.repetitions?.elementAt(0) ?: 0
+            previousSession.exercises.find { it.name == "B" }?.series?.repetitions?.elementAt(0) ?: 0
         val repetitionsForC =
-            sessionResult.exercises.find { it.name == "C" }?.series?.repetitions?.elementAt(0) ?: 0
+            previousSession.exercises.find { it.name == "C" }?.series?.repetitions?.elementAt(0) ?: 0
         return if (repetitionsForB < 4) {
             return if (repetitionsForC > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
         } else {
             Session.SECOND_PROGRAM
         }
+    }
+
+    fun startNewSession(): Session {
+        val lastSession = sessionRepository.getLastSession()
+        return createNewSession(lastSession)
     }
 }

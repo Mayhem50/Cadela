@@ -1,8 +1,11 @@
 package com.br2.cadela.workout
 
+import java.time.LocalDate
+
 data class Session(
     val name: String,
-    val exercises: List<Exercise>
+    val exercises: List<Exercise>,
+    val levelStartedAt: LocalDate = LocalDate.now()
 ) {
     companion object {
         val FIRST_LEVEL_TEST = Session(
