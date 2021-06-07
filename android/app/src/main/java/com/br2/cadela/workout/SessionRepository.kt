@@ -1,8 +1,8 @@
 package com.br2.cadela.workout
 
-class SessionRepository {
+class SessionRepository(private val sessionDao: SessionDao) {
     fun getLastSession(): Session? {
-        TODO("Not yet implemented")
+        return sessionDao.getLastSession()
     }
 
 }

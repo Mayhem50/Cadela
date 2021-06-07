@@ -10,11 +10,13 @@ import org.junit.jupiter.api.Test
 
 abstract class WorkoutTestBase {
     protected lateinit var sut: WorkoutService
-    protected val sessionRepository = mockk<SessionRepository>()
+    protected lateinit var sessionRepository: SessionRepository
 
     @BeforeEach
     fun setup(){
-        every { sessionRepository.getLastSession() } returns null
+        val sessionDao = mockk<SessionDao>()
+        every { sessionDao.getLastSession() } returns null
+        sessionRepository = spyk(SessionRepository(sessionDao))
         sut = WorkoutService(sessionRepository)
     }
 }
