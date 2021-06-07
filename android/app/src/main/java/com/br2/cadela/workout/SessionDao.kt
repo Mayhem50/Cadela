@@ -1,8 +1,10 @@
 package com.br2.cadela.workout
 
 import androidx.room.Dao
+import androidx.room.Query
 
 @Dao
 interface SessionDao {
-    fun getLastSession(): Session?
+    @Query("SELECT * FROM sessions ORDER BY createdAt DESC LIMIT 1")
+    fun getLastSession(): SessionRecord?
 }
