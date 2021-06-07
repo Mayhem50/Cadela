@@ -89,3 +89,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${rootProject.extra["compose_version"]}")
 }
+
+tasks.withType<Test>() {
+    useJUnitPlatform()
+    jvmArgs = mutableListOf("--enable-preview")
+}
