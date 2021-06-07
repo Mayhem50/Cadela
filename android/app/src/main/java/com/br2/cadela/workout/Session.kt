@@ -7,6 +7,10 @@ data class Session(
     val exercises: List<Exercise>,
     val levelStartedAt: LocalDate = LocalDate.now()
 ) {
+    val isComplete: Boolean
+        get() = exercises.flatMap { it.series.repetitions }.all { it > 0 }
+
+
     companion object {
         val FIRST_LEVEL_TEST = Session(
             name = "1st Level Test",

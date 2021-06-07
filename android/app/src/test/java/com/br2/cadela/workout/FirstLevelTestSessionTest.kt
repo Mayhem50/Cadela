@@ -17,8 +17,8 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "1st Level Test",
             exercises = listOf(
-                Exercise("B", Series(1, listOf(3)), restAfter = Rest(120)),
-                Exercise("C", Series(1, listOf(1)), restAfter = null)
+                Exercise("B", Series(1, mutableListOf(3)), restAfter = Rest(120)),
+                Exercise("C", Series(1, mutableListOf(1)), restAfter = null)
             )
         )
         val session = sut.createNewSession(previousSession)
@@ -30,8 +30,8 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "1st Level Test",
             exercises = listOf(
-                Exercise("B", Series(1, listOf(3)), restAfter = Rest(120)),
-                Exercise("C", Series(1, listOf(0)), restAfter = null)
+                Exercise("B", Series(1, mutableListOf(3)), restAfter = Rest(120)),
+                Exercise("C", Series(1, mutableListOf(0)), restAfter = null)
             )
         )
         val session = sut.createNewSession(previousSession)
@@ -42,7 +42,7 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
     fun `B session result is 4 or more, next session wil be Second Program`() {
         val previousSession = Session(
             name = "1st Level Test",
-            exercises = listOf(Exercise("B", Series(1, listOf(4)), restAfter = null))
+            exercises = listOf(Exercise("B", Series(1, mutableListOf(4)), restAfter = null))
         )
         val session = sut.createNewSession(previousSession)
         Assertions.assertEquals(Session.SECOND_PROGRAM, session)

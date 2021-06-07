@@ -13,7 +13,7 @@ abstract class WorkoutTestBase {
     protected lateinit var sessionRepository: SessionRepository
 
     @BeforeEach
-    fun setup(){
+    fun setup() {
         val sessionDao = mockk<SessionDao>()
         every { sessionDao.getLastSession() } returns null
         every { sessionDao.save(any()) } returns Unit
@@ -45,5 +45,35 @@ class WorkoutTest : WorkoutTestBase() {
         verify { sessionRepository.saveSession(any()) }
         assertNull(sut.currentSession)
     }
+
+    @Test
+    fun `Pause and resume current session`() {
+        every { sessionRepository.getLastSession() } returnsMany listOf(
+            Session.FIRST_PROGRAM,
+            makeIncompleteSession()
+        )
+
+        sut.startNewSession()
+        val currentSession = Session(
+            sut.currentSession!!.name,
+            sut.currentSession!!.exercises,
+            sut.currentSession!!.levelStartedAt
+        )
+        currentSession.exercises[0].series.repetitions[0] = 12
+        sut.pauseSession()
+        verify { sessionRepository.saveSession(any()) }
+        assertNull(sut.currentSession)
+        sut.startNewSession()
+        assertEquals(currentSession, sut.currentSession)
+    }
+
+    private fun makeIncompleteSession() = Session(
+    Session.FIRST_PROGRAM.name,
+    Session.FIRST_PROGRAM.exercises.mapIndexed { index, it ->
+        if (index == 0) {
+            it.series.repetitions[0] = 12
+        }
+        it
+    })
 }
 

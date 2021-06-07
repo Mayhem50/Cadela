@@ -21,7 +21,8 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
 
     fun startNewSession() {
         val lastSession = sessionRepository.getLastSession()
-        _currentSession = createNewSession(lastSession)
+        _currentSession = if(lastSession?.isComplete == false) lastSession
+        else createNewSession(lastSession)
     }
 
     private fun nextSessionAfterOnlyBTest(previousSession: Session): Session {
@@ -106,6 +107,13 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     fun endSession() {
+        _currentSession?.let {
+            sessionRepository.saveSession(it)
+            _currentSession = null
+        }
+    }
+
+    fun pauseSession() {
         _currentSession?.let {
             sessionRepository.saveSession(it)
             _currentSession = null
