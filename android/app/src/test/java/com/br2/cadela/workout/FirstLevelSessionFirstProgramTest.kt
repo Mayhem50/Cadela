@@ -10,17 +10,15 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
     private fun assertSession(
         session: Session,
-        series: Array<Series> = Array(session.exercises.size) { Series(2) },
-        sessionName: String,
         exerciseNames: Array<String>
     ) {
-        assertEquals(sessionName, session.name)
+        assertEquals("1st Program", session.name)
         assertEquals(
             exerciseNames.toList(),
             session.exercises.stream().map { it.name }.toList()
         )
         assertEquals(
-            series.toList(),
+            List(session.exercises.size) { Series(2) },
             session.exercises.stream().map { it.series }.toList()
         )
         assertEquals(
@@ -47,7 +45,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         assertSession(
             session = session,
-            sessionName = "1st Program",
+
             exerciseNames = arrayOf("A1", "D", "C4", "E", "F", "G", "K2")
         )
     }
@@ -69,7 +67,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            sessionName = "1st Program",
+
             exerciseNames = arrayOf("A1", "D", "C5", "E", "F", "G", "K2")
         )
     }
@@ -92,8 +90,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A1", "D", "C5", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A1", "D", "C5", "E", "F", "G", "K2")
         )
     }
 
@@ -114,8 +111,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A1", "D", "C6", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A1", "D", "C6", "E", "F", "G", "K2")
         )
     }
 
@@ -136,8 +132,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A1", "D", "C6", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A1", "D", "C6", "E", "F", "G", "K2")
         )
     }
 
@@ -158,8 +153,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A1", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A1", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -181,8 +175,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A1", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A1", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -204,8 +197,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
 
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -226,8 +218,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -248,8 +239,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A3", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A3", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -271,8 +261,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A3", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A3", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -294,8 +283,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A4", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A4", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -317,8 +305,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A4", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A4", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -340,8 +327,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A4", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A4", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -363,8 +349,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A5", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A5", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -386,8 +371,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A5", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A5", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -409,8 +393,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A5", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A5", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -432,8 +415,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A6", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A6", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -455,8 +437,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A6", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A6", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -478,8 +459,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A6", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A6", "A2", "D", "C1", "E", "F", "G", "K2")
         )
     }
 
@@ -523,12 +503,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             )
         )
         val session = sut.createNewSession(sessionResult)
-        assertSession(
-            session = session,
-            series = Array(session.exercises.size) { Series(3) },
-            exerciseNames = arrayOf("B1", "A6", "A2", "D", "C1", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
-        )
+        assertEquals( Session.FIRST_PROGRAM_WITH_B1, session)
     }
 
     @Test
@@ -568,8 +543,6 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         assertEquals(Session.SECOND_PROGRAM, session)
     }
 
-    // TODO if with B1 do 8 or more go to Level 2
-
     @Test
     fun `Session result is A2-8 C4-12, next session will add A3 and replace C4 by C5`() {
         val sessionResult = SessionResult(
@@ -587,8 +560,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(sessionResult)
         assertSession(
             session = session,
-            exerciseNames = arrayOf("A3", "A2", "D", "C5", "E", "F", "G", "K2"),
-            sessionName = "1st Program"
+            exerciseNames = arrayOf("A3", "A2", "D", "C5", "E", "F", "G", "K2")
         )
     }
 }
