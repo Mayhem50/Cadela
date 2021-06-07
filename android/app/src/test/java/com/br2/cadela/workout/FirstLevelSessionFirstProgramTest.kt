@@ -1,6 +1,6 @@
 package com.br2.cadela.workout
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -14,16 +14,16 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         sessionName: String,
         exerciseNames: Array<String>
     ) {
-        Assertions.assertEquals(sessionName, session.name)
-        Assertions.assertEquals(
+        assertEquals(sessionName, session.name)
+        assertEquals(
             exerciseNames.toList(),
             session.exercises.stream().map { it.name }.toList()
         )
-        Assertions.assertEquals(
+        assertEquals(
             series.toList(),
             session.exercises.stream().map { it.series }.toList()
         )
-        Assertions.assertEquals(
+        assertEquals(
             List(session.exercises.size - 1) { 120 },
             session.restsBetweenExercises.stream().map { it.duration }.toList()
         )
@@ -499,16 +499,16 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             )
         )
         val session = sut.createNewSession(sessionResult)
-        Assertions.assertEquals("Only B Test", session.name)
-        Assertions.assertEquals(
+        assertEquals("Only B Test", session.name)
+        assertEquals(
             listOf("B"),
             session.exercises.stream().map { it.name }.toList()
         )
-        Assertions.assertEquals(
+        assertEquals(
             List(session.exercises.size) { Series(1) },
             session.exercises.stream().map { it.series }.toList()
         )
-        Assertions.assertEquals(
+        assertEquals(
             List(session.exercises.size - 1) { 120 },
             session.restsBetweenExercises.stream().map { it.duration }.toList()
         )
@@ -540,21 +540,19 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             )
         )
         val session = sut.createNewSession(sessionResult)
-        assertSession(
-            session = session,
-            series = arrayOf(
-                Series(3),
-                Series(3),
-                Series(1),
-                Series(3),
-                Series(3),
-                Series(3),
-                Series(3),
-                Series(3)
-            ),
-            exerciseNames = *Session.SECOND_PROGRAM.exercises.map { it.name }.toTypedArray(),
-            sessionName = "2nd Program"
+        assertEquals(Session.SECOND_PROGRAM, session)
+    }
+
+    @Test
+    fun `B session result is 8 or over, next session will be 2nd Level`() {
+        val sessionResult = SessionResult(
+            name = Session.ONLY_B_TEST.name,
+            exercises = listOf(
+                Exercise(name = "B", series = Series(1, listOf(8)))
+            )
         )
+        val session = sut.createNewSession(sessionResult)
+        assertEquals(Session.SECOND_LEVEL, session)
     }
 
     @Test
@@ -567,7 +565,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             levelStartedAt = twoWeekBefore
         )
         val session = sut.createNewSession(sessionResult)
-        Assertions.assertEquals(Session.SECOND_PROGRAM, session)
+        assertEquals(Session.SECOND_PROGRAM, session)
     }
 
     // TODO if with B1 do 8 or more go to Level 2

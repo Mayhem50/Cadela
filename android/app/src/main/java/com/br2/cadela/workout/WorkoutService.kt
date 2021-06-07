@@ -16,6 +16,9 @@ class WorkoutService {
     }
 
     private fun nextSessionAfterOnlyBTest(sessionResult: SessionResult): Session {
+        if(sessionResult.exercises[0].series.repetitions[0] >= 8){
+            return Session.SECOND_LEVEL
+        }
         if(sessionResult.exercises[0].series.repetitions[0] > 5) {
             return Session.SECOND_PROGRAM
         }

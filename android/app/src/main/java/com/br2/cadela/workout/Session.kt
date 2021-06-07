@@ -117,5 +117,21 @@ data class Session(
                 Rest(duration = 120)
             )
         )
+
+        val SECOND_LEVEL = Session(
+            name = "2nd Level",
+            exercises = listOf(
+                Exercise(name = "B1", series = Series(6)),
+                Exercise(name = "A3", series = Series(6)),
+                Exercise(name = "A2", series = Series(6)),
+                Exercise(name = "C1", series = Series(6)),
+                Exercise(name = "E", series = Series(6)),
+                Exercise(name = "F", series = Series(4)),
+                Exercise(name = "G", series = Series(6)),
+                Exercise(name = "H", series = Series(6)),
+                Exercise(name = "K2", series = Series(3))
+            ),
+            restsBetweenExercises = listOf()
+        )
     }
 }
