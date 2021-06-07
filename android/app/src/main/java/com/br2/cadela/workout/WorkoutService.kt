@@ -15,6 +15,11 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         }
     }
 
+    fun startNewSession(): Session {
+        val lastSession = sessionRepository.getLastSession()
+        return createNewSession(lastSession)
+    }
+
     private fun nextSessionAfterOnlyBTest(previousSession: Session): Session {
         if(previousSession.exercises[0].series.repetitions[0] >= 8){
             return Session.SECOND_LEVEL
@@ -94,10 +99,5 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         } else {
             Session.SECOND_PROGRAM
         }
-    }
-
-    fun startNewSession(): Session {
-        val lastSession = sessionRepository.getLastSession()
-        return createNewSession(lastSession)
     }
 }
