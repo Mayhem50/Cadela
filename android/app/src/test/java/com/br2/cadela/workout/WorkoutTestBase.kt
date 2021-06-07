@@ -1,8 +1,6 @@
 package com.br2.cadela.workout
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.spyk
+import io.mockk.*
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -33,7 +31,7 @@ class WorkoutTest : WorkoutTestBase() {
     fun `Start new session`() {
         sut = spyk(WorkoutService(sessionRepository))
         sut.startNewSession()
-        verify { sessionRepository.getLastSession() }
+        coVerify { sessionRepository.getLastSession() }
         verify { sut.createNewSession(null) }
         assertNotNull(sut.currentSession)
     }
@@ -42,13 +40,13 @@ class WorkoutTest : WorkoutTestBase() {
     fun `Current session is finished`() {
         sut.startNewSession()
         sut.endSession()
-        verify { sessionRepository.saveSession(any()) }
+        coVerify { sessionRepository.saveSession(any()) }
         assertNull(sut.currentSession)
     }
 
     @Test
     fun `Pause and resume current session`() {
-        every { sessionRepository.getLastSession() } returnsMany listOf(
+        coEvery { sessionRepository.getLastSession() } returnsMany listOf(
             Session.FIRST_PROGRAM,
             makeIncompleteSession()
         )
@@ -61,7 +59,7 @@ class WorkoutTest : WorkoutTestBase() {
         )
         currentSession.exercises[0].series.repetitions[0] = 12
         sut.pauseSession()
-        verify { sessionRepository.saveSession(any()) }
+        coVerify { sessionRepository.saveSession(any()) }
         assertNull(sut.currentSession)
         sut.startNewSession()
         assertEquals(currentSession, sut.currentSession)
