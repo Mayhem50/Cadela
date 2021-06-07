@@ -5,4 +5,8 @@ class SessionRepository(private val sessionDao: SessionDao) {
         return sessionDao.getLastSession()?.session
     }
 
+    fun saveSession(session: Session) {
+        return sessionDao.save(SessionRecord(session = session))
+    }
+
 }

@@ -104,4 +104,11 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             Session.SECOND_PROGRAM
         }
     }
+
+    fun endSession() {
+        _currentSession?.let {
+            sessionRepository.saveSession(it)
+            _currentSession = null
+        }
+    }
 }

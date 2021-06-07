@@ -2,6 +2,7 @@ package com.br2.cadela.workout
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -15,7 +16,7 @@ class SessionRepositoryTest {
 
     @BeforeEach
     fun setup(){
-        sessionDao = mockk()
+        sessionDao = spyk()
         sut = SessionRepository(sessionDao)
     }
 
@@ -27,5 +28,11 @@ class SessionRepositoryTest {
         val session = sut.getLastSession()
         verify { sessionDao.getLastSession() }
         assertEquals(record.session, session)
+    }
+
+    @Test
+    fun `Save session`() {
+        sut.saveSession(Session.FIRST_LEVEL_TEST)
+        verify { sessionDao.save(SessionRecord(session = Session.FIRST_LEVEL_TEST)) }
     }
 }

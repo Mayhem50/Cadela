@@ -6,8 +6,8 @@ import java.time.LocalDate
 
 @Entity(tableName = "sessions", primaryKeys = ["id"])
 data class SessionRecord(
-    @PrimaryKey(autoGenerate = true) val id: String,
+    @PrimaryKey(autoGenerate = true) val id: String = "",
     val session: Session,
-    val createdAt: LocalDate,
-    val endedAt: LocalDate
+    val createdAt: LocalDate = LocalDate.now(),
+    val endedAt: LocalDate = LocalDate.now()
 )

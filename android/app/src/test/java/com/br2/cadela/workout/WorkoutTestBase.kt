@@ -16,6 +16,7 @@ abstract class WorkoutTestBase {
     fun setup(){
         val sessionDao = mockk<SessionDao>()
         every { sessionDao.getLastSession() } returns null
+        every { sessionDao.save(any()) } returns Unit
         sessionRepository = spyk(SessionRepository(sessionDao))
         sut = WorkoutService(sessionRepository)
     }
@@ -35,6 +36,14 @@ class WorkoutTest : WorkoutTestBase() {
         verify { sessionRepository.getLastSession() }
         verify { sut.createNewSession(null) }
         assertNotNull(sut.currentSession)
+    }
+
+    @Test
+    fun `Current session is finished`() {
+        sut.startNewSession()
+        sut.endSession()
+        verify { sessionRepository.saveSession(any()) }
+        assertNull(sut.currentSession)
     }
 }
 
