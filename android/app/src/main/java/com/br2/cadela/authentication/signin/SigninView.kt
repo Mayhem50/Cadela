@@ -13,14 +13,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import com.br2.cadela.R
 import com.br2.cadela.authentication.AuthenticationModule
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
+import com.br2.cadela.shared.buildPopupToCurrent
+import com.br2.cadela.shared.navigateStringResource
 import kotlinx.coroutines.launch
 
 @Composable
-fun SigninView() {
+fun SigninView(navController: NavController) {
     val vm = AuthenticationModule.signinVm
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -64,7 +66,14 @@ fun SigninView() {
             )
             Box(modifier = Modifier.height(124f.dp)) {
                 if (!loading) Button(
-                    onClick = { vm.signin(email, password) },
+                    onClick = {
+                        vm.signin(email, password) {
+                            navController.navigateStringResource(
+                                R.string.nav_workout_home,
+                                NavOptions.Builder().buildPopupToCurrent(navController)
+                            )
+                        }
+                    },
                     modifier = Modifier.padding(8.0f.dp),
                 ) {
                     Text(text = stringResource(id = R.string.signin).capitalize(Locale.current))

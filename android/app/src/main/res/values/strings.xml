@@ -5,4 +5,7 @@
     <string name="password">password</string>
     <string name="email">email</string>
     <string name="signin">signin</string>
+    <string name="nav_workout_home">workout-home</string>
+    <string name="nav_splashscreen">splash-screen</string>
+    <string name="nav_authentication">authentication</string>
 </resources>

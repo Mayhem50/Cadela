@@ -7,16 +7,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.br2.cadela.R
 import com.br2.cadela.authentication.signin.SigninView
+import com.br2.cadela.shared.FakeNavControllerPreviewParameter
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 
 
 @Composable
-fun AuthView() {
+fun AuthView(navController: NavController) {
     Box(
         modifier = Modifier
             .padding(8.0f.dp)
@@ -26,7 +29,7 @@ fun AuthView() {
             .statusBarsPadding(),
         contentAlignment = Alignment.TopCenter
     ) {
-        SigninView()
+        SigninView(navController)
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
@@ -40,8 +43,8 @@ fun AuthView() {
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun DefaultPreview(@PreviewParameter(FakeNavControllerPreviewParameter::class) navController: NavController) {
     CadelaTheme {
-        AuthView()
+        AuthView(navController)
     }
 }

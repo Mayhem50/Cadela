@@ -16,6 +16,7 @@ import com.br2.cadela.shared.ApiClient
 import com.br2.cadela.shared.CadelaDatabase
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.workout.WorkoutModule
+import com.br2.cadela.workout.WorkoutView
 import com.google.accompanist.insets.ProvideWindowInsets
 
 class MainActivity : ComponentActivity() {
@@ -33,10 +34,11 @@ class MainActivity : ComponentActivity() {
                         val navController = rememberNavController()
                         NavHost(
                             navController = navController,
-                            startDestination = "splash-screen"
+                            startDestination = getString(R.string.nav_splashscreen)
                         ) {
-                            composable("splash-screen") { SplashScreen(navController) }
-                            composable("authentication") { AuthView() }
+                            composable(route = getString(R.string.nav_splashscreen)) { SplashScreen(navController) }
+                            composable(route = getString(R.string.nav_splashscreen)) { AuthView(navController) }
+                            composable(route = getString(R.string.nav_workout_home)) { WorkoutView(navController) }
                         }
                     }
                 }

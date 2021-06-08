@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import com.br2.cadela.shared.buildPopupToCurrent
+import com.br2.cadela.shared.navigateStringResource
 import com.br2.cadela.ui.theme.Red200
 import com.br2.cadela.ui.theme.Red500
 import kotlinx.coroutines.*
@@ -69,9 +71,9 @@ fun waitBeforeNavigate(timeMs: Long, navController: NavController) =
     CoroutineScope(Dispatchers.IO).launch {
         delay(timeMs)
         withContext(Dispatchers.Main) {
-            navController.navigate(
-                "authentication",
-                NavOptions.Builder().setPopUpTo("splash-screen", true).build()
+            navController.navigateStringResource(
+                R.string.nav_authentication,
+                NavOptions.Builder().buildPopupToCurrent(navController)
             )
         }
     }

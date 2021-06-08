@@ -1,6 +1,7 @@
 package com.br2.cadela.authentication.signin
 
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
 import com.br2.cadela.InstantExecutorExtension
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @ExtendWith(value = [InstantExecutorExtension::class])
 class SigninViewModelTest {
+    private lateinit var navController: NavController
     private lateinit var api: SigninApi
     private lateinit var tokenRepository: TokenRepository
     private lateinit var loadingObserver: Observer<Boolean>
@@ -35,11 +37,12 @@ class SigninViewModelTest {
         errorObserver = mockk()
         every { errorObserver.onChanged(any()) } returns Unit
 
+        navController = mockk()
         api = mockk()
         tokenRepository = mockk()
 
         signinService = spyk(SigninService(api, tokenRepository))
-        sut = SigninViewModel(signinService)
+        sut = SigninViewModel(signinService, navController)
     }
 
     @Test
@@ -53,6 +56,7 @@ class SigninViewModelTest {
         verifyAll {
             loadingObserver.onChanged(true)
             loadingObserver.onChanged(false)
+            navController.navigate(any<String>())
         }
     }
 
