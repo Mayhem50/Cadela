@@ -16,6 +16,7 @@ class SigninViewModel(private val signinService: SigninService) : ViewModel() {
     val loading: LiveData<Boolean> = _loading
 
     fun signin(email: String, password: String) = viewModelScope.launch(Dispatchers.Main) {
+        _error.value = ""
         _loading.value = true
         try {
             withContext(Dispatchers.IO) { signinService.signin(email, password) }

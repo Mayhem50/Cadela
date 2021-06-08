@@ -18,7 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 class SigninViewModelTest {
     private lateinit var api: SigninApi
     private lateinit var tokenRepository: TokenRepository
-    private lateinit var observer: Observer<Any>
+    private lateinit var loadingObserver: Observer<Boolean>
+    private lateinit var errorObserver: Observer<String>
     private lateinit var signinService: SigninService
     private lateinit var sut: SigninViewModel
 
@@ -29,8 +30,10 @@ class SigninViewModelTest {
     fun setup() {
         clearAllMocks()
         Dispatchers.setMain(newSingleThreadContext("UI"))
-        observer = mockk()
-        every { observer.onChanged(any()) } returns Unit
+        loadingObserver = mockk()
+        every { loadingObserver.onChanged(any()) } returns Unit
+        errorObserver = mockk()
+        every { errorObserver.onChanged(any()) } returns Unit
 
         api = mockk()
         tokenRepository = mockk()
@@ -41,31 +44,32 @@ class SigninViewModelTest {
 
     @Test
     fun `Sign in`() = runBlockingTest {
-        sut.loading.observeForever(observer)
+        sut.loading.observeForever(loadingObserver)
+        sut.error.observeForever(errorObserver)
 
         sut.signin(email, password)
 
         coVerify { signinService.signin(email, password) }
         verifyAll {
-            observer.onChanged(true)
-            observer.onChanged(false)
+            loadingObserver.onChanged(true)
+            loadingObserver.onChanged(false)
         }
     }
 
     @Test
     fun `Fail signin if empty email`() = runBlocking {
-        sut.error.observeForever(observer)
+        sut.error.observeForever(errorObserver)
         sut.signin("", password)
         coVerify { signinService.signin("", password) }
-        verify { observer.onChanged("Empty email") }
+        verify { errorObserver.onChanged("Empty email") }
     }
 
     @Test
     fun `Update error if empty password`() = runBlocking {
-        sut.error.observeForever(observer)
+        sut.error.observeForever(errorObserver)
         sut.signin(email, "")
         coVerify { signinService.signin(email, "") }
-        verify { observer.onChanged("Empty password") }
+        verify { errorObserver.onChanged("Empty password") }
     }
 
     @Test
@@ -73,9 +77,19 @@ class SigninViewModelTest {
         coEvery { signinService.signin(any(), any()) } throws Exception("Problem")
 
         sut = SigninViewModel(signinService)
-        sut.error.observeForever(observer)
+        sut.error.observeForever(errorObserver)
         sut.signin(email, password).join()
         coVerify { signinService.signin(any(), any()) }
-        coVerify { observer.onChanged("Problem") }
+        coVerify { errorObserver.onChanged("Problem") }
+    }
+
+    @Test
+    fun `Reset error on new signin`() = runBlocking {
+        sut.error.observeForever(errorObserver)
+        sut.signin("", password).join()
+        coVerify { signinService.signin(any(), any()) }
+        coVerify { errorObserver.onChanged("Empty email") }
+        sut.signin(email, password).join()
+        coVerify { errorObserver.onChanged("") }
     }
 }
