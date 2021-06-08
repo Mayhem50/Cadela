@@ -1,14 +1,11 @@
 package com.br2.cadela.workout
 
+import kotlinx.coroutines.*
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 class WorkoutService(private val sessionRepository: SessionRepository) {
     private val TWO_WEEKS = 2
-    private var _currentSession: Session? = null
-
-    val currentSession: Session?
-        get() = _currentSession
 
     fun createNewSession(previousSession: Session? = null): Session {
         return when (previousSession?.name) {
@@ -19,10 +16,18 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         }
     }
 
-    fun startNewSession() {
+    suspend fun startNewSession(): Session = withContext(Dispatchers.IO) {
         val lastSession = sessionRepository.getLastSession()
-        _currentSession = if(lastSession?.isComplete == false) lastSession
+        return@withContext if(lastSession?.isComplete == false) lastSession
         else createNewSession(lastSession)
+    }
+
+    suspend fun endSession(session: Session) {
+        saveAndClearCurrentSession(session)
+    }
+
+    suspend fun pauseSession(session: Session) {
+        saveAndClearCurrentSession(session)
     }
 
     private fun nextSessionAfterOnlyBTest(previousSession: Session): Session {
@@ -106,17 +111,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         }
     }
 
-    fun endSession() {
-        _currentSession?.let {
-            sessionRepository.saveSession(it)
-            _currentSession = null
-        }
-    }
-
-    fun pauseSession() {
-        _currentSession?.let {
-            sessionRepository.saveSession(it)
-            _currentSession = null
-        }
+    private suspend fun saveAndClearCurrentSession(session: Session) {
+            sessionRepository.saveSession(session)
     }
 }

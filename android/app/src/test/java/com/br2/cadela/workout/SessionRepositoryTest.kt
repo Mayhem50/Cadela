@@ -1,9 +1,7 @@
 package com.br2.cadela.workout
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.spyk
-import io.mockk.verify
+import io.mockk.*
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
@@ -21,18 +19,18 @@ class SessionRepositoryTest {
     }
 
     @Test
-    fun `Load last session from Dao`() {
-        val record: SessionRecord = SessionRecord("any_id", Session.FIRST_LEVEL_TEST, LocalDate.parse("2021-05-15"), LocalDate.parse("2021-05-15"))
+    fun `Load last session from Dao`() = runBlocking {
+        val record: SessionRecord = SessionRecord(0, Session.FIRST_LEVEL_TEST, LocalDate.parse("2021-05-15"), LocalDate.parse("2021-05-15"))
 
-        every { sessionDao.getLastSession() } returns record
+        coEvery { sessionDao.getLastSession() } returns record
         val session = sut.getLastSession()
-        verify { sessionDao.getLastSession() }
+        coVerify { sessionDao.getLastSession() }
         assertEquals(record.session, session)
     }
 
     @Test
-    fun `Save session`() {
+    fun `Save session`() = runBlocking {
         sut.saveSession(Session.FIRST_LEVEL_TEST)
-        verify { sessionDao.save(SessionRecord(session = Session.FIRST_LEVEL_TEST)) }
+        coVerify { sessionDao.save(SessionRecord(session = Session.FIRST_LEVEL_TEST)) }
     }
 }

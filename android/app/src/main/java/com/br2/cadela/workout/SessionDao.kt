@@ -7,8 +7,8 @@ import androidx.room.Query
 @Dao
 interface SessionDao {
     @Query("SELECT * FROM sessions ORDER BY createdAt DESC LIMIT 1")
-    fun getLastSession(): SessionRecord?
+    suspend fun getLastSession(): SessionRecord?
 
     @Insert
-    fun save(session: SessionRecord)
+    suspend fun save(session: SessionRecord)
 }
