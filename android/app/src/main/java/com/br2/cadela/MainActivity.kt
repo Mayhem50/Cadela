@@ -16,7 +16,7 @@ import com.br2.cadela.shared.ApiClient
 import com.br2.cadela.shared.CadelaDatabase
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.workout.WorkoutModule
-import com.br2.cadela.workout.WorkoutView
+import com.br2.cadela.workout.WorkoutMainView
 import com.google.accompanist.insets.ProvideWindowInsets
 
 class MainActivity : ComponentActivity() {
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable(route = getString(R.string.nav_splashscreen)) { SplashScreen(navController) }
                             composable(route = getString(R.string.nav_splashscreen)) { AuthView(navController) }
-                            composable(route = getString(R.string.nav_workout_home)) { WorkoutView(navController) }
+                            composable(route = getString(R.string.nav_workout_home)) { WorkoutMainView(navController) }
                         }
                     }
                 }
