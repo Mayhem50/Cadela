@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         bootstrap()
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             CadelaTheme {
                 // A surface container using the 'background' color from the theme
@@ -31,7 +33,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = "splash-screen"
                     ) {
-                        composable("splash-screen") { WorkoutView() }
+                        composable("splash-screen") { SplashScreen(navController) }
                         composable("authentication") { AuthView() }
                     }
                 }

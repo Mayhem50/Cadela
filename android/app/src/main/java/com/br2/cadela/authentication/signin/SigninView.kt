@@ -3,6 +3,7 @@ package com.br2.cadela.authentication.signin
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -31,7 +32,7 @@ fun SigninView() {
         modifier = Modifier
             .padding(8.0f.dp)
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxHeight()
     ) {
         OutlinedTextField(
             label = { Text(stringResource(id = R.string.email)) },
@@ -48,11 +49,16 @@ fun SigninView() {
             onValueChange = { password = it },
             modifier = Modifier.padding(8.0f.dp),
         )
-        Button(
-            onClick = { vm.signin(email, password) },
-            modifier = Modifier.padding(8.0f.dp)
-        ) {
-            Text(text = stringResource(id = R.string.signin).capitalize(Locale.current))
+        Box(modifier = Modifier.height(124f.dp)) {
+            if(!loading) Button(
+                onClick = { vm.signin(email, password) },
+                modifier = Modifier.padding(8.0f.dp),
+            ) {
+                Text(text = stringResource(id = R.string.signin).capitalize(Locale.current))
+            }
+            else CircularProgressIndicator(
+                modifier = Modifier.padding(8.0f.dp)
+            )
         }
     }
 }

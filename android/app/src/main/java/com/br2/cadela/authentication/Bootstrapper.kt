@@ -9,7 +9,8 @@ import com.br2.cadela.shared.CadelaDatabase
 
 object AuthenticationModule {
     private lateinit var _signinVm: SigninViewModel
-    val signinVm: SigninViewModel = _signinVm
+    val signinVm: SigninViewModel
+        get() = _signinVm
 
     fun boostrap(db: CadelaDatabase, apiClient: ApiClient) {
         val tokenRepository = TokenRepository(db.tokenDao())

@@ -62,7 +62,7 @@ fun SplashScreen(navController: NavController) {
         }
     }
 
-    waitBeforeNavigate(5000, navController)
+    waitBeforeNavigate(1000, navController)
 }
 
 fun waitBeforeNavigate(timeMs: Long, navController: NavController) =
