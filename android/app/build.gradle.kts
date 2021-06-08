@@ -80,6 +80,7 @@ dependencies {
     //testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     testImplementation("io.mockk:mockk:1.11.0")
     testImplementation("io.mockk:mockk-agent-jvm:1.11.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.google.code.gson:gson:2.8.6")
