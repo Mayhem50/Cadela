@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class ApiClient(baseUrl: HttpUrl = HttpUrl.get("https://cadela.herokuapp.com/")) {
+class ApiClient(baseUrl: HttpUrl = HttpUrl.get("https://cadela.herokuapp.com/api/")) {
     private var token: String? = null
     private val okHttpClient = OkHttpClient.Builder().readTimeout(5000, TimeUnit.MILLISECONDS)
         .connectTimeout(5000, TimeUnit.MILLISECONDS).build()
