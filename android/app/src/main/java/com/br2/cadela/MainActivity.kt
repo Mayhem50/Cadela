@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = getString(R.string.nav_splashscreen)
                         ) {
                             composable(route = getString(R.string.nav_splashscreen)) { SplashScreen(navController) }
-                            composable(route = getString(R.string.nav_splashscreen)) { AuthView(navController) }
+                            composable(route = getString(R.string.nav_authentication)) { AuthView(navController) }
                             composable(route = getString(R.string.nav_workout_home)) { WorkoutMainView(navController) }
                         }
                     }
