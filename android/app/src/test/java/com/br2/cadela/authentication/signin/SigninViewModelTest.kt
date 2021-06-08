@@ -1,16 +1,19 @@
 package com.br2.cadela.authentication.signin
 
+import androidx.lifecycle.Observer
 import com.br2.cadela.InstantExecutorExtension
+import io.mockk.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import androidx.lifecycle.Observer
-import io.mockk.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
 
+@ExperimentalCoroutinesApi
 @ExtendWith(value = [InstantExecutorExtension::class])
 class SigninViewModelTest {
     private lateinit var api: SigninApi
@@ -23,7 +26,8 @@ class SigninViewModelTest {
     private val password = "any_password"
 
     @BeforeEach
-    fun setup(){
+    fun setup() {
+        clearAllMocks()
         Dispatchers.setMain(newSingleThreadContext("UI"))
         observer = mockk()
         every { observer.onChanged(any()) } returns Unit
@@ -49,10 +53,29 @@ class SigninViewModelTest {
     }
 
     @Test
-    fun `Fail signin if empty email`() = runBlockingTest {
+    fun `Fail signin if empty email`() = runBlocking {
         sut.error.observeForever(observer)
         sut.signin("", password)
         coVerify { signinService.signin("", password) }
         verify { observer.onChanged("Empty email") }
+    }
+
+    @Test
+    fun `Update error if empty password`() = runBlocking {
+        sut.error.observeForever(observer)
+        sut.signin(email, "")
+        coVerify { signinService.signin(email, "") }
+        verify { observer.onChanged("Empty password") }
+    }
+
+    @Test
+    fun `Update error if service throws`() = runBlocking {
+        coEvery { signinService.signin(any(), any()) } throws Exception("Problem")
+
+        sut = SigninViewModel(signinService)
+        sut.error.observeForever(observer)
+        sut.signin(email, password).join()
+        coVerify { signinService.signin(any(), any()) }
+        coVerify { observer.onChanged("Problem") }
     }
 }
