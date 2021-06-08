@@ -1,14 +1,11 @@
 package com.br2.cadela.workout
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-
 class SessionRepository(private val sessionDao: SessionDao) {
-    fun getLastSession(): Session? = CoroutineScope(Dispatchers.IO).run {
-        sessionDao.getLastSession()?.session
+    suspend fun getLastSession(): Session? {
+        return sessionDao.getLastSession()?.session
     }
 
-    fun saveSession(session: Session) = CoroutineScope(Dispatchers.IO).run {
+    suspend fun saveSession(session: Session) {
         sessionDao.save(SessionRecord(session = session))
     }
 

@@ -10,13 +10,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room.databaseBuilder
 import com.br2.cadela.authentication.AuthView
-import com.br2.cadela.authentication.AuthenticationServices
-import com.br2.cadela.authentication.signin.SigninApiService
-import com.br2.cadela.authentication.signin.SigninService
-import com.br2.cadela.authentication.signin.SigninApi
+import com.br2.cadela.authentication.AuthenticationModule
 import com.br2.cadela.shared.ApiClient
 import com.br2.cadela.shared.CadelaDatabase
 import com.br2.cadela.ui.theme.CadelaTheme
+import com.br2.cadela.workout.WorkoutModule
+import com.br2.cadela.workout.WorkoutView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +31,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = "splash-screen"
                     ) {
-                        composable("splash-screen") { SplashScreen(navController) }
+                        composable("splash-screen") { WorkoutView() }
                         composable("authentication") { AuthView() }
                     }
                 }
@@ -48,6 +47,7 @@ class MainActivity : ComponentActivity() {
         ).build()
         val api = ApiClient()
 
-        AuthenticationServices.boostrap(db, api)
+        AuthenticationModule.boostrap(db, api)
+        WorkoutModule.bootstrap(db)
     }
 }

@@ -1,6 +1,5 @@
 package com.br2.cadela.workout
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate

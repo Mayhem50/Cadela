@@ -1,6 +1,5 @@
 package com.br2.cadela.ui.theme
 
-import android.graphics.Typeface
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
