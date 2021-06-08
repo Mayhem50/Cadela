@@ -16,7 +16,7 @@ import com.br2.cadela.shared.ApiClient
 import com.br2.cadela.shared.CadelaDatabase
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.workout.WorkoutModule
-import com.br2.cadela.workout.WorkoutView
+import com.google.accompanist.insets.ProvideWindowInsets
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,17 +24,20 @@ class MainActivity : ComponentActivity() {
         bootstrap()
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             CadelaTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    val navController = rememberNavController()
-                    NavHost(
-                        navController = navController,
-                        startDestination = "splash-screen"
-                    ) {
-                        composable("splash-screen") { SplashScreen(navController) }
-                        composable("authentication") { AuthView() }
+                ProvideWindowInsets {
+                    Surface(color = MaterialTheme.colors.background) {
+                        val navController = rememberNavController()
+                        NavHost(
+                            navController = navController,
+                            startDestination = "splash-screen"
+                        ) {
+                            composable("splash-screen") { SplashScreen(navController) }
+                            composable("authentication") { AuthView() }
+                        }
                     }
                 }
             }

@@ -11,12 +11,19 @@ import androidx.compose.ui.unit.dp
 import com.br2.cadela.R
 import com.br2.cadela.authentication.signin.SigninView
 import com.br2.cadela.ui.theme.CadelaTheme
+import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.statusBarsPadding
 
 
 @Composable
 fun AuthView() {
     Box(
-        modifier = Modifier.padding(8.0f.dp).fillMaxHeight().fillMaxWidth().padding(top = 32f.dp),
+        modifier = Modifier
+            .padding(8.0f.dp)
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .statusBarsPadding(),
         contentAlignment = Alignment.TopCenter
     ) {
         Image(
