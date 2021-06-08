@@ -1,5 +1,6 @@
 package com.br2.cadela.authentication.signin
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,7 +25,9 @@ import androidx.navigation.NavOptions
 import com.br2.cadela.R
 import com.br2.cadela.authentication.AuthenticationModule
 import com.br2.cadela.shared.buildPopupToCurrent
+import com.br2.cadela.shared.fillAllAndSmallPadding
 import com.br2.cadela.shared.navigateStringResource
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
@@ -52,23 +55,12 @@ fun SigninView(navController: NavController) {
             }
         }
 
-        if (error.isNotEmpty()) {
-            scope.launch {
-                scaffoldState.snackbarHostState.showSnackbar(
-                    message = error,
-                    duration = SnackbarDuration.Short,
-                    actionLabel = null,
-                )
-                vm.clearError()
-            }
-        }
+        ShowSnackBarIfNeeded(error, scope, scaffoldState) { vm.clearError() }
+
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(8.0f.dp)
-                .fillMaxWidth()
-                .fillMaxHeight()
+            modifier = Modifier.fillAllAndSmallPadding()
         ) {
             OutlinedTextField(
                 keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
@@ -95,19 +87,46 @@ fun SigninView(navController: NavController) {
                     .padding(8.0f.dp)
                     .focusRequester(passwordFocusRequester),
             )
-            Box(modifier = Modifier.height(124f.dp)) {
-                if (!loading) Button(
-                    onClick = {
-                        signin()
-                    },
-                    modifier = Modifier.padding(8.0f.dp),
-                ) {
-                    Text(text = stringResource(id = R.string.signin).capitalize(Locale.current))
-                }
-                else CircularProgressIndicator(
-                    modifier = Modifier.padding(8.0f.dp)
-                )
+            ButtonWithLoader(loading) {
+                signin()
             }
         }
+    }
+}
+
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+private fun ShowSnackBarIfNeeded(
+    error: String,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState,
+    action: () -> Unit
+) {
+    if (error.isNotEmpty()) {
+        scope.launch {
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = error,
+                duration = SnackbarDuration.Short,
+                actionLabel = null,
+            )
+            action()
+        }
+    }
+}
+
+@Composable
+private fun ButtonWithLoader(loading: Boolean, action: () -> Unit) {
+    Box(modifier = Modifier.height(124f.dp)) {
+        if (!loading) Button(
+            onClick = {
+                action()
+            },
+            modifier = Modifier.padding(8.0f.dp),
+        ) {
+            Text(text = stringResource(id = R.string.signin).capitalize(Locale.current))
+        }
+        else CircularProgressIndicator(
+            modifier = Modifier.padding(8.0f.dp)
+        )
     }
 }
