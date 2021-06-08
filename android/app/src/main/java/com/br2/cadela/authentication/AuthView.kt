@@ -26,6 +26,7 @@ fun AuthView() {
             .statusBarsPadding(),
         contentAlignment = Alignment.TopCenter
     ) {
+        SigninView()
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
@@ -34,8 +35,6 @@ fun AuthView() {
                 .height(80f.dp),
             alignment = Alignment.TopCenter
         )
-
-        SigninView()
     }
 }
 
