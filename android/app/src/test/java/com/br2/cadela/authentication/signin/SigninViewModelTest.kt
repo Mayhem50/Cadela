@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @ExtendWith(value = [InstantExecutorExtension::class])
 class SigninViewModelTest {
-    private lateinit var navController: NavController
     private lateinit var api: SigninApi
     private lateinit var tokenRepository: TokenRepository
     private lateinit var loadingObserver: Observer<Boolean>
@@ -36,13 +35,11 @@ class SigninViewModelTest {
         every { loadingObserver.onChanged(any()) } returns Unit
         errorObserver = mockk()
         every { errorObserver.onChanged(any()) } returns Unit
-
-        navController = mockk()
         api = mockk()
         tokenRepository = mockk()
 
         signinService = spyk(SigninService(api, tokenRepository))
-        sut = SigninViewModel(signinService, navController)
+        sut = SigninViewModel(signinService)
     }
 
     @Test
@@ -56,7 +53,6 @@ class SigninViewModelTest {
         verifyAll {
             loadingObserver.onChanged(true)
             loadingObserver.onChanged(false)
-            navController.navigate(any<String>())
         }
     }
 
@@ -94,6 +90,16 @@ class SigninViewModelTest {
         coVerify { signinService.signin(any(), any()) }
         coVerify { errorObserver.onChanged("Empty email") }
         sut.signin(email, password).join()
+        coVerify { errorObserver.onChanged("") }
+    }
+
+    @Test
+    fun `Clear error`() = runBlocking {
+        sut.error.observeForever(errorObserver)
+        sut.signin("", password).join()
+        coVerify { signinService.signin(any(), any()) }
+        coVerify { errorObserver.onChanged("Empty email") }
+        sut.clearError()
         coVerify { errorObserver.onChanged("") }
     }
 }

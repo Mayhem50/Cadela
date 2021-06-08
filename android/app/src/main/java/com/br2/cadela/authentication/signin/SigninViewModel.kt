@@ -21,7 +21,7 @@ class SigninViewModel(private val signinService: SigninService) : ViewModel() {
     val loading: LiveData<Boolean> = _loading
 
     fun signin(email: String, password: String, onSuccess: (() -> Unit)? = null) = viewModelScope.launch(Dispatchers.Main) {
-        _error.value = ""
+       clearError()
         _loading.value = true
         try {
             withContext(Dispatchers.IO) { signinService.signin(email, password) }
@@ -30,5 +30,9 @@ class SigninViewModel(private val signinService: SigninService) : ViewModel() {
             _error.value = ex.message
         }
         _loading.value = false
+    }
+
+    fun clearError() {
+        _error.value = ""
     }
 }
