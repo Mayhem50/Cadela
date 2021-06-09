@@ -10,8 +10,8 @@ data class Session(
     val estimatedTimeInSec: Int
         get() = exercises.foldIndexed(0, { index, acc, it ->
             val totalRestBetweenSeries = (it.series.count - 1) * it.series.restAfter.duration
-            if(index < exercises.size - 1) acc + totalRestBetweenSeries + (it.restAfter?.duration ?: 0)
-            else acc + totalRestBetweenSeries
+            val totalRestBetweenExercise = if(index < exercises.size - 1)  (it.restAfter?.duration ?: 0) else 0
+            acc + totalRestBetweenSeries + totalRestBetweenExercise
         })
 
     val notStarted: Boolean
