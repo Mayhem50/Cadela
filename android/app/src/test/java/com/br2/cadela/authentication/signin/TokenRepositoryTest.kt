@@ -1,13 +1,16 @@
 package com.br2.cadela.authentication.signin
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
 class TokenRepositoryTest : TokenRepositoryContract() {
     override val sut: TokenRepository
         get() = _sut
+
+    override fun setup() {
+
+    }
 
     private val tokenDao = mockk<TokenDao>()
     private var _sut: TokenRepository
@@ -17,13 +20,13 @@ class TokenRepositoryTest : TokenRepositoryContract() {
     private val tokenRecord = TokenRecord(token, userId)
 
     init {
-        every { tokenDao.save(tokenRecord) } returns mockk()
+        coEvery { tokenDao.save(tokenRecord) } returns mockk()
         _sut = TokenRepository(tokenDao)
     }
 
     @Test
-    fun `Ensure Room client is called with right parameters`() {
+    fun `Ensure Room client is called with right parameters`() = runBlocking {
         sut.save(token, userId)
-        verify { tokenDao.save(tokenRecord) }
+        coVerify { tokenDao.save(tokenRecord) }
     }
 }

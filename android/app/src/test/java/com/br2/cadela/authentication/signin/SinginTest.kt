@@ -4,6 +4,7 @@ package com.br2.cadela.authentication.signin
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.IOException
@@ -17,10 +18,11 @@ object Mocks {
 
     val DEFAULT_USER = User("any_user_id", "John", "McLane")
 
-    init {
-        every { repository.save(any(), any()) } returns mockk()
-        every { repository.save("", any()) } throws InvalidParameterException("Empty token")
-        every { repository.save(any(), "") } throws InvalidParameterException("Empty user id")
+    fun init() {
+        clearAllMocks()
+        coEvery { repository.save(any(), any()) } returns mockk()
+        coEvery { repository.save("", any()) } throws InvalidParameterException("Empty token")
+        coEvery { repository.save(any(), "") } throws InvalidParameterException("Empty user id")
 
         coEvery { api.signin(any(), any()) } returns SigninResponse(
             DEFAULT_USER, "any_token"
@@ -37,6 +39,11 @@ class SinginServiceTest {
 
     private val email = "any_email@mail.com"
     private val password = "any_password"
+
+    @BeforeEach
+    fun setup(){
+        Mocks.init()
+    }
 
     @Test
     fun `Save token for userId if valid email & password provided`() = runBlocking {
@@ -73,8 +80,8 @@ class SinginServiceTest {
     fun `Throw exception if repository fails`() = runBlocking  {
         val failRepository = mockk<TokenRepository>()
         sut = SigninService(api, failRepository)
-        every { failRepository.save("any_token", "any_user_id") } throws IOException()
-        assertThrows<IOException> { sut.signin(email, password) }
+        coEvery { failRepository.save("any_token", "any_user_id") } throws IOException()
+        val exception = assertThrows<IOException> { sut.signin(email, password) }
         return@runBlocking
     }
 
@@ -94,4 +101,7 @@ class MockApiTest : SigninApiContract() {
 
 class MockTokenRepositoryContract : TokenRepositoryContract() {
     override val sut = Mocks.repository
+    override fun setup() {
+        Mocks.init()
+    }
 }

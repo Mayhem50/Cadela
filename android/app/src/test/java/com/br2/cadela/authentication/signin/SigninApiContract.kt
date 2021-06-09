@@ -2,12 +2,18 @@ package com.br2.cadela.authentication.signin
 
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.security.InvalidParameterException
 
 abstract class SigninApiContract {
     protected abstract val sut: SigninApi
+
+    @BeforeEach
+    fun setupMocks(){
+        Mocks.init()
+    }
 
     @Test
     fun `Get signin response for specific user email`() = runBlocking {

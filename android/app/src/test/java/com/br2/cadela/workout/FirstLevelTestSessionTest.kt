@@ -15,7 +15,7 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
     @Test
     fun `B session result is under 4, next session wil be First Program`() {
         val previousSession = Session(
-            name = "1st Level Test",
+            name = "first_level_test",
             exercises = listOf(
                 Exercise("B", Series(1, mutableListOf(3)), restAfter = Rest(120)),
                 Exercise("C", Series(1, mutableListOf(1)), restAfter = null)
@@ -28,7 +28,7 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
     @Test
     fun `B session result is under 4 and C is 0, next session wil be First Program with C4 instead of C1`() {
         val previousSession = Session(
-            name = "1st Level Test",
+            name = "first_level_test",
             exercises = listOf(
                 Exercise("B", Series(1, mutableListOf(3)), restAfter = Rest(120)),
                 Exercise("C", Series(1, mutableListOf(0)), restAfter = null)
@@ -41,7 +41,7 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
     @Test
     fun `B session result is 4 or more, next session wil be Second Program`() {
         val previousSession = Session(
-            name = "1st Level Test",
+            name = "first_level_test",
             exercises = listOf(Exercise("B", Series(1, mutableListOf(4)), restAfter = null))
         )
         val session = sut.createNewSession(previousSession)

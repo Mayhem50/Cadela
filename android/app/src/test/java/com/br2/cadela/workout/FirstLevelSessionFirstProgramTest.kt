@@ -11,7 +11,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         session: Session,
         exerciseNames: Array<String>
     ) {
-        assertEquals("1st Program", session.name)
+        assertEquals("first_program", session.name)
         assertEquals(
             exerciseNames.toList(),
             session.exercises.map { it.name }.toList()
@@ -29,7 +29,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `C4 session result is less than 12, next session will be the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -51,7 +51,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `C4 session result is 12 or more, next session replace C4 by C5`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -72,7 +72,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `C5 session result is less than 12 next session will be the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -94,7 +94,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `C5 session result is 12 or more, next session replace C5 by C6`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -115,7 +115,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `C6 session result is less than 12 next session will be the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -136,7 +136,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `C6 session result is 12 or more, next session replace C6 by C1`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -157,7 +157,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A1 session result is less than 8, next session will be the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -179,7 +179,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A1 session result is 8 or more, next session replace A1 by A2`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -201,7 +201,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A2 session result is less than 8, next session is the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A2", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -222,7 +222,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A2 session result is 8 or more, next session add A3 before A2`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -243,7 +243,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A3 session result is less than 8, next session will be the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A3", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
@@ -265,7 +265,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A3 session result is 8 or more, next session replace A3 by A4`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A3", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
@@ -287,7 +287,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `Session result is A2-8 A3-10, next session will replace A3 by A4`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A3", series = Series(2, mutableListOf(10)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
@@ -309,7 +309,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A4 session result is less than 8, next session will be the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A4", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
@@ -331,7 +331,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A4 session result is 8 or more, next session replace A4 by A5`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A4", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
@@ -353,7 +353,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `Session result is A2-8 A4-10, next session will replace A4 by A5`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A4", series = Series(2, mutableListOf(10)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
@@ -375,7 +375,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A5 session result is less than 8, next session will be the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A5", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
@@ -397,7 +397,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A5 session result is 8 or more, next session replace A5 by A6`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A5", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
@@ -419,7 +419,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `Session result is A2-8 A5-10, next session will replace A5 by A6`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A5", series = Series(2, mutableListOf(10)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
@@ -441,7 +441,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A6 session result is less than 8, next session will be the same`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A6", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
@@ -463,7 +463,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `A6 session result is 8 or more, next session is a test on only B`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A6", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
@@ -516,7 +516,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     }
 
     @Test
-    fun `Go to 2nd Program if user do 1st Program with B1 since 2 weeks`() {
+    fun `Go to 2nd Program if user do first_program with B1 since 2 weeks`() {
         val today = LocalDate.now()
         val twoWeekBefore = today.minus(2, ChronoUnit.WEEKS)
         val previousSession = Session(
@@ -531,7 +531,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
     @Test
     fun `Session result is A2-8 C4-12, next session will add A3 and replace C4 by C5`() {
         val previousSession = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
