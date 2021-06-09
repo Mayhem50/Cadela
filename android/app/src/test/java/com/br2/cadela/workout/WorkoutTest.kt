@@ -1,19 +1,23 @@
 package com.br2.cadela.workout
 
 import io.mockk.*
-import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 
 abstract class WorkoutTestBase {
+    protected lateinit var sessionDao: SessionDao
+
     protected lateinit var sut: WorkoutService
     protected lateinit var sessionRepository: SessionRepository
 
     @BeforeEach
     fun setup() {
-        val sessionDao = mockk<SessionDao>()
+        clearAllMocks()
+        sessionDao = mockk()
         coEvery { sessionDao.getLastSession() } returns null
         coEvery { sessionDao.save(any()) } returns Unit
         sessionRepository = spyk(SessionRepository(sessionDao))
@@ -34,6 +38,29 @@ class WorkoutTest : WorkoutTestBase() {
         sut.startNewSession()
         coVerify { sessionRepository.getLastSession() }
         verify { sut.createNewSession(null) }
+    }
+
+    @Test
+    fun `If next session is on same level levelStartedAt stays the same`() = runBlocking {
+        val incompleteSession = Session(
+            name = Session.FIRST_PROGRAM.name,
+            exercises = Session.FIRST_PROGRAM.exercises.map {
+                Exercise(
+                    it.name,
+                    Series(it.series.count, it.series.repetitions.map { 3 }.toMutableList()),
+                    it.restAfter
+                )
+            },
+            levelStartedAt = LocalDate.of(2021, 5, 30))
+
+        coEvery { sessionDao.getLastSession() } returns SessionRecord(
+            id = 0,
+            session = incompleteSession
+        )
+
+        val session = sut.startNewSession()
+        assertEquals(incompleteSession.name, session.name)
+        assertEquals(incompleteSession.levelStartedAt, session.levelStartedAt)
     }
 
     @Test
@@ -59,12 +86,12 @@ class WorkoutTest : WorkoutTestBase() {
     }
 
     private fun makeIncompleteSession() = Session(
-    Session.FIRST_PROGRAM.name,
-    Session.FIRST_PROGRAM.exercises.mapIndexed { index, it ->
-        if (index == 0) {
-            it.series.repetitions[0] = 12
-        }
-        it
-    })
+        Session.FIRST_PROGRAM.name,
+        Session.FIRST_PROGRAM.exercises.mapIndexed { index, it ->
+            if (index == 0) {
+                it.series.repetitions[0] = 12
+            }
+            it
+        })
 }
 
