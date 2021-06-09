@@ -7,13 +7,25 @@ data class Session(
     val exercises: List<Exercise>,
     val levelStartedAt: LocalDate = LocalDate.now()
 ) {
-    val isComplete: Boolean
-        get() = exercises.flatMap { it.series.repetitions }.all { it > 0 }
+    val estimatedTimeInSec: Int
+        get() = exercises.foldIndexed(0, { index, acc, it ->
+            val totalRestBetweenSeries = (it.series.count - 1) * it.series.restAfter.duration
+            if(index < exercises.size - 1) acc + totalRestBetweenSeries + (it.restAfter?.duration ?: 0)
+            else acc + totalRestBetweenSeries
+        })
 
+    val notStarted: Boolean
+        get() = exercises.flatMap { it.series.repetitions }.all { it == 0 }
+
+    val isComplete: Boolean
+        get() = exercises.map { it.series.repetitions.any { it > 0 } }.all { it }
+
+    fun clone(newStartDate: LocalDate? = null): Session =
+        Session(name = name, exercises = exercises, levelStartedAt = newStartDate ?: levelStartedAt)
 
     companion object {
         val FIRST_LEVEL_TEST = Session(
-            name = "1st Level Test",
+            name = "first_level_test",
             exercises = listOf(
                 Exercise(name = "A", series = Series(1), restAfter = Rest(180)),
                 Exercise(name = "B", series = Series(1), restAfter = Rest(180)),
@@ -22,7 +34,7 @@ data class Session(
             )
         )
         val FIRST_PROGRAM = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
@@ -35,7 +47,7 @@ data class Session(
         )
 
         val FIRST_PROGRAM_WITH_C4 = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "A1", series = Series(1), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(1), restAfter = Rest(120)),
@@ -48,14 +60,14 @@ data class Session(
         )
 
         val ONLY_B_TEST = Session(
-            name = "Only B Test",
+            name = "only_b_test",
             exercises = listOf(
                 Exercise(name = "B", series = Series(1), restAfter = null),
             )
         )
 
         val FIRST_PROGRAM_WITH_B1 = Session(
-            name = "1st Program",
+            name = "first_program",
             exercises = listOf(
                 Exercise(name = "B1", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "A6", series = Series(3), restAfter = Rest(duration = 120)),
@@ -70,7 +82,7 @@ data class Session(
         )
 
         val SECOND_PROGRAM = Session(
-            name = "2nd Program",
+            name = "second_program",
             exercises = listOf(
                 Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
@@ -84,7 +96,7 @@ data class Session(
         )
 
         val SECOND_LEVEL = Session(
-            name = "2nd Level",
+            name = "level_2",
             exercises = listOf(
                 Exercise(name = "B1", series = Series(6), restAfter = Rest(duration = 25)),
                 Exercise(name = "A3", series = Series(6), restAfter = Rest(duration = 25)),
