@@ -7,5 +7,5 @@ import androidx.room.OnConflictStrategy
 @Dao
 interface TokenDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(record: TokenRecord)
+    suspend fun save(record: TokenRecord)
 }
