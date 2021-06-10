@@ -47,25 +47,25 @@ class SessionTest {
 
     @Test
     fun `Compute estimated session time`() {
-        val session540 = Session("any_name", listOf(
+        val session660 = Session("any_name", listOf(
             Exercise("any_name", Series(1, mutableListOf(1, 1), Rest(120)), Rest(180)),
             Exercise("any_name", Series(1, mutableListOf(1, 1), Rest(120)), Rest(180)),
             Exercise("any_name", Series(1, mutableListOf(1, 1), Rest(120)), Rest(180)),
             Exercise("any_name", Series(1, mutableListOf(1, 1), Rest(120)), Rest(180)),
         ))
-        val session690 = Session("any_name", listOf(
+        val session960 = Session("any_name", listOf(
             Exercise("any_name", Series(2, mutableListOf(1, 1), Rest(120)), Rest(180)),
             Exercise("any_name", Series(3, mutableListOf(0, 0), Rest(90)), Rest(120)),
             Exercise("any_name", Series(4, mutableListOf(0, 0), Rest(30)), Rest(100)),
         ))
-        val session810 = Session("any_name", listOf(
+        val session1080 = Session("any_name", listOf(
             Exercise("any_name", Series(2, mutableListOf(1, 1), Rest(120)), Rest(180)),
             Exercise("any_name", Series(3, mutableListOf(0, 0), Rest(90)), Rest(240)),
             Exercise("any_name", Series(4, mutableListOf(0, 0), Rest(30)), Rest(100)),
         ))
 
-        assertEquals( 540, session540.estimatedTimeInSec)
-        assertEquals( 690, session690.estimatedTimeInSec)
-        assertEquals( 810, session810.estimatedTimeInSec)
+        assertEquals( 660, session660.estimatedTimeInSec)
+        assertEquals( 960, session960.estimatedTimeInSec)
+        assertEquals( 1080, session1080.estimatedTimeInSec)
     }
 }
