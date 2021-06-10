@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password">mot de passe</string>
+    <string name="email">email</string>
+    <string name="signin">connexion</string>
+
+    <string name="first_level_test">Test Débutant</string>
+    <string name="first_program">Premier Programme</string>
+    <string name="second_program">Second Programme</string>
+    <string name="level_2">Niveau 2</string>
+    <string name="only_b_test">Test B</string>
+
+    <string name="session_duration">Durée: %1$s</string>
+    <string name="session_not_started">Pas commencé</string>
+    <string name="session_started">Commencé le %1$s</string>
+    <string name="empty_serie">-</string>
+    <string name="exercise_index">Exo %1$d:</string>
+    <string name="start_session">DEMARRER</string>
+</resources>
