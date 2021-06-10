@@ -11,7 +11,7 @@ data class Session(
         get() = exercises.foldIndexed(0, { index, acc, it ->
             val totalRestBetweenSeries = (it.series.count - 1) * it.series.restAfter.duration
             val totalRestBetweenExercise = if(index < exercises.size - 1)  (it.restAfter?.duration ?: 0) else 0
-            val estimatedExerciseTime = 30 * it.series.count
+            val estimatedExerciseTime = Series.ESTIMATED_TIME_FOR_ONE_SERIE_IN_SEC * it.series.count
             acc + totalRestBetweenSeries + totalRestBetweenExercise + estimatedExerciseTime
         })
 
