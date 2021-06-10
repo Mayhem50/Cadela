@@ -1,11 +1,25 @@
 <resources>
-    <string name="app_name">Cadela</string>
-    <string name="database_name">cadela-db</string>
+    <string name="app_name" translatable="false">Cadela</string>
+    <string name="database_name" translatable="false">cadela-db</string>
+    <string name="package_name" translatable="false">com.br2.cadela</string>
+    <string name="nav_workout_home" translatable="false">workout-home</string>
+    <string name="nav_splashscreen" translatable="false">splash-screen</string>
+    <string name="nav_authentication" translatable="false">authentication</string>
 
     <string name="password">password</string>
     <string name="email">email</string>
     <string name="signin">signin</string>
-    <string name="nav_workout_home">workout-home</string>
-    <string name="nav_splashscreen">splash-screen</string>
-    <string name="nav_authentication">authentication</string>
+
+    <string name="first_level_test">Beginner Test</string>
+    <string name="first_program">First Program</string>
+    <string name="second_program">Second Program</string>
+    <string name="level_2">Level 2</string>
+    <string name="only_b_test">Test B</string>
+
+    <string name="session_duration">Duration: %1$s</string>
+    <string name="session_not_started">Not started yet</string>
+    <string name="session_started">Started %1$s</string>
+    <string name="empty_serie">-</string>
+    <string name="exercise_index">Exo %1$d:</string>
+    <string name="start_session">START</string>
 </resources>

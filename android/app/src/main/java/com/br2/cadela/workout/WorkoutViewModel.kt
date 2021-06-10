@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel() {
     private var _currentSession = MutableLiveData<Session?>()
@@ -14,13 +15,13 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
 
     fun startSession() = viewModelScope.launch(Dispatchers.IO) {
         val session = workoutService.startNewSession()
-        _currentSession.value = session
+        withContext(Dispatchers.Main) { _currentSession.value = session }
     }
 
     fun endSession() = viewModelScope.launch(Dispatchers.IO) {
         _currentSession.value?.let {
             workoutService.endSession(it)
-            _currentSession.value = null
+            withContext(Dispatchers.Main) { _currentSession.value = null }
         }
     }
 

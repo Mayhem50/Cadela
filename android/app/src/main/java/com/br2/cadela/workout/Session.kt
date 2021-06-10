@@ -7,7 +7,7 @@ data class Session(
     val exercises: List<Exercise>,
     val levelStartedAt: LocalDate = LocalDate.now()
 ) {
-    val estimatedTimeInSec: Int
+    val estimatedTimeInSec: Long
         get() = exercises.foldIndexed(0, { index, acc, it ->
             val totalRestBetweenSeries = (it.series.count - 1) * it.series.restAfter.duration
             val totalRestBetweenExercise = if(index < exercises.size - 1)  (it.restAfter?.duration ?: 0) else 0

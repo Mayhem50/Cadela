@@ -8,17 +8,21 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     private val TWO_WEEKS = 2
 
     fun createNewSession(previousSession: Session? = null): Session {
-        return when (previousSession?.name) {
-            "1st Level Test" -> nextSessionAfterFirstLevelTest(previousSession)
-            "1st Program" -> nextSessionAfter1stProgram(previousSession)
-            "Only B Test" -> nextSessionAfterOnlyBTest(previousSession)
+        val nextSession = when (previousSession?.name) {
+            "first_level_test" -> nextSessionAfterFirstLevelTest(previousSession)
+            "first_program" -> nextSessionAfter1stProgram(previousSession)
+            "only_b_test" -> nextSessionAfterOnlyBTest(previousSession)
             else -> Session.FIRST_LEVEL_TEST
         }
+
+        return if (previousSession?.name == nextSession.name) {
+            nextSession.clone(previousSession.levelStartedAt)
+        } else nextSession
     }
 
     suspend fun startNewSession(): Session = withContext(Dispatchers.IO) {
         val lastSession = sessionRepository.getLastSession()
-        return@withContext if(lastSession?.isComplete == false) lastSession
+        return@withContext if (lastSession?.isComplete == false) lastSession
         else createNewSession(lastSession)
     }
 
@@ -31,17 +35,17 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     private fun nextSessionAfterOnlyBTest(previousSession: Session): Session {
-        if(previousSession.exercises[0].series.repetitions[0] >= 8){
+        if (previousSession.exercises[0].series.repetitions[0] >= 8) {
             return Session.SECOND_LEVEL
         }
-        if(previousSession.exercises[0].series.repetitions[0] > 5) {
+        if (previousSession.exercises[0].series.repetitions[0] > 5) {
             return Session.SECOND_PROGRAM
         }
         return Session.FIRST_PROGRAM_WITH_B1
     }
 
     private fun nextSessionAfter1stProgram(previousSession: Session): Session {
-        if(sessionIsStartedSince2Weeks(previousSession)) {
+        if (sessionIsStartedSince2Weeks(previousSession)) {
             return Session.SECOND_PROGRAM
         }
         val exercises = previousSession.exercises.toMutableList()
@@ -94,16 +98,19 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         if (index >= 0) {
             val exercise = exercises[index]
             if (exercise.series.repetitions[0] >= threshold) {
-                exercises[index] = Exercise(replaceBy, Series(exercise.series.count), exercise.restAfter)
+                exercises[index] =
+                    Exercise(replaceBy, Series(exercise.series.count), exercise.restAfter)
             }
         }
     }
 
     private fun nextSessionAfterFirstLevelTest(previousSession: Session): Session {
         val repetitionsForB =
-            previousSession.exercises.find { it.name == "B" }?.series?.repetitions?.elementAt(0) ?: 0
+            previousSession.exercises.find { it.name == "B" }?.series?.repetitions?.elementAt(0)
+                ?: 0
         val repetitionsForC =
-            previousSession.exercises.find { it.name == "C" }?.series?.repetitions?.elementAt(0) ?: 0
+            previousSession.exercises.find { it.name == "C" }?.series?.repetitions?.elementAt(0)
+                ?: 0
         return if (repetitionsForB < 4) {
             return if (repetitionsForC > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
         } else {
@@ -112,6 +119,6 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     private suspend fun saveAndClearCurrentSession(session: Session) {
-            sessionRepository.saveSession(session)
+        sessionRepository.saveSession(session)
     }
 }
