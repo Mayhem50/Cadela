@@ -139,8 +139,8 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         _currentSession = null
     }
 
-    suspend fun waitFor(duration: Int) {
-        delay(duration.toLong() * 1000)
+    suspend fun waitFor(rest: Rest) {
+        delay(rest.duration.toLong() * 1000)
     }
 
     fun moveToNextExercise(): Exercise? {

@@ -58,12 +58,12 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
 
     private suspend fun waitBetweenSeries() {
         _currentExercise.value?.let {
-            workoutService.waitFor(it.series.restAfter.duration)
+            workoutService.waitFor(it.series.restAfter)
         }
     }
 
     private suspend fun restAndMoveToNextExercise(it: Exercise) {
-        workoutService.waitFor(it.restAfter?.duration ?: 0)
+        workoutService.waitFor(it.restAfter ?: Rest(0))
         withContext(Dispatchers.Main) {
             _currentExercise.value = workoutService.moveToNextExercise()
             _currentSerieIndex = 0

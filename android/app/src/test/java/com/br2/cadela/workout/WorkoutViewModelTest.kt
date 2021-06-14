@@ -126,14 +126,14 @@ class WorkoutViewModelTest {
     }
 
     @Test
-    fun `Update current serie current repetition make move to next exercise after rest time after exercise if no more reps to do`() =
+    fun `Update current serie current repetition make move to next exercise after rest time after exercise if no more reps to do and can set rep for it`() =
         runBlocking {
             sut.currentExercise.observeForever(exerciseObserver)
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
                     Exercise(name = "A", series = Series(count = 2, restAfter = Rest(0)), restAfter = Rest(0)),
-                    Exercise(name = "B", series = Series(1), restAfter = Rest(120))
+                    Exercise(name = "B", series = Series(count = 2, restAfter = Rest(0)), restAfter = Rest(120))
                 )
             )
             coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
@@ -143,8 +143,11 @@ class WorkoutViewModelTest {
             sut.setRepsForCurrentSerie(5).join()
             sut.setRepsForCurrentSerie(5).join()
 
+            sut.setRepsForCurrentSerie(10).join()
+
             verify { exerciseObserver.onChanged(session.exercises[1]) }
-            coVerify { workoutService.waitFor(session.exercises[0].restAfter!!.duration) }
+            coVerify { workoutService.waitFor(session.exercises[0].restAfter!!) }
+            assertEquals(10, sut.currentExercise.value!!.series.repetitions[0].done)
         }
 
     @Test
@@ -156,7 +159,7 @@ class WorkoutViewModelTest {
                 exercises = listOf(
                     Exercise(
                         name = "A1",
-                        series = Series(count = 2, restAfter = Rest(0)),
+                        series = Series(count = 3, restAfter = Rest(0)),
                         restAfter = Rest(120)
                     ),
                     Exercise(
@@ -180,7 +183,8 @@ class WorkoutViewModelTest {
             sut.startSession().join()
             sut.runSession()
             sut.setRepsForCurrentSerie(5)
-            coVerify { workoutService.waitFor(session.exercises[0].series.restAfter.duration) }
+            sut.setRepsForCurrentSerie(5)
+            coVerify { workoutService.waitFor(session.exercises[0].series.restAfter) }
             verify(exactly = 0) { exerciseObserver.onChanged(session.exercises[1]) }
         }
 }
