@@ -4,7 +4,6 @@ import androidx.lifecycle.Observer
 import com.br2.cadela.InstantExecutorExtension
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
@@ -83,39 +82,46 @@ class WorkoutViewModelTest {
         sut.currentExercise.observeForever(exerciseObserver)
         sut.startSession().join()
         sut.runSession()
+        verify { workoutService.runSession() }
         verify { exerciseObserver.onChanged(Session.FIRST_LEVEL_TEST.exercises[0]) }
     }
 
     @Test
-    fun `When move to next exercise current exercise is update to the next exercise of the list`() =
-        runBlocking {
-            sut.currentExercise.observeForever(exerciseObserver)
-            sut.startSession().join()
-            sut.runSession()
-            sut.moveToNextExercise()
-            verify { exerciseObserver.onChanged(Session.FIRST_LEVEL_TEST.exercises[1]) }
-        }
-
-    @Test
     fun `When move to next exercise and no more exercise current exercise is update to null`() =
         runBlocking {
+            val session = Session(
+                name = "dummy_name",
+                exercises = listOf(
+                    Exercise(name = "A", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0)),
+                    Exercise(name = "B", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0))
+                )
+            )
+            coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
             sut.currentExercise.observeForever(exerciseObserver)
             sut.startSession().join()
             sut.runSession()
-            sut.moveToNextExercise()
-            sut.moveToNextExercise()
-            sut.moveToNextExercise()
-            sut.moveToNextExercise()
+            sut.setRepsForCurrentSerie(5).join()
+            sut.setRepsForCurrentSerie(5).join()
             verify { exerciseObserver.onChanged(null) }
         }
 
     @Test
     fun `Update current serie current repetition`() = runBlocking {
         val doneReps = 5
+        val session = Session(
+        name = "dummy_name",
+        exercises = listOf(
+            Exercise(name = "A", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0)),
+            Exercise(name = "B", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0))
+        )
+    )
+        coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
+
         sut.startSession().join()
         sut.runSession()
         val currentExercise = sut.currentExercise.value!!
-        sut.setRepsForCurrentSerie(doneReps)
+        sut.setRepsForCurrentSerie(doneReps).join()
+
         assertEquals(doneReps, currentExercise.series.repetitions[0].done)
     }
 
@@ -126,15 +132,16 @@ class WorkoutViewModelTest {
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
-                    Exercise(name = "A", series = Series(1), restAfter = Rest(0)),
-                    Exercise(name = "B", series = Series(1), restAfter = Rest(0))
+                    Exercise(name = "A", series = Series(count = 2, restAfter = Rest(0)), restAfter = Rest(0)),
+                    Exercise(name = "B", series = Series(1), restAfter = Rest(120))
                 )
             )
             coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
 
             sut.startSession().join()
             sut.runSession()
-            sut.setRepsForCurrentSerie(5)
+            sut.setRepsForCurrentSerie(5).join()
+            sut.setRepsForCurrentSerie(5).join()
 
             verify { exerciseObserver.onChanged(session.exercises[1]) }
             coVerify { workoutService.waitFor(session.exercises[0].restAfter!!.duration) }
@@ -147,10 +154,26 @@ class WorkoutViewModelTest {
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
-                    Exercise(name = "A1", series = Series(count = 2, restAfter = Rest(0)), restAfter = Rest(120)),
-                    Exercise(name = "D", series = Series(count = 2, restAfter = Rest(180)), restAfter = Rest(120)),
-                    Exercise(name = "C1", series = Series(count = 2, restAfter = Rest(180)), restAfter = Rest(120)),
-                    Exercise(name = "E", series = Series(count = 2, restAfter = Rest(180)), restAfter = null)
+                    Exercise(
+                        name = "A1",
+                        series = Series(count = 2, restAfter = Rest(0)),
+                        restAfter = Rest(120)
+                    ),
+                    Exercise(
+                        name = "D",
+                        series = Series(count = 2, restAfter = Rest(180)),
+                        restAfter = Rest(120)
+                    ),
+                    Exercise(
+                        name = "C1",
+                        series = Series(count = 2, restAfter = Rest(180)),
+                        restAfter = Rest(120)
+                    ),
+                    Exercise(
+                        name = "E",
+                        series = Series(count = 2, restAfter = Rest(180)),
+                        restAfter = null
+                    )
                 )
             )
             coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
