@@ -41,29 +41,6 @@ class WorkoutTest : WorkoutTestBase() {
     }
 
     @Test
-    fun `If next session is on same level levelStartedAt stays the same`() = runBlocking {
-        val incompleteSession = Session(
-            name = Session.FIRST_PROGRAM.name,
-            exercises = Session.FIRST_PROGRAM.exercises.map {
-                Exercise(
-                    it.name,
-                    Series(it.series.count, it.series.repetitions.map { 3 }.toMutableList()),
-                    it.restAfter
-                )
-            },
-            levelStartedAt = LocalDate.of(2021, 5, 30))
-
-        coEvery { sessionDao.getLastSession() } returns SessionRecord(
-            id = 0,
-            session = incompleteSession
-        )
-
-        val session = sut.startNewSession()
-        assertEquals(incompleteSession.name, session.name)
-        assertEquals(incompleteSession.levelStartedAt, session.levelStartedAt)
-    }
-
-    @Test
     fun `Current session is finished`() = runBlocking {
         val session = sut.startNewSession()
         sut.endSession(session)
@@ -78,7 +55,7 @@ class WorkoutTest : WorkoutTestBase() {
         )
 
         val currentSession = sut.startNewSession()
-        currentSession.exercises[0].series.repetitions[0] = 12
+        currentSession.exercises[0].series.repetitions[0] = Repetition(12)
         sut.pauseSession(currentSession)
         coVerify { sessionRepository.saveSession(any()) }
         sut.startNewSession()
@@ -89,7 +66,7 @@ class WorkoutTest : WorkoutTestBase() {
         Session.FIRST_PROGRAM.name,
         Session.FIRST_PROGRAM.exercises.mapIndexed { index, it ->
             if (index == 0) {
-                it.series.repetitions[0] = 12
+                it.series.repetitions[0] = Repetition(12)
             }
             it
         })

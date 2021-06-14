@@ -33,7 +33,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C4", series = Series(2, mutableListOf(11)), restAfter = Rest(120)),
+                Exercise(name = "C4", series = Series(2, mutableListOf(Repetition(11))), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
@@ -55,7 +55,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C4", series = Series(2, mutableListOf(12)), restAfter = Rest(120)),
+                Exercise(name = "C4", series = Series(2, mutableListOf(Repetition(12))), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
@@ -76,7 +76,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C5", series = Series(2, mutableListOf(11)), restAfter = Rest(120)),
+                Exercise(name = "C5", series = Series(2, mutableListOf(Repetition(11))), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
@@ -98,7 +98,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C5", series = Series(2, mutableListOf(12)), restAfter = Rest(120)),
+                Exercise(name = "C5", series = Series(2, mutableListOf(Repetition(12))), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
@@ -119,7 +119,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C6", series = Series(2, mutableListOf(11)), restAfter = Rest(120)),
+                Exercise(name = "C6", series = Series(2, mutableListOf(Repetition(11))), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
@@ -140,7 +140,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C6", series = Series(2, mutableListOf(12)), restAfter = Rest(120)),
+                Exercise(name = "C6", series = Series(2, mutableListOf(Repetition(12))), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
@@ -159,7 +159,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A1", series = Series(2, mutableListOf(Repetition(7))), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
@@ -181,7 +181,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A1", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A1", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
@@ -203,7 +203,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A2", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, mutableListOf(Repetition(7))), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
@@ -224,7 +224,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
@@ -245,7 +245,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A3", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A3", series = Series(2, mutableListOf(Repetition(7))), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
@@ -267,7 +267,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A3", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A3", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
@@ -289,8 +289,8 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A3", series = Series(2, mutableListOf(10)), restAfter = Rest(120)),
-                Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A3", series = Series(2, mutableListOf(Repetition(10))), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
@@ -311,7 +311,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A4", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A4", series = Series(2, mutableListOf(Repetition(7))), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
@@ -333,7 +333,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A4", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A4", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
@@ -355,8 +355,8 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A4", series = Series(2, mutableListOf(10)), restAfter = Rest(120)),
-                Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A4", series = Series(2, mutableListOf(Repetition(10))), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
@@ -377,7 +377,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A5", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A5", series = Series(2, mutableListOf(Repetition(7))), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
@@ -399,7 +399,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A5", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A5", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
@@ -421,8 +421,8 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A5", series = Series(2, mutableListOf(10)), restAfter = Rest(120)),
-                Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A5", series = Series(2, mutableListOf(Repetition(10))), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
@@ -443,7 +443,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A6", series = Series(2, mutableListOf(7)), restAfter = Rest(120)),
+                Exercise(name = "A6", series = Series(2, mutableListOf(Repetition(7))), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
@@ -465,7 +465,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A6", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A6", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "A2", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
@@ -484,7 +484,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = Session.ONLY_B_TEST.name,
             exercises = listOf(
-                Exercise(name = "B", series = Series(1, mutableListOf(4)), restAfter = null)
+                Exercise(name = "B", series = Series(1, mutableListOf(Repetition(4))), restAfter = null)
             )
         )
         val session = sut.createNewSession(previousSession)
@@ -496,7 +496,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = Session.ONLY_B_TEST.name,
             exercises = listOf(
-                Exercise(name = "B", series = Series(1, mutableListOf(7)), restAfter = null)
+                Exercise(name = "B", series = Series(1, mutableListOf(Repetition(7))), restAfter = null)
             )
         )
         val session = sut.createNewSession(previousSession)
@@ -508,7 +508,7 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = Session.ONLY_B_TEST.name,
             exercises = listOf(
-                Exercise(name = "B", series = Series(1, mutableListOf(8)), restAfter = null)
+                Exercise(name = "B", series = Series(1, mutableListOf(Repetition(8))), restAfter = null)
             )
         )
         val session = sut.createNewSession(previousSession)
@@ -525,7 +525,8 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
             levelStartedAt = twoWeekBefore
         )
         val session = sut.createNewSession(previousSession)
-        assertEquals(Session.SECOND_PROGRAM, session)
+        assertEquals(Session.SECOND_PROGRAM.name, session.name)
+        assertEquals(Session.SECOND_PROGRAM.exercises, session.exercises)
     }
 
     @Test
@@ -533,9 +534,9 @@ class FirstLevelSessionFirstProgramTest : WorkoutTestBase() {
         val previousSession = Session(
             name = "first_program",
             exercises = listOf(
-                Exercise(name = "A2", series = Series(2, mutableListOf(8)), restAfter = Rest(120)),
+                Exercise(name = "A2", series = Series(2, mutableListOf(Repetition(8))), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C4", series = Series(2, mutableListOf(12)), restAfter = Rest(120)),
+                Exercise(name = "C4", series = Series(2, mutableListOf(Repetition(12))), restAfter = Rest(120)),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),

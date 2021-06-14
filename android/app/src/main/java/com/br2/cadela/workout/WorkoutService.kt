@@ -15,10 +15,23 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             else -> Session.FIRST_LEVEL_TEST
         }
 
-        return if (previousSession?.name == nextSession.name) {
-            nextSession.clone(previousSession.levelStartedAt)
+        return if (stillOnSameLevel(previousSession, nextSession)
+        ) {
+            nextSession.clone(previousSession?.levelStartedAt)
         } else nextSession
     }
+
+    private fun stillOnSameLevel(
+        previousSession: Session?,
+        nextSession: Session
+    ) = previousSession?.name == nextSession.name ||
+            (stillOnFirstLevel(previousSession, nextSession))
+
+    private fun stillOnFirstLevel(
+        previousSession: Session?,
+        nextSession: Session
+    ) =
+        previousSession?.name == Session.FIRST_PROGRAM.name && nextSession.name == Session.SECOND_PROGRAM.name
 
     suspend fun startNewSession(): Session = withContext(Dispatchers.IO) {
         val lastSession = sessionRepository.getLastSession()
@@ -35,10 +48,10 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     private fun nextSessionAfterOnlyBTest(previousSession: Session): Session {
-        if (previousSession.exercises[0].series.repetitions[0] >= 8) {
+        if (previousSession.exercises[0].series.repetitions[0].done >= 8) {
             return Session.SECOND_LEVEL
         }
-        if (previousSession.exercises[0].series.repetitions[0] > 5) {
+        if (previousSession.exercises[0].series.repetitions[0].done > 5) {
             return Session.SECOND_PROGRAM
         }
         return Session.FIRST_PROGRAM_WITH_B1
@@ -66,7 +79,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         }
 
         exercises.find { it.name == "A6" }?.let {
-            if (it.series.repetitions[0] >= 8) {
+            if (it.series.repetitions[0].done >= 8) {
                 return Session.ONLY_B_TEST
             }
         }
@@ -82,7 +95,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     private fun shouldReplaceA2(
         exercise: Exercise,
         exercises: List<Exercise>
-    ) = exercise.series.repetitions[0] >= 8 && exercises.find {
+    ) = exercise.series.repetitions[0].done >= 8 && exercises.find {
         listOf("A4", "A5", "A6").contains(
             it.name
         )
@@ -97,7 +110,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         val index = exercises.indexOfFirst { it.name == searchName }
         if (index >= 0) {
             val exercise = exercises[index]
-            if (exercise.series.repetitions[0] >= threshold) {
+            if (exercise.series.repetitions[0].done >= threshold) {
                 exercises[index] =
                     Exercise(replaceBy, Series(exercise.series.count), exercise.restAfter)
             }
@@ -107,12 +120,12 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     private fun nextSessionAfterFirstLevelTest(previousSession: Session): Session {
         val repetitionsForB =
             previousSession.exercises.find { it.name == "B" }?.series?.repetitions?.elementAt(0)
-                ?: 0
+                ?: Repetition(0)
         val repetitionsForC =
             previousSession.exercises.find { it.name == "C" }?.series?.repetitions?.elementAt(0)
-                ?: 0
-        return if (repetitionsForB < 4) {
-            return if (repetitionsForC > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
+                ?: Repetition(0)
+        return if (repetitionsForB.done < 4) {
+            return if (repetitionsForC.done > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
         } else {
             Session.SECOND_PROGRAM
         }

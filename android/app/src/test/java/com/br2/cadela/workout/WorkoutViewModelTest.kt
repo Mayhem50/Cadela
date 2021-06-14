@@ -111,8 +111,9 @@ class WorkoutViewModelTest {
         val doneReps = 5
         sut.startSession().join()
         sut.runSession()
+        val currentExercise = sut.currentExercise.value!!
         sut.setRepsForCurrentSerie(doneReps)
-        assertEquals(doneReps, sut.currentExercise.value!!.series.repetitions[0])
+        assertEquals(doneReps, currentExercise.series.repetitions[0].done)
     }
 
 

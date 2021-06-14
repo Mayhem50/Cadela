@@ -16,12 +16,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.br2.cadela.R
-import com.br2.cadela.shared.FakeNavControllerPreviewParameter
 import com.br2.cadela.shared.stringResourceByName
 import com.br2.cadela.shared.toFormattedString
 import com.br2.cadela.ui.theme.CadelaTheme
@@ -119,8 +116,9 @@ private fun ExerciseComponent(index: Int, exercise: Exercise) {
         ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 exercise.series.repetitions.map {
-                    val text = if (it == 0) stringResource(R.string.empty_serie) else it.toString()
-                    val paddingHorizontal = if (it == 0) 5f.dp else 2f.dp
+                    val text =
+                        if (it.done == 0) stringResource(R.string.empty_serie) else it.toString()
+                    val paddingHorizontal = if (it.done == 0) 5f.dp else 2f.dp
                     Text(
                         text = text,
                         modifier = Modifier.width(20f.dp),
@@ -187,7 +185,24 @@ fun PreviewCard() {
                 exercises = listOf(
                     Exercise(
                         "A",
-                        Series(10, mutableListOf(19, 18, 17, 16, 15, 14, 13, 12, 11, 10), Rest(30)),
+                        Series(
+                            10,
+                            mutableListOf(
+                                Repetition(19),
+                                Repetition(18),
+                                Repetition(17),
+                                Repetition(16),
+                                Repetition(17),
+                                Repetition(14),
+                                Repetition(15),
+                                Repetition(16),
+                                Repetition(13),
+                                Repetition(12),
+                                Repetition(11),
+                                Repetition(10),
+                            ),
+                            Rest(30)
+                        ),
                         Rest(120)
                     ),
                     Exercise("A1", Series(4), Rest(120)),

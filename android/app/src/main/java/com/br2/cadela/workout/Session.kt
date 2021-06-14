@@ -16,10 +16,10 @@ data class Session(
         })
 
     val notStarted: Boolean
-        get() = exercises.flatMap { it.series.repetitions }.all { it == 0 }
+        get() = exercises.flatMap { it.series.repetitions }.all { it.done == 0 }
 
     val isComplete: Boolean
-        get() = exercises.map { it.series.repetitions.any { it > 0 } }.all { it }
+        get() = exercises.map { it.series.repetitions.any { rep -> rep.done > 0 } }.all { it }
 
     fun clone(newStartDate: LocalDate? = null): Session =
         Session(name = name, exercises = exercises, levelStartedAt = newStartDate ?: levelStartedAt)

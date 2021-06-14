@@ -58,7 +58,7 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
 
     fun setRepsForCurrentSerie(done: Int) {
         _currentExercise.value?.let {
-            it.series.repetitions[0] = done
+            it.series.repetitions[0] = Repetition(done)
             moveToNextExercise()
         }
     }
