@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -103,5 +104,14 @@ class WorkoutViewModelTest {
         sut.moveToNextExercise()
         sut.moveToNextExercise()
         verify { exerciseObserver.onChanged(null) }
+    }
+
+    @Test
+    fun `Update current serie current repetition`() = runBlocking {
+        val doneReps = 5
+        sut.startSession().join()
+        sut.runSession()
+        sut.setRepsForCurrentSerie(doneReps)
+        assertEquals(doneReps, sut.currentExercise.value!!.series.repetitions[0])
     }
 }
