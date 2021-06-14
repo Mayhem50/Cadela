@@ -40,23 +40,11 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
     }
 
     fun runSession() {
-        _currentExercise.value = _currentSession.value?.exercises?.elementAt(0)
+        _currentExercise.value = workoutService.runSession()
     }
 
     fun moveToNextExercise() {
-
-        val currentExerciseIndex = _currentSession.value?.exercises?.indexOf(_currentExercise.value)
-        currentExerciseIndex?.let {
-            if (IntRange(0, (_currentSession.value?.exercises?.size ?: 0) - 2).contains(
-                    currentExerciseIndex
-                )
-            ) {
-                _currentExercise.value =
-                    _currentSession.value?.exercises?.elementAt(currentExerciseIndex + 1)
-            } else {
-                _currentExercise.value = null
-            }
-        }
+        _currentExercise.value = workoutService.moveToNextExercise()
     }
 
     fun setRepsForCurrentSerie(done: Int) {

@@ -5,6 +5,8 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 class WorkoutService(private val sessionRepository: SessionRepository) {
+    private var _currentExerciseIndex: Int = 0
+    private var _currentSession: Session? = null
     private val TWO_WEEKS = 2
 
     fun createNewSession(previousSession: Session? = null): Session {
@@ -35,8 +37,9 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
 
     suspend fun startNewSession(): Session = withContext(Dispatchers.IO) {
         val lastSession = sessionRepository.getLastSession()
-        return@withContext if (lastSession?.isComplete == false) lastSession
+        _currentSession = if (lastSession?.isComplete == false) lastSession
         else createNewSession(lastSession)
+        return@withContext _currentSession!!
     }
 
     suspend fun endSession(session: Session) {
@@ -133,9 +136,23 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
 
     private suspend fun saveAndClearCurrentSession(session: Session) {
         sessionRepository.saveSession(session)
+        _currentSession = null
     }
 
     suspend fun waitFor(duration: Int) {
         delay(duration.toLong() * 1000)
+    }
+
+    fun moveToNextExercise(): Exercise? {
+        return _currentSession?.let {
+            _currentExerciseIndex += 1
+            if (_currentExerciseIndex < it.exercises.size) it.exercises[_currentExerciseIndex]
+            else null
+        }
+    }
+
+    fun runSession(): Exercise? {
+        _currentExerciseIndex = -1
+        return moveToNextExercise()
     }
 }
