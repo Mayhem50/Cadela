@@ -38,4 +38,8 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
     fun runSession() {
         _currentExercise.value = _currentSession.value?.exercises?.elementAt(0)
     }
+
+    fun moveToNextExercise() {
+        _currentExercise.value = _currentSession.value?.exercises?.elementAt(1)
+    }
 }

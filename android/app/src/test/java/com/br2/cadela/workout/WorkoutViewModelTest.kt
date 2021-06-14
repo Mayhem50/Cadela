@@ -81,4 +81,13 @@ class WorkoutViewModelTest {
         sut.runSession()
         verify { exerciseObserver.onChanged(sut.currentSession.value!!.exercises[0]) }
     }
+
+    @Test
+    fun `When move to next exercise current exercise is update to the next exercise of the list`() = runBlocking {
+        sut.currentExercise.observeForever(exerciseObserver)
+        sut.startSession().join()
+        sut.runSession()
+        sut.moveToNextExercise()
+        verify { exerciseObserver.onChanged(Session.FIRST_LEVEL_TEST.exercises[1]) }
+    }
 }
