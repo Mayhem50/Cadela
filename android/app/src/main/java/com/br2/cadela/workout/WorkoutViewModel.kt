@@ -9,6 +9,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel() {
+    private val _currentExercise = MutableLiveData<Exercise?>()
+    val currentExercise: LiveData<Exercise?>
+        get() = _currentExercise
+
     private var _currentSession = MutableLiveData<Session?>()
     val currentSession: LiveData<Session?>
         get() = _currentSession
@@ -29,5 +33,9 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
         _currentSession.value?.let {
             workoutService.pauseSession(it)
         }
+    }
+
+    fun runSession() {
+        _currentExercise.value = _currentSession.value?.exercises?.elementAt(0)
     }
 }
