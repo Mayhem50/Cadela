@@ -2,7 +2,6 @@ package com.br2.cadela.workout
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import kotlin.streams.toList
 
 class FirstLevelTestSessionTest : WorkoutTestBase() {
     @Test
