@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.awt.font.NumericShaper
 
 class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel() {
     private val _currentExercise = MutableLiveData<Exercise?>()
@@ -40,6 +41,15 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
     }
 
     fun moveToNextExercise() {
-        _currentExercise.value = _currentSession.value?.exercises?.elementAt(1)
+
+        val currentExerciseIndex = _currentSession.value?.exercises?.indexOf(_currentExercise.value)
+        currentExerciseIndex?.let {
+            if(IntRange(0, (_currentSession.value?.exercises?.size ?: 0) - 2).contains(currentExerciseIndex)) {
+                _currentExercise.value =
+                    _currentSession.value?.exercises?.elementAt(currentExerciseIndex + 1)
+            } else {
+                _currentExercise.value = null
+            }
+        }
     }
 }

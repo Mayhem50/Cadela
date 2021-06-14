@@ -79,7 +79,7 @@ class WorkoutViewModelTest {
         sut.currentExercise.observeForever(exerciseObserver)
         sut.startSession().join()
         sut.runSession()
-        verify { exerciseObserver.onChanged(sut.currentSession.value!!.exercises[0]) }
+        verify { exerciseObserver.onChanged(Session.FIRST_LEVEL_TEST.exercises[0]) }
     }
 
     @Test
@@ -89,5 +89,17 @@ class WorkoutViewModelTest {
         sut.runSession()
         sut.moveToNextExercise()
         verify { exerciseObserver.onChanged(Session.FIRST_LEVEL_TEST.exercises[1]) }
+    }
+
+    @Test
+    fun `When move to next exercise and no more exercise current exercise is update to null`() = runBlocking {
+        sut.currentExercise.observeForever(exerciseObserver)
+        sut.startSession().join()
+        sut.runSession()
+        sut.moveToNextExercise()
+        sut.moveToNextExercise()
+        sut.moveToNextExercise()
+        sut.moveToNextExercise()
+        verify { exerciseObserver.onChanged(null) }
     }
 }
