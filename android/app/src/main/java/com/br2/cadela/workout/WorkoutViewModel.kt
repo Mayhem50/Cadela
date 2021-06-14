@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.awt.font.NumericShaper
 
 class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel() {
     private val _currentExercise = MutableLiveData<Exercise?>()
@@ -47,7 +47,10 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
 
         val currentExerciseIndex = _currentSession.value?.exercises?.indexOf(_currentExercise.value)
         currentExerciseIndex?.let {
-            if(IntRange(0, (_currentSession.value?.exercises?.size ?: 0) - 2).contains(currentExerciseIndex)) {
+            if (IntRange(0, (_currentSession.value?.exercises?.size ?: 0) - 2).contains(
+                    currentExerciseIndex
+                )
+            ) {
                 _currentExercise.value =
                     _currentSession.value?.exercises?.elementAt(currentExerciseIndex + 1)
             } else {
@@ -59,11 +62,22 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
     fun setRepsForCurrentSerie(done: Int) {
         _currentExercise.value?.let {
             it.series.repetitions[0] = Repetition(done)
-            if(it.series.repetitions.size > 1) {
-
+            if (it.series.repetitions.size > 1) {
+                restAndMoveToNextSerieRepetition()
             } else {
-                moveToNextExercise()
+                restAndMoveToNextExercise(it)
             }
         }
+    }
+
+    private fun restAndMoveToNextSerieRepetition() = viewModelScope.launch(Dispatchers.IO) {
+        _currentExercise.value?.let {
+            workoutService.waitFor(it.series.restAfter.duration)
+        }
+    }
+
+    private fun restAndMoveToNextExercise(it: Exercise) = viewModelScope.launch(Dispatchers.IO) {
+        workoutService.waitFor(it.restAfter?.duration ?: 0)
+        withContext(Dispatchers.Main) { moveToNextExercise() }
     }
 }

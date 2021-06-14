@@ -134,4 +134,8 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     private suspend fun saveAndClearCurrentSession(session: Session) {
         sessionRepository.saveSession(session)
     }
+
+    suspend fun waitFor(duration: Int) {
+        delay(duration.toLong() * 1000)
+    }
 }
