@@ -1,7 +1,6 @@
 package com.br2.cadela.workout
 
 import android.text.format.DateUtils
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -26,12 +25,11 @@ import com.br2.cadela.shared.FakeNavControllerPreviewParameter
 import com.br2.cadela.shared.stringResourceByName
 import com.br2.cadela.shared.toFormattedString
 import com.br2.cadela.ui.theme.CadelaTheme
-import com.br2.cadela.ui.theme.Red500
 import java.time.Duration
 import java.time.LocalDate
 
 @Composable
-fun WorkoutHomeView(navController: NavController) {
+fun WorkoutHomeView(navFABAction: (() -> Unit)? = null) {
     val vm = WorkoutModule.workoutVm
     val session = vm.currentSession.observeAsState()
     vm.startSession()
@@ -40,19 +38,20 @@ fun WorkoutHomeView(navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(Red500)
     ) {
         session.value?.let {
-            HomeView(it)
+            HomeView(it, navFABAction)
         } ?: CircularProgressIndicator(color = Color.White)
     }
 
 }
 
 @Composable
-private fun HomeView(session: Session) {
-
-    Card(elevation = 3f.dp, modifier = Modifier.padding(16f.dp)) {
+private fun HomeView(session: Session, navFABAction: (() -> Unit)? = null) {
+    Card(
+        elevation = 3f.dp, modifier = Modifier
+            .padding(16f.dp)
+    ) {
         Column(
             Modifier
                 .padding(16f.dp)
@@ -64,13 +63,13 @@ private fun HomeView(session: Session) {
                 ExerciseComponent(index, exercise)
             }
 
-            Footer(session)
+            Footer(session, navFABAction)
         }
     }
 }
 
 @Composable
-private fun Footer(session: Session) {
+private fun Footer(session: Session, navFABAction: (() -> Unit)? = null) {
     Text(
         text = getStartedSince(session),
         textAlign = TextAlign.End,
@@ -80,7 +79,7 @@ private fun Footer(session: Session) {
     )
     Button(modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 24f.dp), onClick = { }) {
+        .padding(top = 24f.dp), onClick = { navFABAction?.invoke() }) {
         Text(text = stringResource(R.string.start_session))
     }
 }
@@ -205,8 +204,8 @@ fun PreviewCard() {
 
 @Preview(name = "Home", showBackground = true)
 @Composable
-fun PreviewHome(@PreviewParameter(FakeNavControllerPreviewParameter::class) navController: NavController) {
+fun PreviewHome() {
     CadelaTheme {
-        WorkoutHomeView(navController)
+        WorkoutHomeView()
     }
 }
