@@ -116,7 +116,6 @@ class WorkoutViewModelTest {
         assertEquals(doneReps, currentExercise.series.repetitions[0].done)
     }
 
-
     @Test
     fun `Update current serie current repetition make move to next exercise if no more reps to do`() = runBlocking {
         sut.currentExercise.observeForever(exerciseObserver)
@@ -125,5 +124,15 @@ class WorkoutViewModelTest {
         sut.runSession()
         sut.setRepsForCurrentSerie(5)
         verify { exerciseObserver.onChanged(Session.FIRST_LEVEL_TEST.exercises[1]) }
+    }
+
+    @Test
+    fun `Update current serie current repetition make move to next repetition not done`() = runBlocking {
+        sut.currentExercise.observeForever(exerciseObserver)
+        coEvery { sessionDao.getLastSession() } returns SessionRecord(0, Session.FIRST_PROGRAM)
+        sut.startSession().join()
+        sut.runSession()
+        sut.setRepsForCurrentSerie(5)
+        verify(exactly = 0) { exerciseObserver.onChanged(Session.FIRST_PROGRAM.exercises[1]) }
     }
 }
