@@ -26,7 +26,10 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
     fun endSession() = viewModelScope.launch(Dispatchers.IO) {
         _currentSession.value?.let {
             workoutService.endSession(it)
-            withContext(Dispatchers.Main) { _currentSession.value = null }
+            withContext(Dispatchers.Main) {
+                _currentSession.value = null
+                _currentExercise.value = null
+            }
         }
     }
 

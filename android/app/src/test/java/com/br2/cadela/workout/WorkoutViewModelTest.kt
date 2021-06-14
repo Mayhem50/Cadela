@@ -54,12 +54,14 @@ class WorkoutViewModelTest {
     @Test
     fun `End session`() = runBlocking {
         sut.currentSession.observeForever(observer)
+        sut.currentExercise.observeForever(exerciseObserver)
         sut.startSession().join()
         sut.endSession()
         coVerify { workoutService.endSession(any()) }
         verifyAll {
             observer.onChanged(any())
             observer.onChanged(null)
+            exerciseObserver.onChanged(null)
         }
     }
 
