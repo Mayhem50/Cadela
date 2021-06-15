@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 class WorkoutViewModelTest {
     private lateinit var observer: Observer<Session?>
     private lateinit var exerciseObserver: Observer<Exercise?>
+    private lateinit var restObserver: Observer<Rest?>
     private lateinit var sessionDao: SessionDao
     private lateinit var sessionRepository: SessionRepository
     private lateinit var workoutService: WorkoutService
@@ -27,12 +28,14 @@ class WorkoutViewModelTest {
         Dispatchers.setMain(Dispatchers.Default)
         observer = mockk()
         exerciseObserver = mockk()
+        restObserver = mockk()
         sessionDao = mockk()
 
         coEvery { sessionDao.getLastSession() } returns SessionRecord(0, Session.FIRST_LEVEL_TEST)
         coEvery { sessionDao.save(any()) } returns Unit
         every { observer.onChanged(any()) } returns Unit
         every { exerciseObserver.onChanged(any()) } returns Unit
+        every { restObserver.onChanged(any()) } returns Unit
 
         sessionRepository = SessionRepository(sessionDao)
         workoutService = spyk(WorkoutService(sessionRepository))
@@ -100,8 +103,8 @@ class WorkoutViewModelTest {
             sut.currentExercise.observeForever(exerciseObserver)
             sut.startSession().join()
             sut.runSession()
-            sut.setRepsForCurrentSerie(5).join()
-            sut.setRepsForCurrentSerie(5).join()
+            sut.setRepsForCurrentSerie(5)
+            sut.setRepsForCurrentSerie(5)
             verify { exerciseObserver.onChanged(null) }
         }
 
@@ -120,62 +123,54 @@ class WorkoutViewModelTest {
         sut.startSession().join()
         sut.runSession()
         val currentExercise = sut.currentExercise.value!!
-        sut.setRepsForCurrentSerie(doneReps).join()
+        sut.setRepsForCurrentSerie(doneReps)
 
         assertEquals(doneReps, currentExercise.series.repetitions[0].done)
     }
 
     @Test
-    fun `Update current serie current repetition make move to next exercise after rest time after exercise if no more reps to do and can set rep for it`() =
+    fun `Update current serie current repetition make move to next exercise, update rest time after exercise if no more reps to do and can set rep for it`() =
         runBlocking {
-            sut.currentExercise.observeForever(exerciseObserver)
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
-                    Exercise(name = "A", series = Series(count = 2, restAfter = Rest(0)), restAfter = Rest(0)),
-                    Exercise(name = "B", series = Series(count = 2, restAfter = Rest(0)), restAfter = Rest(120))
+                    Exercise(name = "A", series = Series(count = 2, restAfter = Rest(1)), restAfter = Rest(3)),
+                    Exercise(name = "B", series = Series(count = 2, restAfter = Rest(2)), restAfter = Rest(4))
                 )
             )
+            sut.currentExercise.observeForever(exerciseObserver)
+            sut.currentRest.observeForever(restObserver)
             coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
 
             sut.startSession().join()
             sut.runSession()
-            sut.setRepsForCurrentSerie(5).join()
-            sut.setRepsForCurrentSerie(5).join()
+            sut.setRepsForCurrentSerie(5)
+            sut.setRepsForCurrentSerie(5)
 
-            sut.setRepsForCurrentSerie(10).join()
+            sut.setRepsForCurrentSerie(10)
 
             verify { exerciseObserver.onChanged(session.exercises[1]) }
-            coVerify { workoutService.waitFor(session.exercises[0].restAfter!!) }
+            verify { restObserver.onChanged(session.exercises[0].restAfter) }
             assertEquals(10, sut.currentExercise.value!!.series.repetitions[0].done)
         }
 
     @Test
-    fun `Update current serie current repetition make move to next repetition not done after rest time`() =
+    fun `Update current serie current repetition make move to next repetition not done and update rest time`() =
         runBlocking {
             sut.currentExercise.observeForever(exerciseObserver)
+            sut.currentRest.observeForever(restObserver)
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
                     Exercise(
-                        name = "A1",
-                        series = Series(count = 3, restAfter = Rest(0)),
-                        restAfter = Rest(120)
+                        name = "A",
+                        series = Series(count = 3, restAfter = Rest(1)),
+                        restAfter = Rest(10)
                     ),
                     Exercise(
-                        name = "D",
-                        series = Series(count = 2, restAfter = Rest(180)),
-                        restAfter = Rest(120)
-                    ),
-                    Exercise(
-                        name = "C1",
-                        series = Series(count = 2, restAfter = Rest(180)),
-                        restAfter = Rest(120)
-                    ),
-                    Exercise(
-                        name = "E",
-                        series = Series(count = 2, restAfter = Rest(180)),
-                        restAfter = null
+                        name = "B",
+                        series = Series(count = 2, restAfter = Rest(2)),
+                        restAfter = Rest(11)
                     )
                 )
             )
@@ -184,7 +179,7 @@ class WorkoutViewModelTest {
             sut.runSession()
             sut.setRepsForCurrentSerie(5)
             sut.setRepsForCurrentSerie(5)
-            coVerify { workoutService.waitFor(session.exercises[0].series.restAfter) }
+            verify { restObserver.onChanged(session.exercises[0].series.restAfter) }
             verify(exactly = 0) { exerciseObserver.onChanged(session.exercises[1]) }
         }
 }

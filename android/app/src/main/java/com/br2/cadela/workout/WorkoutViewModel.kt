@@ -1,5 +1,6 @@
 package com.br2.cadela.workout
 
+import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel() {
-    private var _currentSerieIndex = 0
+    private val _currentRest = MutableLiveData<Rest?>(null)
+    val currentRest: LiveData<Rest?>
+        get() = _currentRest
+
+    private val _currentSerieIndex = MutableLiveData(0)
+    val currentSerieIndex: LiveData<Int>
+        get() = _currentSerieIndex
 
     private val _currentExercise = MutableLiveData<Exercise?>()
     val currentExercise: LiveData<Exercise?>
@@ -44,29 +51,26 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
         _currentExercise.value = workoutService.runSession()
     }
 
-    fun setRepsForCurrentSerie(done: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun setRepsForCurrentSerie(done: Int) {
         _currentExercise.value?.let {
-            it.series.repetitions[_currentSerieIndex] = Repetition(done)
-            _currentSerieIndex += 1
-            if (_currentSerieIndex < it.series.repetitions.size) {
-                waitBetweenSeries()
+            it.series.repetitions[_currentSerieIndex.value!!] = Repetition(done)
+            _currentSerieIndex.value = _currentSerieIndex.value!! + 1
+
+            if (_currentSerieIndex.value!! < it.series.repetitions.size) {
+                updateCurrentRest(it.series.restAfter)
             } else {
-                restAndMoveToNextExercise(it)
+                moveToNextExercise(it)
             }
         }
     }
 
-    private suspend fun waitBetweenSeries() {
-        _currentExercise.value?.let {
-            workoutService.waitFor(it.series.restAfter)
-        }
+    private fun moveToNextExercise(it: Exercise) {
+        _currentSerieIndex.value = 0
+        updateCurrentRest(it.restAfter)
+        _currentExercise.value = workoutService.moveToNextExercise()
     }
 
-    private suspend fun restAndMoveToNextExercise(it: Exercise) {
-        workoutService.waitFor(it.restAfter ?: Rest(0))
-        withContext(Dispatchers.Main) {
-            _currentExercise.value = workoutService.moveToNextExercise()
-            _currentSerieIndex = 0
-        }
+    private fun updateCurrentRest(rest: Rest?){
+        _currentRest.value = rest
     }
 }
