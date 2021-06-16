@@ -121,3 +121,19 @@ fun Exercise.withRestOf(rest: Rest) = Exercise(name, series, rest, speed)
 
 fun Exercise.withSeries(series: Series) =
     Exercise(name, series, restAfter)
+
+fun MutableList<Exercise>.replaceExercise(search: String, replaceBy: String, threshold: Int){
+    val index = indexOfFirst { it.name == search }
+    if (index >= 0) {
+        val exercise = elementAt(index)
+        if (exercise.series.repetitions[0].done >= threshold) {
+            this[index] =
+                Exercise(
+                    replaceBy,
+                    Series(exercise.series.count),
+                    exercise.restAfter,
+                    exercise.speed
+                )
+        }
+    }
+}

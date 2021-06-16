@@ -71,10 +71,10 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
 
         replaceCxExerciseForBeginner(exercises)
 
-        changeExercise("A1", "A2", 8, exercises)
-        changeExercise("A3", "A4", 8, exercises)
-        changeExercise("A4", "A5", 8, exercises)
-        changeExercise("A5", "A6", 8, exercises)
+        exercises.replaceExercise("A1", "A2", 8)
+        exercises.replaceExercise("A3", "A4", 8)
+        exercises.replaceExercise("A4", "A5", 8)
+        exercises.replaceExercise("A5", "A6", 8)
 
         exercises.find { it.name == "A2" }?.let {
             if (shouldReplaceA2(it, exercises)) {
@@ -95,8 +95,8 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         if (previousSession.exercises[0].series.repetitions[0].done >= 8) return Session.SECOND_LEVEL
 
         val exercises = previousSession.exercises.toMutableList()
-        changeExercise("A1", "A2", 8, exercises)
-        changeExercise("C1", "C3", 10, exercises)
+        exercises.replaceExercise("A1", "A2", 8)
+        exercises.replaceExercise("C1", "C3", 10)
 
         replaceCxExerciseForBeginner(exercises)
         addRepetitionsToExercise("C1", 3, exercises)
@@ -122,9 +122,9 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     private fun replaceCxExerciseForBeginner(exercises: MutableList<Exercise>) {
-        changeExercise("C4", "C5", 12, exercises)
-        changeExercise("C5", "C6", 12, exercises)
-        changeExercise("C6", "C1", 12, exercises)
+        exercises.replaceExercise("C4", "C5", 12)
+        exercises.replaceExercise("C5", "C6", 12)
+        exercises.replaceExercise("C6", "C1", 12)
     }
 
     private fun buildSession(
@@ -143,27 +143,6 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             it.name
         )
     } == null
-
-    private fun changeExercise(
-        searchName: String,
-        replaceBy: String,
-        threshold: Int,
-        exercises: MutableList<Exercise>
-    ) {
-        val index = exercises.indexOfFirst { it.name == searchName }
-        if (index >= 0) {
-            val exercise = exercises[index]
-            if (exercise.series.repetitions[0].done >= threshold) {
-                exercises[index] =
-                    Exercise(
-                        replaceBy,
-                        Series(exercise.series.count),
-                        exercise.restAfter,
-                        exercise.speed
-                    )
-            }
-        }
-    }
 
     private fun nextSessionAfterFirstLevelTest(previousSession: Session): Session {
         val repetitionsForB =
