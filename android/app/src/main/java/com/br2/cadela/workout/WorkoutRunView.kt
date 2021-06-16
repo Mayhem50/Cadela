@@ -36,13 +36,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+private val DEFAULT_REPETITION_DONE = 10
+
 private val PREVIEW_SESSION = Session(
     name = Session.FIRST_LEVEL_TEST.name,
     exercises = listOf(
         Exercise(
             "A",
             Series(
-                10, mutableListOf(
+                DEFAULT_REPETITION_DONE, mutableListOf(
                     Repetition(19),
                     Repetition(18),
                     Repetition(17),
@@ -60,10 +62,10 @@ private val PREVIEW_SESSION = Session(
             Rest(120)
         ),
         Exercise("A1", Series(4), Rest(120)),
-        Exercise("A2", Series(10), Rest(120)),
-        Exercise("A3", Series(10), Rest(120)),
-        Exercise("A4", Series(10), Rest(120)),
-        Exercise("A5", Series(10), Rest(120)),
+        Exercise("A2", Series(DEFAULT_REPETITION_DONE), Rest(120)),
+        Exercise("A3", Series(DEFAULT_REPETITION_DONE), Rest(120)),
+        Exercise("A4", Series(DEFAULT_REPETITION_DONE), Rest(120)),
+        Exercise("A5", Series(DEFAULT_REPETITION_DONE), Rest(120)),
     ),
     levelStartedAt = LocalDate.of(2021, 6, 8)
 )
@@ -153,7 +155,10 @@ private fun RepetitionCard(
         ) {
             val (title, repetitions, button, input) = createRefs()
             val verticalGuideline = createGuidelineFromStart(.5f)
-            var repetitionDone = 0
+            var repetitionDone = DEFAULT_REPETITION_DONE
+            val disabled by viewModel?.isResting?.observeAsState(initial = true)
+                ?: remember { mutableStateOf(true) }
+
             Text(
                 text = exercise.name,
                 style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold),
@@ -181,32 +186,36 @@ private fun RepetitionCard(
                 })
 
             Button(
+                enabled = !disabled,
                 onClick = { callback(repetitionDone) },
                 modifier = Modifier.constrainAs(ref = button) {
                     bottom.linkTo(parent.bottom, 8.dp)
                     start.linkTo(parent.start, 8.dp)
                     end.linkTo(parent.end, 8.dp)
                 }) {
-                Text(text = "Wait")
+                Text(text = "Done")
             }
 
-            RepetitionInput(modifier = Modifier.constrainAs(ref = input) {
-                start.linkTo(verticalGuideline, 8.dp)
-                end.linkTo(parent.end, 8.dp)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
+            RepetitionInput(
+                enabled = !disabled,
+                modifier = Modifier.constrainAs(ref = input) {
+                    start.linkTo(verticalGuideline, 8.dp)
+                    end.linkTo(parent.end, 8.dp)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
 
-            }) { value -> repetitionDone = value }
+                }) { value -> repetitionDone = value }
         }
     }
 }
 
 @Composable
 fun RepetitionInput(
+    enabled: Boolean,
     modifier: Modifier,
     updateAction: (value: Int) -> Unit
 ) {
-    var value by remember { mutableStateOf(10) }
+    var value by remember { mutableStateOf(DEFAULT_REPETITION_DONE) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -216,10 +225,13 @@ fun RepetitionInput(
                 clip = true
             }
             .background(Color.White)) {
-        Button(onClick = {
-            value += 1
-            updateAction(value)
-        }, modifier = Modifier.padding(8.dp)) {
+        Button(
+            enabled = enabled,
+            onClick = {
+                value += 1
+                updateAction(value)
+            }, modifier = Modifier.padding(8.dp)
+        ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = null)
         }
 
@@ -233,10 +245,13 @@ fun RepetitionInput(
             modifier = Modifier.padding(8.dp)
         )
 
-        Button(onClick = {
-            value -= 1
-            updateAction(value)
-        }, modifier = Modifier.padding(8.dp)) {
+        Button(
+            enabled = enabled,
+            onClick = {
+                value -= 1
+                updateAction(value)
+            }, modifier = Modifier.padding(8.dp)
+        ) {
             Icon(imageVector = Icons.Filled.Remove, contentDescription = null)
         }
     }
@@ -249,7 +264,7 @@ fun RepetitionList(
     modifier: Modifier
 ) {
     val currentIndex by
-        viewModel?.currentSerieIndex?.observeAsState() ?: remember { mutableStateOf(5) }
+    viewModel?.currentSerieIndex?.observeAsState() ?: remember { mutableStateOf(5) }
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
