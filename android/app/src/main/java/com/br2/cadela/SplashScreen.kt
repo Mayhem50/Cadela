@@ -72,7 +72,7 @@ fun waitBeforeNavigate(timeMs: Long, navController: NavController) =
         delay(timeMs)
         withContext(Dispatchers.Main) {
             navController.navigateStringResource(
-                R.string.nav_authentication,
+                R.string.nav_workout_home,
                 NavOptions.Builder().buildPopupToCurrent(navController)
             )
         }
