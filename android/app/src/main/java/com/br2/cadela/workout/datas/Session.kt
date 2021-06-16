@@ -39,7 +39,7 @@ data class Session(
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C1", series = Series(2), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2), restAfter = Rest(120), speed = ESpeed.FAST),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
@@ -88,7 +88,7 @@ data class Session(
                 Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
-                Exercise(name = "C1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "C1", series = Series(3), restAfter = Rest(duration = 120), speed = ESpeed.FAST),
                 Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
@@ -99,10 +99,10 @@ data class Session(
         val SECOND_LEVEL = Session(
             name = "level_2",
             exercises = listOf(
-                Exercise(name = "B1", series = Series(6), restAfter = Rest(duration = 25)),
-                Exercise(name = "A3", series = Series(6), restAfter = Rest(duration = 25)),
-                Exercise(name = "A2", series = Series(6), restAfter = Rest(duration = 180)),
-                Exercise(name = "C1", series = Series(6), restAfter = Rest(duration = 180)),
+                Exercise(name = "B1", series = Series(6), restAfter = Rest(duration = 25), speed = ESpeed.FAST),
+                Exercise(name = "A3", series = Series(6), restAfter = Rest(duration = 25), speed = ESpeed.FAST),
+                Exercise(name = "A2", series = Series(6), restAfter = Rest(duration = 180), speed = ESpeed.FAST),
+                Exercise(name = "C1", series = Series(6), restAfter = Rest(duration = 180), speed = ESpeed.FAST),
                 Exercise(name = "E", series = Series(6), restAfter = Rest(duration = 180)),
                 Exercise(name = "F", series = Series(4), restAfter = Rest(duration = 180)),
                 Exercise(name = "G", series = Series(6), restAfter = Rest(duration = 90)),
