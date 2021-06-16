@@ -238,7 +238,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                 Exercise(name = "K2", series = Series(3), restAfter = null)
             )
         )
-        val  expected = Session(
+        val expected = Session(
             name = "second_program",
             exercises = listOf(
                 Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
@@ -296,7 +296,10 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
                 Exercise(
                     name = "C1",
-                    series = Series(3, mutableListOf(Repetition(9), Repetition(9), Repetition(9))),
+                    series = Series(
+                        3,
+                        mutableListOf(Repetition(9), Repetition(9), Repetition(9))
+                    ),
                     restAfter = Rest(duration = 120),
                     speed = ESpeed.FAST
                 ),
@@ -310,4 +313,30 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         val session = sut.createNewSession(previousSession)
         assertEquals(previousSession.clearExercisesRepetitions(), session)
     }
+
+    @Test
+    fun `E first serie result is 15 or more, next session replace E by E1`() {
+        val previousSession = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C1",
+                    series = Series(3),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3, mutableListOf(Repetition(15))), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+
+        val session = sut.createNewSession(previousSession)
+        assertEquals(previousSession.replaceExerciseNameAndClearReps("E", "E1"), session)
+    }
 }
+
