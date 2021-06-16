@@ -26,11 +26,6 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         } else nextSession
     }
 
-    private fun nextSessionAfter2ndProgram(previousSession: Session): Session {
-        val repetition = previousSession.exercises[0].series.repetitions[0].done
-        return if (repetition < 8) Session.SECOND_PROGRAM else Session.SECOND_LEVEL
-    }
-
     private fun stillOnSameLevel(
         previousSession: Session?,
         nextSession: Session
@@ -95,10 +90,24 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             }
         }
 
-        return Session(previousSession.name, exercises.map {
-            Exercise(it.name, Series(it.series.count), it.restAfter)
-        }.toList())
+        return buildSession(previousSession, exercises)
     }
+
+    private fun nextSessionAfter2ndProgram(previousSession: Session): Session {
+        if(previousSession.exercises[0].series.repetitions[0].done >= 8) return Session.SECOND_LEVEL
+
+        val exercises = previousSession.exercises.toMutableList()
+        changeExercise("A1", "A2", 8, exercises)
+
+        return buildSession(previousSession, exercises)
+    }
+
+    private fun buildSession(
+        previousSession: Session,
+        exercises: MutableList<Exercise>
+    ) = Session(previousSession.name, exercises.map {
+        Exercise(it.name, Series(it.series.count), it.restAfter, it.speed)
+    }.toList())
 
     private fun sessionIsStartedSince2Weeks(previousSession: Session) =
         ChronoUnit.WEEKS.between(previousSession.levelStartedAt, LocalDate.now()) >= TWO_WEEKS
@@ -123,7 +132,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             val exercise = exercises[index]
             if (exercise.series.repetitions[0].done >= threshold) {
                 exercises[index] =
-                    Exercise(replaceBy, Series(exercise.series.count), exercise.restAfter)
+                    Exercise(replaceBy, Series(exercise.series.count), exercise.restAfter, exercise.speed)
             }
         }
     }

@@ -96,6 +96,20 @@ data class Session(
             )
         )
 
+        val SECOND_PROGRAM_WITH_A2 = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A2", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(name = "C1", series = Series(3), restAfter = Rest(duration = 120), speed = ESpeed.FAST),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+
         val SECOND_LEVEL = Session(
             name = "level_2",
             exercises = listOf(
