@@ -9,11 +9,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
+import com.br2.cadela.R
 import com.br2.cadela.compose.pagerSwipeAnimation
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.ui.theme.Red200
@@ -154,12 +156,12 @@ fun NoStopAllowedDialog(dismissRequest: () -> Unit) {
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             ) {
-                Button(onClick = { dismissRequest() }) { Text(text = "Ok") }
+                Button(onClick = { dismissRequest() }) { Text(text = stringResource(R.string.ok)) }
             }
         },
         onDismissRequest = { dismissRequest() },
-        title = { Text(text = "Impossible") },
-        text = { Text(text = "You can not stop a running exercise") }
+        title = { Text(text = stringResource(R.string.impossible)) },
+        text = { Text(text = stringResource(R.string.can_not_stop_running_exercise)) }
     )
 }
 
@@ -170,14 +172,14 @@ private fun BackToHomeDialog(
 ) {
     AlertDialog(
         confirmButton = {
-            Button(onClick = { confirmRequest() }) { Text(text = "Quit") }
+            Button(onClick = { confirmRequest() }) { Text(text = stringResource(R.string.quit)) }
         },
         dismissButton = {
-            Button(onClick = { dismissRequest() }) { Text(text = "Dismiss") }
+            Button(onClick = { dismissRequest() }) { Text(text = stringResource(R.string.dismiss)) }
         },
         onDismissRequest = { dismissRequest() },
-        title = { Text(text = "Are you sure ?") },
-        text = { Text(text = "You're about ot quit. It will end your session in this state") })
+        title = { Text(text = stringResource(R.string.are_you_sure)) },
+        text = { Text(text = stringResource(R.string.you_are_about_to_quit)) })
 }
 
 @OptIn(ExperimentalPagerApi::class)

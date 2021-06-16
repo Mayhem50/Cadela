@@ -20,4 +20,12 @@
     <string name="speed_slow">lent</string>
     <string name="speed_normal">normal</string>
     <string name="speed_fast">rapide</string>
+
+    <string name="ok">Ok</string>
+    <string name="impossible">Impossible</string>
+    <string name="can_not_stop_running_exercise">Vous ne pouvez pas quitter pendant un exercise.</string>
+    <string name="quit">Quitter</string>
+    <string name="dismiss">Annuler</string>
+    <string name="are_you_sure">Êtes-vous sûr ?</string>
+    <string name="you_are_about_to_quit">Vous êtes sur le point de quitter votre session. Elle sera conservée dans cet état.</string>
 </resources>

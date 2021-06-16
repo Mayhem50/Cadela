@@ -26,4 +26,12 @@
     <string name="speed_slow">slow</string>
     <string name="speed_normal">normal</string>
     <string name="speed_fast">fast</string>
+
+    <string name="ok">Ok</string>
+    <string name="impossible">Impossible</string>
+    <string name="can_not_stop_running_exercise">You can not stop a running exercise.</string>
+    <string name="quit">Quit</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="are_you_sure">Are you sure ?</string>
+    <string name="you_are_about_to_quit">You\'re about ot quit. It will end your session in this state.</string>
 </resources>
