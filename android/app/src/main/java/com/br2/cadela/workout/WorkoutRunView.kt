@@ -248,7 +248,7 @@ fun RepetitionList(
     repetitions: List<Repetition>,
     modifier: Modifier
 ) {
-    val currentIndex =
+    val currentIndex by
         viewModel?.currentSerieIndex?.observeAsState() ?: remember { mutableStateOf(5) }
     Column(
         verticalArrangement = Arrangement.Top,
@@ -262,9 +262,9 @@ fun RepetitionList(
 
 @Composable
 private fun RepetitionRow(
-    currentIndex: State<Int?>,
+    currentIndex: Int?,
     index: Int,
-    it: Repetition
+    repetition: Repetition
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -273,7 +273,7 @@ private fun RepetitionRow(
             .padding(horizontal = 4.dp, vertical = 4.dp)
     ) {
         RepetitionRowIcon(
-            currentIndex = currentIndex.value ?: 0,
+            currentIndex = currentIndex ?: 0,
             index = index,
             modifier = Modifier.weight(0.5f)
         )
@@ -283,7 +283,10 @@ private fun RepetitionRow(
         }
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = if (it.done == 0) "-" else "${it.done}", textAlign = TextAlign.Center)
+            Text(
+                text = if (repetition.done == 0) "-" else "${repetition.done}",
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
