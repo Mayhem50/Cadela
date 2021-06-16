@@ -8,10 +8,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowRight
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -154,7 +151,7 @@ private fun RepetitionCard(
                 .fillMaxHeight()
         ) {
             val (title, repetitions, button, input) = createRefs()
-            val verticalGuideline = createGuidelineFromStart(.5f)
+            val verticalGuideline = createGuidelineFromStart(.65f)
             var repetitionDone = DEFAULT_REPETITION_DONE
             val disabled by viewModel?.isResting?.observeAsState(initial = true)
                 ?: remember { mutableStateOf(true) }
@@ -224,33 +221,47 @@ fun RepetitionInput(
                 shape = RoundedCornerShape(corner = CornerSize(4.dp))
                 clip = true
             }
-            .background(Color.White)) {
+            .background(Color.White)
+            .padding(8.dp)) {
         Button(
             enabled = enabled,
             onClick = {
                 value += 1
                 updateAction(value)
-            }, modifier = Modifier.padding(8.dp)
+            }, modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = null)
         }
 
-        Text(
-            text = "$value",
-            style = TextStyle(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
-            ),
-            modifier = Modifier.padding(8.dp)
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(vertical = 8.dp)
+        ) {
+            Text(
+                text = "$value",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
+                )
+            )
+            Icon(
+                imageVector = Icons.Filled.FitnessCenter,
+                contentDescription = null,
+                tint = Color.Black,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .size(20.dp)
+            )
+        }
 
         Button(
             enabled = enabled,
             onClick = {
                 value -= 1
                 updateAction(value)
-            }, modifier = Modifier.padding(8.dp)
+            }, modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Icon(imageVector = Icons.Filled.Remove, contentDescription = null)
         }
