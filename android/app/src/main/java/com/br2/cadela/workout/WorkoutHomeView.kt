@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.br2.cadela.R
 import com.br2.cadela.shared.stringResourceByName
 import com.br2.cadela.shared.toFormattedString
@@ -26,25 +27,24 @@ import java.time.Duration
 import java.time.LocalDate
 
 @Composable
-fun WorkoutHomeView(navFABAction: (() -> Unit)? = null) {
-    val vm = WorkoutModule.workoutVm
-    val session = vm.currentSession.observeAsState()
-    vm.startSession()
+fun WorkoutHomeView(viewModel: WorkoutViewModel?, navController: NavController?) {
+    val session = viewModel?.currentSession?.observeAsState()
+    viewModel?.startSession()
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-        session.value?.let {
-            HomeView(it, navFABAction)
+        session?.value?.let {
+            HomeView(it, viewModel, navController)
         } ?: CircularProgressIndicator(color = Color.White)
     }
 
 }
 
 @Composable
-private fun HomeView(session: Session, navFABAction: (() -> Unit)? = null) {
+private fun HomeView(session: Session, viewModel: WorkoutViewModel?, navController: NavController?) {
     Card(
         elevation = 3f.dp, modifier = Modifier
             .padding(16f.dp)
@@ -60,13 +60,13 @@ private fun HomeView(session: Session, navFABAction: (() -> Unit)? = null) {
                 ExerciseComponent(index, exercise)
             }
 
-            Footer(session, navFABAction)
+            Footer(session, viewModel, navController)
         }
     }
 }
 
 @Composable
-private fun Footer(session: Session, navFABAction: (() -> Unit)? = null) {
+private fun Footer(session: Session, viewModel: WorkoutViewModel?, navController: NavController?) {
     Text(
         text = getStartedSince(session),
         textAlign = TextAlign.End,
@@ -76,7 +76,10 @@ private fun Footer(session: Session, navFABAction: (() -> Unit)? = null) {
     )
     Button(modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 24f.dp), onClick = { navFABAction?.invoke() }) {
+        .padding(top = 24f.dp), onClick = {
+        viewModel?.runSession()
+        navController?.navigate("workout_run")
+    }) {
         Text(text = stringResource(R.string.start_session))
     }
 }
@@ -117,7 +120,7 @@ private fun ExerciseComponent(index: Int, exercise: Exercise) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 exercise.series.repetitions.map {
                     val text =
-                        if (it.done == 0) stringResource(R.string.empty_serie) else it.toString()
+                        if (it.done == 0) stringResource(R.string.empty_serie) else it.done.toString()
                     val paddingHorizontal = if (it.done == 0) 5f.dp else 2f.dp
                     Text(
                         text = text,
@@ -212,7 +215,7 @@ fun PreviewCard() {
                     Exercise("A5", Series(10), Rest(120)),
                 ),
                 levelStartedAt = LocalDate.of(2021, 6, 8)
-            )
+            ), null, null
         )
     }
 }
@@ -221,6 +224,6 @@ fun PreviewCard() {
 @Composable
 fun PreviewHome() {
     CadelaTheme {
-        WorkoutHomeView()
+        WorkoutHomeView(null, null)
     }
 }

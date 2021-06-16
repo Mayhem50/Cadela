@@ -8,9 +8,26 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel() {
-    private val _currentRest = MutableLiveData<Rest?>(null)
+    val EMPTY_TIME_STRING = "--:--"
+    private var _countDownTimer: CountDownTimer? = null
+
+    private val _isResting = MutableLiveData(false)
+    val isResting: LiveData<Boolean>
+        get() = _isResting
+
+    private val _timeDisplay = MutableLiveData(EMPTY_TIME_STRING)
+    val timeDisplay: LiveData<String>
+        get() = _timeDisplay
+
+    private val _restProgress = MutableLiveData(0f)
+    val restProgress: LiveData<Float>
+        get() = _restProgress
+
+    private val _currentRest = MutableLiveData<Rest?>()
     val currentRest: LiveData<Rest?>
         get() = _currentRest
 
@@ -62,6 +79,35 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
                 moveToNextExercise(it)
             }
         }
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun startRest(callback: (() -> Unit)? = null){
+        if(_isResting.value == true) {
+            return
+        }
+
+        val restDurationMs = _currentRest.value!!.duration.toLong() * 1000
+        _isResting.value = true
+        _countDownTimer = object : CountDownTimer( restDurationMs, 1000){
+            override fun onTick(millisUntilFinished: Long) {
+                _restProgress.value = 1f - millisUntilFinished.toFloat() / restDurationMs.toFloat()
+                val duration = Duration.milliseconds(millisUntilFinished)
+                duration.toComponents { minutes, seconds, nanoseconds ->
+                    _timeDisplay.value = String.format("%02d:%02d", minutes, seconds)
+                }
+            }
+
+            override fun onFinish() {
+                _restProgress.value = 1.0f
+                _isResting.value = false
+                _timeDisplay.value = EMPTY_TIME_STRING
+                callback?.invoke()
+            }
+
+        }
+
+        _countDownTimer?.start()
     }
 
     private fun moveToNextExercise(it: Exercise) {

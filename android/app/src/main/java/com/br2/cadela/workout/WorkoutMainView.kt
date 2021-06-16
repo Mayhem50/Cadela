@@ -61,14 +61,15 @@ fun WorkoutMainView(mainNavController: NavController?) {
                 .navigationBarsPadding()
         ) {
             NavHost(navController = navController, startDestination = "workout_home") {
-                composable("workout_home") { WorkoutHomeView { navController.navigate("workout_run") } }
-                composable("nav_settings") { WorkoutHomeView { navController.navigate("workout_run") } }
-                composable("workout_stats") { WorkoutHomeView { navController.navigate("workout_run") } }
-                composable("workout_run") { WorkoutHomeView { navController.navigate("workout_run") } }
+                composable("workout_home") {WorkoutHomeView(WorkoutModule.workoutVm, navController) }
+                composable("nav_settings") { WorkoutHomeView(WorkoutModule.workoutVm, navController) }
+                composable("workout_stats") { WorkoutHomeView(WorkoutModule.workoutVm, navController) }
+                composable("workout_run") { WorkoutRunView(WorkoutModule.workoutVm) }
             }
         }
     }
 }
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

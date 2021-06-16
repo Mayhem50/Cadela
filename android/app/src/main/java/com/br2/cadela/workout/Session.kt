@@ -28,8 +28,8 @@ data class Session(
         val FIRST_LEVEL_TEST = Session(
             name = "first_level_test",
             exercises = listOf(
-                Exercise(name = "A", series = Series(1), restAfter = Rest(180)),
-                Exercise(name = "B", series = Series(1), restAfter = Rest(180)),
+                Exercise(name = "A", series = Series(1), restAfter = Rest(5)),
+                Exercise(name = "B", series = Series(1), restAfter = Rest(5)),
                 Exercise(name = "C", series = Series(1), restAfter = Rest(180)),
                 Exercise(name = "A1", series = Series(1), restAfter = null)
             )
