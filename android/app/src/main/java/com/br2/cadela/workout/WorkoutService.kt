@@ -16,6 +16,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             "first_level_test" -> nextSessionAfterFirstLevelTest(previousSession)
             "first_program" -> nextSessionAfter1stProgram(previousSession)
             "only_b_test" -> nextSessionAfterOnlyBTest(previousSession)
+            "second_program" -> Session.SECOND_LEVEL
             else -> Session.FIRST_LEVEL_TEST
         }
 
