@@ -341,8 +341,6 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         assertEquals(previousSession.replaceExerciseNameAndClearReps("E", "E1"), session)
     }
 
-
-
     @Test
     fun `Go to 2nd Level if user do second_program since 3 weeks`() {
         val today = LocalDate.now()

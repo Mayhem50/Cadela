@@ -205,6 +205,7 @@ fun PreviewCard() {
                                 Repetition(11),
                                 Repetition(10),
                             ),
+                            0,
                             Rest(30)
                         ),
                         Rest(120)

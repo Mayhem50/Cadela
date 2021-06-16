@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit
 
 // TODO: Handle beginning of level -> 4 sessions/week then 3 sessions/week
 // TODO: Change 2nd Program to 2nd Level if doing session less than 3/week
+// TODO: Introduce target reps
 
 class WorkoutService(private val sessionRepository: SessionRepository) {
     private var _currentExerciseIndex: Int = 0
@@ -21,6 +22,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             "first_program" -> nextSessionAfter1stProgram(previousSession)
             "only_b_test" -> nextSessionAfterOnlyBTest(previousSession)
             "second_program" -> nextSessionAfter2ndProgram(previousSession)
+            "level_2" -> nextSessionAfter2ndLevel(previousSession)
             else -> Session.FIRST_LEVEL_TEST
         }
 
@@ -28,6 +30,25 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         ) {
             nextSession.clone(previousSession?.levelStartedAt)
         } else nextSession
+    }
+
+    private fun canGoToLevel3(session: Session): Boolean{
+        val exercises = session.exercises
+        val reps = exercises.filter { it.name != "K2" && it.name != "G" }.flatMap { it.series.repetitions }
+        val meanReps = reps.sumOf { it.done } / reps.size
+        return meanReps >= 8
+    }
+
+    private fun nextSessionAfter2ndLevel(previousSession: Session): Session {
+        if(canGoToLevel3(previousSession)) {
+            return Session.THIRD_LEVEL
+        }
+
+        val exercises = previousSession.exercises.toMutableList()
+
+        exercises.replaceExercise("E", "E1", 10)
+        exercises.changeTarget("C1", 3, 5)
+        return buildSession(previousSession, exercises)
     }
 
     private fun stillOnSameLevel(

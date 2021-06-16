@@ -137,3 +137,18 @@ fun MutableList<Exercise>.replaceExercise(search: String, replaceBy: String, thr
         }
     }
 }
+fun MutableList<Exercise>.changeTarget(search: String, target: Int, threshold: Int){
+    val index = indexOfFirst { it.name == search }
+    if (index >= 0) {
+        val exercise = elementAt(index)
+        if (exercise.series.meanRepsDone < threshold) {
+            this[index] =
+                Exercise(
+                    exercise.name,
+                    exercise.series.newTarget(target),
+                    exercise.restAfter,
+                    exercise.speed
+                )
+        }
+    }
+}

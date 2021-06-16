@@ -156,6 +156,57 @@ data class Session(
             exercises = listOf(
                 Exercise(
                     name = "B1",
+                    series = Series(6, target = 5),
+                    restAfter = Rest(duration = 25),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(
+                    name = "A3",
+                    series = Series(6, target = 5),
+                    restAfter = Rest(duration = 25),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(
+                    name = "A2",
+                    series = Series(6, target = 5),
+                    restAfter = Rest(duration = 180),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(
+                    name = "C1",
+                    series = Series(6, target = 5),
+                    restAfter = Rest(duration = 180),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(
+                    name = "E",
+                    series = Series(6, target = 5),
+                    restAfter = Rest(duration = 180)
+                ),
+                Exercise(
+                    name = "F",
+                    series = Series(4, target = 5),
+                    restAfter = Rest(duration = 180)
+                ),
+                Exercise(
+                    name = "G",
+                    series = Series(6, target = 10),
+                    restAfter = Rest(duration = 90)
+                ),
+                Exercise(
+                    name = "H",
+                    series = Series(6, target = 1),
+                    restAfter = Rest(duration = 60)
+                ),
+                Exercise(name = "K2", series = Series(3, target = 12), restAfter = null)
+            )
+        )
+
+        val THIRD_LEVEL = Session(
+            name = "level_3",
+            exercises = listOf(
+                Exercise(
+                    name = "B2",
                     series = Series(6),
                     restAfter = Rest(duration = 25),
                     speed = ESpeed.FAST
@@ -163,8 +214,7 @@ data class Session(
                 Exercise(
                     name = "A3",
                     series = Series(6),
-                    restAfter = Rest(duration = 25),
-                    speed = ESpeed.FAST
+                    restAfter = Rest(duration = 25)
                 ),
                 Exercise(
                     name = "A2",
@@ -173,12 +223,17 @@ data class Session(
                     speed = ESpeed.FAST
                 ),
                 Exercise(
-                    name = "C1",
+                    name = "C2",
                     series = Series(6),
                     restAfter = Rest(duration = 180),
                     speed = ESpeed.FAST
                 ),
-                Exercise(name = "E", series = Series(6), restAfter = Rest(duration = 180)),
+                Exercise(
+                    name = "E3",
+                    series = Series(6),
+                    restAfter = Rest(duration = 180),
+                    speed = ESpeed.FAST
+                ),
                 Exercise(name = "F", series = Series(4), restAfter = Rest(duration = 180)),
                 Exercise(name = "G", series = Series(6), restAfter = Rest(duration = 90)),
                 Exercise(name = "H", series = Series(6), restAfter = Rest(duration = 60)),
@@ -211,6 +266,7 @@ fun Session.clearExercisesRepetitions() = Session(
             Series(
                 it.series.count,
                 MutableList(it.series.count) { Repetition(0) },
+                it.series.target,
                 it.series.restAfter
             ),
             it.restAfter,
@@ -218,6 +274,25 @@ fun Session.clearExercisesRepetitions() = Session(
         )
     }, levelStartedAt
 )
+
+fun Session.changeTargetForExercise(search: String, newTarget: Int): Session {
+    val exercises = exercises.toMutableList()
+    val index = exercises.indexOfFirst { it.name == search }
+    if (index >= 0) {
+        val exercise = exercises[index]
+        exercises[index] = Exercise(
+            exercise.name,
+            exercise.series.newTarget(newTarget),
+            exercise.restAfter,
+            exercise.speed
+        )
+    }
+
+    return Session(name, exercises, levelStartedAt)
+}
+
+fun Session.changeTargetForExerciseAndClearReps(search: String, newTarget: Int) =
+    clearExercisesRepetitions().changeTargetForExercise(search, newTarget)
 
 fun Session.replaceExerciseNameAndClearReps(search: String, replaceBy: String) =
     clearExercisesRepetitions().replaceExerciseName(search, replaceBy)
