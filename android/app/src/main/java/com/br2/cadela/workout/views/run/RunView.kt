@@ -1,20 +1,19 @@
 package com.br2.cadela.workout.views.run
 
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavController
 import com.br2.cadela.compose.pagerSwipeAnimation
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.ui.theme.Red200
@@ -61,11 +60,12 @@ private val PREVIEW_SESSION = Session(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun WorkoutRunView(viewModel: WorkoutViewModel?) {
+fun WorkoutRunView(viewModel: WorkoutViewModel?, navController: NavController?) {
     val scope = rememberCoroutineScope()
     val session =
         viewModel?.currentSession?.observeAsState() ?: remember { mutableStateOf(PREVIEW_SESSION) }
     val pagerState = rememberPagerState(pageCount = session?.value?.exercises?.size ?: 0)
+    BackPressWarningDialog(viewModel, navController)
 
     ConstraintLayout(
         modifier = Modifier
@@ -127,6 +127,59 @@ fun WorkoutRunView(viewModel: WorkoutViewModel?) {
 
 }
 
+@Composable
+private fun BackPressWarningDialog(viewModel: WorkoutViewModel?, navController: NavController?) {
+    val currentSerieIndex by viewModel?.currentSerieIndex?.observeAsState(0) ?: remember {
+        mutableStateOf(0)
+    }
+    var openDialog by remember { mutableStateOf(false) }
+
+    BackHandler(onBack = { openDialog = true })
+
+    if (!openDialog) return
+
+    if (currentSerieIndex == 0)
+        BackToHomeDialog({
+            viewModel?.endSession()
+            navController?.popBackStack()
+        }, { openDialog = false })
+    else NoStopAllowedDialog { openDialog = false }
+}
+
+@Composable
+fun NoStopAllowedDialog(dismissRequest: () -> Unit) {
+    AlertDialog(
+        buttons = {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
+            ) {
+                Button(onClick = { dismissRequest() }) { Text(text = "Ok") }
+            }
+        },
+        onDismissRequest = { dismissRequest() },
+        title = { Text(text = "Impossible") },
+        text = { Text(text = "You can not stop a running exercise") }
+    )
+}
+
+@Composable
+private fun BackToHomeDialog(
+    confirmRequest: () -> Unit,
+    dismissRequest: () -> Unit
+) {
+    AlertDialog(
+        confirmButton = {
+            Button(onClick = { confirmRequest() }) { Text(text = "Quit") }
+        },
+        dismissButton = {
+            Button(onClick = { dismissRequest() }) { Text(text = "Dismiss") }
+        },
+        onDismissRequest = { dismissRequest() },
+        title = { Text(text = "Are you sure ?") },
+        text = { Text(text = "You're about ot quit. It will end your session in this state") })
+}
+
 @OptIn(ExperimentalPagerApi::class)
 private fun moveToNext(
     viewModel: WorkoutViewModel?,
@@ -144,9 +197,7 @@ private fun moveToNext(
 @Composable
 fun PreviewWorkoutRunCardFullReps() {
     CadelaTheme {
-        WorkoutRunView(
-            null,
-        )
+        WorkoutRunView(null, null)
     }
 }
 

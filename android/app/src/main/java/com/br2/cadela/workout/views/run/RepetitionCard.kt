@@ -1,7 +1,6 @@
 package com.br2.cadela.workout.views.run
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -23,13 +22,16 @@ import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.br2.cadela.shared.stringResourceByName
+import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.workout.datas.Exercise
 import com.br2.cadela.workout.datas.Repetition
+import com.br2.cadela.workout.datas.Series
 import com.br2.cadela.workout.views.WorkoutViewModel
 
 private val DEFAULT_REPETITION_DONE = 10
@@ -238,32 +240,43 @@ private fun RepetitionRowIcon(currentIndex: Int, index: Int, modifier: Modifier)
     fun isBeforeCurrentIndex() =
         currentIndex != index && index < currentIndex
 
-    AnimatedVisibility(
-        visible = isCurrentIndex(),
-        modifier = modifier
-    ) {
-        Column {
-            Icon(
-                imageVector = Icons.Filled.ArrowRight,
-                contentDescription = null
-            )
+    Box(modifier = modifier) {
+        AnimatedVisibility(
+            visible = isCurrentIndex(),
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Column {
+                Icon(
+                    imageVector = Icons.Filled.ArrowRight,
+                    contentDescription = null
+                )
+            }
+        }
+        AnimatedVisibility(
+            visible = isBeforeCurrentIndex(),
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Column {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null
+                )
+            }
         }
     }
-    AnimatedVisibility(
-        visible = isBeforeCurrentIndex(),
-        modifier = modifier
-    ) {
-        Column {
-            Icon(
-                imageVector = Icons.Filled.Check,
-                contentDescription = null
-            )
+}
+
+@Preview
+@Composable
+fun PreviewExerciseCard() {
+    CadelaTheme {
+        RepetitionCard(
+            viewModel = null,
+            modifier = Modifier,
+            exercise = Exercise("A", Series(7), null)) {
+
         }
-    }
-    AnimatedVisibility(
-        visible = !(isBeforeCurrentIndex() || isCurrentIndex()),
-        modifier = modifier
-    ) {
-        Box {}
     }
 }

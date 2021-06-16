@@ -66,7 +66,7 @@ fun WorkoutMainView(mainNavController: NavController?) {
                 composable("workout_home") {WorkoutHomeView(WorkoutModule.workoutVm, navController) }
                 composable("nav_settings") { WorkoutHomeView(WorkoutModule.workoutVm, navController) }
                 composable("workout_stats") { WorkoutHomeView(WorkoutModule.workoutVm, navController) }
-                composable("workout_run") { WorkoutRunView(WorkoutModule.workoutVm) }
+                composable("workout_run") { WorkoutRunView(WorkoutModule.workoutVm, navController) }
             }
         }
     }
