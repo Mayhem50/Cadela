@@ -16,7 +16,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             "first_level_test" -> nextSessionAfterFirstLevelTest(previousSession)
             "first_program" -> nextSessionAfter1stProgram(previousSession)
             "only_b_test" -> nextSessionAfterOnlyBTest(previousSession)
-            "second_program" -> Session.SECOND_LEVEL
+            "second_program" -> nextSessionAfter2ndProgram(previousSession)
             else -> Session.FIRST_LEVEL_TEST
         }
 
@@ -24,6 +24,11 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         ) {
             nextSession.clone(previousSession?.levelStartedAt)
         } else nextSession
+    }
+
+    private fun nextSessionAfter2ndProgram(previousSession: Session): Session {
+        val repetition = previousSession.exercises[0].series.repetitions[0].done
+        return if (repetition < 8) Session.SECOND_PROGRAM else Session.SECOND_LEVEL
     }
 
     private fun stillOnSameLevel(
