@@ -69,9 +69,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         }
         val exercises = previousSession.exercises.toMutableList()
 
-        changeExercise("C4", "C5", 12, exercises)
-        changeExercise("C5", "C6", 12, exercises)
-        changeExercise("C6", "C1", 12, exercises)
+        replaceCxExerciseForBeginner(exercises)
 
         changeExercise("A1", "A2", 8, exercises)
         changeExercise("A3", "A4", 8, exercises)
@@ -94,20 +92,44 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     private fun nextSessionAfter2ndProgram(previousSession: Session): Session {
-        if(previousSession.exercises[0].series.repetitions[0].done >= 8) return Session.SECOND_LEVEL
+        if (previousSession.exercises[0].series.repetitions[0].done >= 8) return Session.SECOND_LEVEL
 
         val exercises = previousSession.exercises.toMutableList()
         changeExercise("A1", "A2", 8, exercises)
 
+        replaceCxExerciseForBeginner(exercises)
+        addRepetitionsToExercise("C1", 3, exercises)
+
         return buildSession(previousSession, exercises)
+    }
+
+    private fun addRepetitionsToExercise(
+        name: String,
+        seriesCount: Int,
+        exercises: MutableList<Exercise>
+    ) {
+        val index = exercises.indexOfFirst { it.name == name }
+        if (index >= 0) {
+            val exercise = exercises[index]
+            exercises[index] = Exercise(
+                exercise.name,
+                Series(count = seriesCount, restAfter = exercise.series.restAfter),
+                exercise.restAfter,
+                exercise.speed
+            )
+        }
+    }
+
+    private fun replaceCxExerciseForBeginner(exercises: MutableList<Exercise>) {
+        changeExercise("C4", "C5", 12, exercises)
+        changeExercise("C5", "C6", 12, exercises)
+        changeExercise("C6", "C1", 12, exercises)
     }
 
     private fun buildSession(
         previousSession: Session,
         exercises: MutableList<Exercise>
-    ) = Session(previousSession.name, exercises.map {
-        Exercise(it.name, Series(it.series.count), it.restAfter, it.speed)
-    }.toList())
+    ) = Session(previousSession.name, exercises).clearExercisesRepetitions()
 
     private fun sessionIsStartedSince2Weeks(previousSession: Session) =
         ChronoUnit.WEEKS.between(previousSession.levelStartedAt, LocalDate.now()) >= TWO_WEEKS
@@ -132,7 +154,12 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             val exercise = exercises[index]
             if (exercise.series.repetitions[0].done >= threshold) {
                 exercises[index] =
-                    Exercise(replaceBy, Series(exercise.series.count), exercise.restAfter, exercise.speed)
+                    Exercise(
+                        replaceBy,
+                        Series(exercise.series.count),
+                        exercise.restAfter,
+                        exercise.speed
+                    )
             }
         }
     }
@@ -145,9 +172,9 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
             previousSession.exercises.find { it.name == "C" }?.series?.repetitions?.elementAt(0)
                 ?: Repetition(0)
         return if (repetitionsForB.done < 4) {
-            return if (repetitionsForC.done > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
+            if (repetitionsForC.done > 0) Session.FIRST_PROGRAM else Session.FIRST_PROGRAM_WITH_C4
         } else {
-            Session.SECOND_PROGRAM
+            if (repetitionsForC.done > 0) Session.SECOND_PROGRAM else Session.SECOND_PROGRAM_WITH_C4
         }
     }
 

@@ -10,7 +10,8 @@ data class Session(
     val estimatedTimeInSec: Long
         get() = exercises.foldIndexed(0, { index, acc, it ->
             val totalRestBetweenSeries = (it.series.count - 1) * it.series.restAfter.duration
-            val totalRestBetweenExercise = if(index < exercises.size - 1)  (it.restAfter?.duration ?: 0) else 0
+            val totalRestBetweenExercise =
+                if (index < exercises.size - 1) (it.restAfter?.duration ?: 0) else 0
             val estimatedExerciseTime = Series.ESTIMATED_TIME_FOR_ONE_SERIE_IN_SEC * it.series.count
             acc + totalRestBetweenSeries + totalRestBetweenExercise + estimatedExerciseTime
         })
@@ -39,7 +40,12 @@ data class Session(
             exercises = listOf(
                 Exercise(name = "A1", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(2), restAfter = Rest(120)),
-                Exercise(name = "C1", series = Series(2), restAfter = Rest(120), speed = ESpeed.FAST),
+                Exercise(
+                    name = "C1",
+                    series = Series(2),
+                    restAfter = Rest(120),
+                    speed = ESpeed.FAST
+                ),
                 Exercise(name = "E", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(2), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(2), restAfter = Rest(120)),
@@ -52,7 +58,12 @@ data class Session(
             exercises = listOf(
                 Exercise(name = "A1", series = Series(1), restAfter = Rest(120)),
                 Exercise(name = "D", series = Series(1), restAfter = Rest(120)),
-                Exercise(name = "C4", series = Series(1), restAfter = Rest(120)),
+                Exercise(
+                    name = "C4",
+                    series = Series(1),
+                    restAfter = Rest(120),
+                    speed = ESpeed.FAST
+                ),
                 Exercise(name = "E", series = Series(1), restAfter = Rest(120)),
                 Exercise(name = "F", series = Series(1), restAfter = Rest(120)),
                 Exercise(name = "G", series = Series(1), restAfter = Rest(120)),
@@ -88,7 +99,32 @@ data class Session(
                 Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
-                Exercise(name = "C1", series = Series(3), restAfter = Rest(duration = 120), speed = ESpeed.FAST),
+                Exercise(
+                    name = "C1",
+                    series = Series(3),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+
+
+        val SECOND_PROGRAM_WITH_C4 = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C4",
+                    series = Series(1),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
                 Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
@@ -102,7 +138,12 @@ data class Session(
                 Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "A2", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
-                Exercise(name = "C1", series = Series(3), restAfter = Rest(duration = 120), speed = ESpeed.FAST),
+                Exercise(
+                    name = "C1",
+                    series = Series(3),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
                 Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
@@ -113,10 +154,30 @@ data class Session(
         val SECOND_LEVEL = Session(
             name = "level_2",
             exercises = listOf(
-                Exercise(name = "B1", series = Series(6), restAfter = Rest(duration = 25), speed = ESpeed.FAST),
-                Exercise(name = "A3", series = Series(6), restAfter = Rest(duration = 25), speed = ESpeed.FAST),
-                Exercise(name = "A2", series = Series(6), restAfter = Rest(duration = 180), speed = ESpeed.FAST),
-                Exercise(name = "C1", series = Series(6), restAfter = Rest(duration = 180), speed = ESpeed.FAST),
+                Exercise(
+                    name = "B1",
+                    series = Series(6),
+                    restAfter = Rest(duration = 25),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(
+                    name = "A3",
+                    series = Series(6),
+                    restAfter = Rest(duration = 25),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(
+                    name = "A2",
+                    series = Series(6),
+                    restAfter = Rest(duration = 180),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(
+                    name = "C1",
+                    series = Series(6),
+                    restAfter = Rest(duration = 180),
+                    speed = ESpeed.FAST
+                ),
                 Exercise(name = "E", series = Series(6), restAfter = Rest(duration = 180)),
                 Exercise(name = "F", series = Series(4), restAfter = Rest(duration = 180)),
                 Exercise(name = "G", series = Series(6), restAfter = Rest(duration = 90)),
@@ -126,3 +187,37 @@ data class Session(
         )
     }
 }
+
+fun Session.replaceExerciseName(search: String, replaceBy: String): Session {
+    val index = exercises.indexOfFirst { it.name == search }
+    return if (index >= 0) {
+        Session(name, exercises.mapIndexed { idx, exercise ->
+            if (index == idx) Exercise(
+                replaceBy,
+                exercise.series,
+                exercise.restAfter,
+                exercise.speed
+            )
+            else exercise
+        }, levelStartedAt)
+    } else Session(name, exercises, levelStartedAt)
+}
+
+fun Session.clearExercisesRepetitions() = Session(
+    name,
+    exercises.map {
+        Exercise(
+            it.name,
+            Series(
+                it.series.count,
+                MutableList(it.series.count) { Repetition(0) },
+                it.series.restAfter
+            ),
+            it.restAfter,
+            it.speed
+        )
+    }, levelStartedAt
+)
+
+fun Session.replaceExerciseNameAndClearReps(search: String, replaceBy: String) =
+    clearExercisesRepetitions().replaceExerciseName(search, replaceBy)

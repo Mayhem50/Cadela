@@ -69,7 +69,11 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
             name = "second_program",
             exercises = listOf(
                 Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
-                Exercise(name = "A1", series = Series(3, mutableListOf(Repetition(8), Repetition(7), Repetition(6))), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "A1",
+                    series = Series(3, mutableListOf(Repetition(8), Repetition(7), Repetition(6))),
+                    restAfter = Rest(duration = 120)
+                ),
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
                 Exercise(
                     name = "C1",
@@ -88,4 +92,172 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         assertEquals(Session.SECOND_PROGRAM_WITH_A2, session)
     }
 
+    @Test
+    fun `C4 session result is less than 12, next session will be the same`() {
+        val previousSession = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C4",
+                    series = Series(1, mutableListOf(Repetition(11))),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+
+        val session = sut.createNewSession(previousSession)
+
+        assertEquals(previousSession.clearExercisesRepetitions(), session)
+    }
+
+    @Test
+    fun `C4 session result is 12 or more, next session replace C4 by C5`() {
+        val previousSession = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C4",
+                    series = Series(1, mutableListOf(Repetition(12))),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+        val session = sut.createNewSession(previousSession)
+
+        assertEquals(previousSession.replaceExerciseNameAndClearReps("C4", "C5"), session)
+    }
+
+    @Test
+    fun `C5 session result is less than 12 next session will be the same`() {
+        val previousSession = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C5",
+                    series = Series(1, mutableListOf(Repetition(11))),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+        val session = sut.createNewSession(previousSession)
+
+        assertEquals(previousSession.clearExercisesRepetitions(), session)
+    }
+
+    @Test
+    fun `C5 session result is 12 or more, next session replace C5 by C6`() {
+        val previousSession = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C5",
+                    series = Series(1, mutableListOf(Repetition(12))),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+        val session = sut.createNewSession(previousSession)
+
+        assertEquals(previousSession.replaceExerciseNameAndClearReps("C5", "C6"), session)
+    }
+
+    @Test
+    fun `C6 session result is less than 12 next session will be the same`() {
+        val previousSession = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C6",
+                    series = Series(1, mutableListOf(Repetition(11))),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+        val session = sut.createNewSession(previousSession)
+
+        assertEquals(previousSession.clearExercisesRepetitions(), session)
+    }
+
+    @Test
+    fun `C6 session result is 12 or more, next session replace C6 by C1`() {
+        val previousSession = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C6",
+                    series = Series(1, mutableListOf(Repetition(12))),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+        val  expected = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C1",
+                    series = Series(3),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+        val session = sut.createNewSession(previousSession)
+
+        assertEquals(expected, session)
+    }
 }
