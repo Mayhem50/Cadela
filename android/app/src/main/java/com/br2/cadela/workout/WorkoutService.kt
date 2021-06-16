@@ -6,6 +6,9 @@ import kotlinx.coroutines.*
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
+// TODO: Handle beginning of level -> 4 sessions/week then 3 sessions/week
+// TODO: Change 2nd Program to 2nd Level if doing session less than 3/week
+
 class WorkoutService(private val sessionRepository: SessionRepository) {
     private var _currentExerciseIndex: Int = 0
     private var _currentSession: Session? = null
