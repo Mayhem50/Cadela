@@ -3,6 +3,8 @@ package com.br2.cadela.workout
 import com.br2.cadela.workout.datas.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
     @Test
@@ -337,6 +339,21 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
 
         val session = sut.createNewSession(previousSession)
         assertEquals(previousSession.replaceExerciseNameAndClearReps("E", "E1"), session)
+    }
+
+
+
+    @Test
+    fun `Go to 2nd Level if user do second_program since 3 weeks`() {
+        val today = LocalDate.now()
+        val threeWeekBefore = today.minus(3, ChronoUnit.WEEKS)
+        val previousSession = Session(
+            name = Session.SECOND_PROGRAM.name,
+            exercises = Session.SECOND_PROGRAM.exercises,
+            levelStartedAt = threeWeekBefore
+        )
+        val session = sut.createNewSession(previousSession)
+        assertEquals(Session.SECOND_LEVEL, session)
     }
 }
 

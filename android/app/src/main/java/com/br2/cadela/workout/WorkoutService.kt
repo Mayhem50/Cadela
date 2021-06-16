@@ -10,6 +10,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     private var _currentExerciseIndex: Int = 0
     private var _currentSession: Session? = null
     private val TWO_WEEKS = 2
+    private val THREE_WEEKS = 2
 
     fun createNewSession(previousSession: Session? = null): Session {
         val nextSession = when (previousSession?.name) {
@@ -64,7 +65,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     private fun nextSessionAfter1stProgram(previousSession: Session): Session {
-        if (sessionIsStartedSince2Weeks(previousSession)) {
+        if (sessionIsStartedSince(previousSession, TWO_WEEKS)) {
             return Session.SECOND_PROGRAM
         }
         val exercises = previousSession.exercises.toMutableList()
@@ -92,6 +93,9 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     private fun nextSessionAfter2ndProgram(previousSession: Session): Session {
+        if (sessionIsStartedSince(previousSession, THREE_WEEKS)) {
+            return Session.SECOND_LEVEL
+        }
         if (previousSession.exercises[0].series.repetitions[0].done >= 8) return Session.SECOND_LEVEL
 
         val exercises = previousSession.exercises.toMutableList()
@@ -133,8 +137,8 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
         exercises: MutableList<Exercise>
     ) = Session(previousSession.name, exercises).clearExercisesRepetitions()
 
-    private fun sessionIsStartedSince2Weeks(previousSession: Session) =
-        ChronoUnit.WEEKS.between(previousSession.levelStartedAt, LocalDate.now()) >= TWO_WEEKS
+    private fun sessionIsStartedSince(previousSession: Session, weekCount: Int) =
+        ChronoUnit.WEEKS.between(previousSession.levelStartedAt, LocalDate.now()) >= weekCount
 
     private fun shouldReplaceA2(
         exercise: Exercise,
