@@ -1,5 +1,7 @@
 package com.br2.cadela.workout
 
+import com.br2.cadela.workout.datas.*
+import com.br2.cadela.workout.repositories.SessionRecord
 import io.mockk.coEvery
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions

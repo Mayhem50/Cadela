@@ -1,10 +1,12 @@
 package com.br2.cadela
 
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,10 +18,11 @@ import com.br2.cadela.shared.ApiClient
 import com.br2.cadela.shared.CadelaDatabase
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.workout.WorkoutModule
-import com.br2.cadela.workout.WorkoutMainView
+import com.br2.cadela.workout.views.WorkoutMainView
 import com.google.accompanist.insets.ProvideWindowInsets
 
 class MainActivity : ComponentActivity() {
+    @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bootstrap()

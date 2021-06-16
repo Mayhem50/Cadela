@@ -1,5 +1,7 @@
 package com.br2.cadela.workout
 
+import com.br2.cadela.workout.datas.*
+import com.br2.cadela.workout.repositories.SessionRepository
 import kotlinx.coroutines.*
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit

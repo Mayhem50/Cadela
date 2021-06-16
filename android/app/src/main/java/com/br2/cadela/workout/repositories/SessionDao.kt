@@ -1,4 +1,4 @@
-package com.br2.cadela.workout
+package com.br2.cadela.workout.repositories
 
 import androidx.room.Dao
 import androidx.room.Insert

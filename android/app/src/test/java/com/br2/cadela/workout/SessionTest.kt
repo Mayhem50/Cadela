@@ -1,5 +1,6 @@
 package com.br2.cadela.workout
 
+import com.br2.cadela.workout.datas.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

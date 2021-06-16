@@ -1,4 +1,4 @@
-package com.br2.cadela.workout
+package com.br2.cadela.workout.views
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.layout.*
@@ -23,6 +23,7 @@ import com.br2.cadela.R
 import com.br2.cadela.shared.stringResourceByName
 import com.br2.cadela.shared.toFormattedString
 import com.br2.cadela.ui.theme.CadelaTheme
+import com.br2.cadela.workout.datas.*
 import java.time.Duration
 import java.time.LocalDate
 

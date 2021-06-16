@@ -1,4 +1,4 @@
-package com.br2.cadela.workout
+package com.br2.cadela.workout.datas
 
 data class Series(val count: Int, val repetitions: MutableList<Repetition> = MutableList(count) { Repetition(0) }, val restAfter: Rest = Rest(120)){
     companion object {

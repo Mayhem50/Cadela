@@ -1,4 +1,4 @@
-package com.br2.cadela.workout
+package com.br2.cadela.workout.views
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -26,6 +26,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.br2.cadela.ui.theme.Red500
+import com.br2.cadela.workout.WorkoutModule
+import com.br2.cadela.workout.views.run.WorkoutRunView
 import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable

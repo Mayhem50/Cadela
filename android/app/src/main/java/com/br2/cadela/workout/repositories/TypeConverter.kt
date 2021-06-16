@@ -1,6 +1,7 @@
-package com.br2.cadela.workout
+package com.br2.cadela.workout.repositories
 
 import androidx.room.TypeConverter
+import com.br2.cadela.workout.datas.Session
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDate

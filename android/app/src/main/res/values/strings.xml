@@ -22,4 +22,8 @@
     <string name="empty_serie">-</string>
     <string name="exercise_index">Exo %1$d:</string>
     <string name="start_session">START</string>
+
+    <string name="speed_slow">slow</string>
+    <string name="speed_normal">normal</string>
+    <string name="speed_fast">fast</string>
 </resources>

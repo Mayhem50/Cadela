@@ -1,4 +1,4 @@
-package com.br2.cadela.workout
+package com.br2.cadela.workout.views.run
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -6,7 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
@@ -16,127 +19,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.br2.cadela.compose.pagerSwipeAnimation
-import com.br2.cadela.ui.theme.CadelaTheme
-import com.br2.cadela.ui.theme.Red200
-import com.br2.cadela.ui.theme.Red700
-import com.google.accompanist.insets.statusBarsPadding
-import com.google.accompanist.pager.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import java.time.LocalDate
+import com.br2.cadela.shared.stringResourceByName
+import com.br2.cadela.workout.datas.Exercise
+import com.br2.cadela.workout.datas.Repetition
+import com.br2.cadela.workout.views.WorkoutViewModel
 
 private val DEFAULT_REPETITION_DONE = 10
 
-private val PREVIEW_SESSION = Session(
-    name = Session.FIRST_LEVEL_TEST.name,
-    exercises = listOf(
-        Exercise(
-            "A",
-            Series(
-                DEFAULT_REPETITION_DONE, mutableListOf(
-                    Repetition(19),
-                    Repetition(18),
-                    Repetition(17),
-                    Repetition(16),
-                    Repetition(17),
-                    Repetition(14),
-                    Repetition(15),
-                    Repetition(16),
-                    Repetition(13),
-                    Repetition(0),
-                    Repetition(0),
-                    Repetition(0)
-                ), Rest(30)
-            ),
-            Rest(120)
-        ),
-        Exercise("A1", Series(4), Rest(120)),
-        Exercise("A2", Series(DEFAULT_REPETITION_DONE), Rest(120)),
-        Exercise("A3", Series(DEFAULT_REPETITION_DONE), Rest(120)),
-        Exercise("A4", Series(DEFAULT_REPETITION_DONE), Rest(120)),
-        Exercise("A5", Series(DEFAULT_REPETITION_DONE), Rest(120)),
-    ),
-    levelStartedAt = LocalDate.of(2021, 6, 8)
-)
-
-@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun WorkoutRunView(viewModel: WorkoutViewModel?) {
-    val scope = rememberCoroutineScope()
-    val session =
-        viewModel?.currentSession?.observeAsState() ?: remember { mutableStateOf(PREVIEW_SESSION) }
-    val pagerState = rememberPagerState(pageCount = session?.value?.exercises?.size ?: 0)
-
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(8.dp)
-            .statusBarsPadding()
-    ) {
-        val (timer, pager, indicator) = createRefs()
-
-        CircularTimer(viewModel = viewModel, modifier = Modifier.constrainAs(ref = timer) {
-            top.linkTo(parent.top, 8.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            width = Dimension.fillToConstraints
-        })
-        HorizontalPager(
-            state = pagerState,
-            dragEnabled = false,
-            modifier = Modifier
-                .padding(8.dp)
-                .constrainAs(ref = pager) {
-                    top.linkTo(timer.bottom, 8.dp)
-                    bottom.linkTo(indicator.top, 8.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                }
-
-        ) { page ->
-            val exercise = session.value!!.exercises[page]
-            val modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .graphicsLayer {
-                    pagerSwipeAnimation(page, this)
-                }
-            RepetitionCard(viewModel, modifier, exercise) { repetitionDone ->
-                viewModel?.setRepsForCurrentSerie(repetitionDone)
-                moveToNext(viewModel, scope, pagerState)
-            }
-        }
-
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            activeColor = Red200,
-            inactiveColor = Red700,
-            modifier = Modifier
-                .height(24.dp)
-                .constrainAs(ref = indicator) {
-                    bottom.linkTo(parent.bottom, 8.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.wrapContent
-                }
-        )
-    }
-
-}
-
-@Composable
-private fun RepetitionCard(
+fun RepetitionCard(
     viewModel: WorkoutViewModel?,
     modifier: Modifier,
     exercise: Exercise,
@@ -150,7 +49,7 @@ private fun RepetitionCard(
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            val (title, repetitions, button, input) = createRefs()
+            val (title, repetitions, button, input, speedIndicator) = createRefs()
             val verticalGuideline = createGuidelineFromStart(.65f)
             var repetitionDone = DEFAULT_REPETITION_DONE
             val disabled by viewModel?.isResting?.observeAsState(initial = true)
@@ -168,6 +67,21 @@ private fun RepetitionCard(
                     }
                     .wrapContentHeight()
             )
+
+            Row(modifier = Modifier.constrainAs(ref = speedIndicator) {
+                top.linkTo(title.top)
+                bottom.linkTo(title.bottom)
+                end.linkTo(input.end)
+                start.linkTo(input.start)
+            }) {
+                Icon(imageVector = Icons.Filled.Speed, contentDescription = null)
+                Text(
+                    text = stringResourceByName(name = "speed_${exercise.speed.text}").capitalize(
+                        Locale.current
+                    ),
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
 
             RepetitionList(
                 viewModel = viewModel,
@@ -207,7 +121,7 @@ private fun RepetitionCard(
 }
 
 @Composable
-fun RepetitionInput(
+private fun RepetitionInput(
     enabled: Boolean,
     modifier: Modifier,
     updateAction: (value: Int) -> Unit
@@ -269,7 +183,7 @@ fun RepetitionInput(
 }
 
 @Composable
-fun RepetitionList(
+private fun RepetitionList(
     viewModel: WorkoutViewModel?,
     repetitions: List<Repetition>,
     modifier: Modifier
@@ -353,94 +267,3 @@ private fun RepetitionRowIcon(currentIndex: Int, index: Int, modifier: Modifier)
         Box {}
     }
 }
-
-@OptIn(ExperimentalPagerApi::class)
-private fun moveToNext(
-    viewModel: WorkoutViewModel?,
-    scope: CoroutineScope,
-    pagerState: PagerState
-) {
-    viewModel?.startRest {
-        scope.launch {
-            pagerState.animateScrollToPage(pagerState.currentPage + 1)
-        }
-    }
-}
-
-@Composable
-fun CircularTimer(viewModel: WorkoutViewModel?, modifier: Modifier) {
-    val progress = viewModel?.restProgress?.observeAsState(initial = 0f)
-    val timeString = viewModel?.timeDisplay?.observeAsState()
-
-    Box(modifier = modifier.wrapContentSize(), contentAlignment = Alignment.Center) {
-        Text(
-            text = timeString?.value ?: "--:--",
-            modifier = Modifier.fillMaxWidth(0.65f),
-            textAlign = TextAlign.Center,
-            style = TextStyle(
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp,
-                letterSpacing = 1.2f.sp
-            )
-        )
-        CircularProgressIndicator(
-            progress = 1.0f,
-            strokeWidth = 6.dp,
-            color = Color.LightGray,
-            modifier = Modifier
-                .fillMaxWidth(.65f)
-                .height(240.dp)
-        )
-        CircularProgressIndicator(
-            progress = progress?.value ?: .5f, strokeWidth = 6.dp,
-            modifier = Modifier
-                .fillMaxWidth(.65f)
-                .height(240.dp)
-        )
-    }
-}
-
-@Preview(name = "Full Reps", showBackground = true)
-@Composable
-fun PreviewWorkoutRunCardFullReps() {
-    CadelaTheme {
-        WorkoutRunView(
-            null,
-        )
-    }
-}
-
-//@Preview(name = "Few Reps", showBackground = true)
-//@Composable
-//fun PreviewWorkoutRunCardFewReps() {
-//    CadelaTheme {
-//        WorkoutRunView(
-//            null,
-//            Session(
-//                name = Session.FIRST_LEVEL_TEST.name,
-//                exercises = listOf(
-//                    Exercise(
-//                        "A",
-//                        Series(
-//                            10, mutableListOf(
-//                                Repetition(19),
-//                                Repetition(18),
-//                                Repetition(17),
-//                                Repetition(0),
-//                                Repetition(0),
-//                                Repetition(0)
-//                            ), Rest(30)
-//                        ),
-//                        Rest(120)
-//                    ),
-//                    Exercise("A1", Series(4), Rest(120)),
-//                    Exercise("A2", Series(10), Rest(120)),
-//                    Exercise("A3", Series(10), Rest(120)),
-//                    Exercise("A4", Series(10), Rest(120)),
-//                    Exercise("A5", Series(10), Rest(120)),
-//                ),
-//                levelStartedAt = LocalDate.of(2021, 6, 8)
-//            )
-//        )
-//    }
-//}

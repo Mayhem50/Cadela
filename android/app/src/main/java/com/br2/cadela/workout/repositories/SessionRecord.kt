@@ -1,7 +1,8 @@
-package com.br2.cadela.workout
+package com.br2.cadela.workout.repositories
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.br2.cadela.workout.datas.Session
 import java.time.LocalDate
 
 @Entity(tableName = "sessions")

@@ -5,9 +5,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.br2.cadela.authentication.signin.TokenDao
 import com.br2.cadela.authentication.signin.TokenRecord
-import com.br2.cadela.workout.SessionDao
-import com.br2.cadela.workout.SessionRecord
-import com.br2.cadela.workout.WorkoutTypeConverter
+import com.br2.cadela.workout.repositories.SessionDao
+import com.br2.cadela.workout.repositories.SessionRecord
+import com.br2.cadela.workout.repositories.WorkoutTypeConverter
 
 @Database(
     entities = [

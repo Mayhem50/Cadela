@@ -2,6 +2,14 @@ package com.br2.cadela.workout
 
 import androidx.lifecycle.Observer
 import com.br2.cadela.InstantExecutorExtension
+import com.br2.cadela.workout.datas.Exercise
+import com.br2.cadela.workout.datas.Rest
+import com.br2.cadela.workout.datas.Series
+import com.br2.cadela.workout.datas.Session
+import com.br2.cadela.workout.repositories.SessionDao
+import com.br2.cadela.workout.repositories.SessionRecord
+import com.br2.cadela.workout.repositories.SessionRepository
+import com.br2.cadela.workout.views.WorkoutViewModel
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
