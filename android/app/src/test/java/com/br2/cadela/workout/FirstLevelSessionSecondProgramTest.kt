@@ -260,4 +260,29 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
 
         assertEquals(expected, session)
     }
+
+    @Test
+    fun `C1 first serie result is 10 or more, next session replace C1 by C3`() {
+        val previousSession = Session(
+            name = "second_program",
+            exercises = listOf(
+                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(
+                    name = "C1",
+                    series = Series(3, mutableListOf(Repetition(10), Repetition(9), Repetition(9))),
+                    restAfter = Rest(duration = 120),
+                    speed = ESpeed.FAST
+                ),
+                Exercise(name = "E", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
+                Exercise(name = "K2", series = Series(3), restAfter = null)
+            )
+        )
+
+        val session = sut.createNewSession(previousSession)
+        assertEquals(previousSession.replaceExerciseNameAndClearReps("C1", "C3"), session)
+    }
 }

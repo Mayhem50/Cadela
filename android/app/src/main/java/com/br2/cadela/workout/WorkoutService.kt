@@ -96,6 +96,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
 
         val exercises = previousSession.exercises.toMutableList()
         changeExercise("A1", "A2", 8, exercises)
+        changeExercise("C1", "C3", 10, exercises)
 
         replaceCxExerciseForBeginner(exercises)
         addRepetitionsToExercise("C1", 3, exercises)
