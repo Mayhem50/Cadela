@@ -47,7 +47,7 @@ private val PREVIEW_SESSION = Session(
                     Repetition(0),
                     Repetition(0),
                     Repetition(0)
-                ), 0, Rest(30)
+                ), Rest(30)
             ),
             Rest(120)
         ),

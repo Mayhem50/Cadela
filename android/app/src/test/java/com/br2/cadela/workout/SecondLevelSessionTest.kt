@@ -30,7 +30,7 @@ class SecondLevelSessionTest : WorkoutTestBase() {
                 ),
                 Exercise(
                     name = "C1",
-                    series = Series(6),
+                    series = Series(6, MutableList(6) { Repetition(10) }),
                     restAfter = Rest(duration = 180),
                     speed = ESpeed.FAST
                 ),

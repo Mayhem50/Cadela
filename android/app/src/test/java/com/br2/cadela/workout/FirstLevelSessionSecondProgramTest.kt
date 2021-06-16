@@ -104,7 +104,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
                 Exercise(
                     name = "C4",
-                    series = Series(1, mutableListOf(Repetition(11))),
+                    series = Series(1, MutableList(1) { Repetition(11) }),
                     restAfter = Rest(duration = 120),
                     speed = ESpeed.FAST
                 ),
@@ -130,7 +130,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
                 Exercise(
                     name = "C4",
-                    series = Series(1, mutableListOf(Repetition(12))),
+                    series = Series(1, MutableList(1) { Repetition(12) }),
                     restAfter = Rest(duration = 120),
                     speed = ESpeed.FAST
                 ),
@@ -155,7 +155,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
                 Exercise(
                     name = "C5",
-                    series = Series(1, mutableListOf(Repetition(11))),
+                    series = Series(1, MutableList(1) { Repetition(11) }),
                     restAfter = Rest(duration = 120),
                     speed = ESpeed.FAST
                 ),
@@ -180,7 +180,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
                 Exercise(
                     name = "C5",
-                    series = Series(1, mutableListOf(Repetition(12))),
+                    series = Series(1, MutableList(1) { Repetition(12) }),
                     restAfter = Rest(duration = 120),
                     speed = ESpeed.FAST
                 ),
@@ -205,7 +205,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
                 Exercise(
                     name = "C6",
-                    series = Series(1, mutableListOf(Repetition(11))),
+                    series = Series(1, MutableList(1) { Repetition(11) }),
                     restAfter = Rest(duration = 120),
                     speed = ESpeed.FAST
                 ),
@@ -230,7 +230,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                 Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
                 Exercise(
                     name = "C6",
-                    series = Series(1, mutableListOf(Repetition(12))),
+                    series = Series(1, MutableList(1) { Repetition(12) }),
                     restAfter = Rest(duration = 120),
                     speed = ESpeed.FAST
                 ),
@@ -330,7 +330,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
                     restAfter = Rest(duration = 120),
                     speed = ESpeed.FAST
                 ),
-                Exercise(name = "E", series = Series(3, mutableListOf(Repetition(15))), restAfter = Rest(duration = 120)),
+                Exercise(name = "E", series = Series(3, MutableList(3) { Repetition(15) }), restAfter = Rest(duration = 120)),
                 Exercise(name = "F", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "G", series = Series(3), restAfter = Rest(duration = 120)),
                 Exercise(name = "K2", series = Series(3), restAfter = null)
