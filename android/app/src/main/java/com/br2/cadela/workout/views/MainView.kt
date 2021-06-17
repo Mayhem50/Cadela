@@ -14,7 +14,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -63,7 +62,7 @@ fun WorkoutMainView(mainNavController: NavController?) {
         ) {
             NavHost(navController = navController, startDestination = "workout_home") {
                 composable("workout_home") {WorkoutHomeView(WorkoutModule.workoutVm, navController) }
-                composable("workout_stats") { WorkoutHomeView(WorkoutModule.workoutVm, navController) }
+                composable("workout_stats") { WorkoutStatsView(WorkoutModule.workoutVm, navController) }
                 composable("workout_run") { WorkoutRunView(WorkoutModule.workoutVm, navController) }
             }
         }
