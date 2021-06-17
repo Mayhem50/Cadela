@@ -62,7 +62,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
 
         val session = sut.createNewSession(previousSession)
-        assertEquals(Session.SECOND_PROGRAM, session)
+        assertEquals(previousSession.exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -117,7 +117,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
 
         val session = sut.createNewSession(previousSession)
 
-        assertEquals(previousSession.clearExercisesRepetitions(), session)
+        assertEquals(previousSession.exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -142,7 +142,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
         val session = sut.createNewSession(previousSession)
 
-        assertEquals(previousSession.replaceExerciseNameAndClearReps("C4", "C5"), session)
+        assertEquals(previousSession.replaceExerciseName("C4", "C5").exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -167,7 +167,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
         val session = sut.createNewSession(previousSession)
 
-        assertEquals(previousSession.clearExercisesRepetitions(), session)
+        assertEquals(previousSession.exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -192,7 +192,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
         val session = sut.createNewSession(previousSession)
 
-        assertEquals(previousSession.replaceExerciseNameAndClearReps("C5", "C6"), session)
+        assertEquals(previousSession.replaceExerciseName("C5", "C6").exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -217,7 +217,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
         val session = sut.createNewSession(previousSession)
 
-        assertEquals(previousSession.clearExercisesRepetitions(), session)
+        assertEquals(previousSession.exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -260,7 +260,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
         val session = sut.createNewSession(previousSession)
 
-        assertEquals(expected, session)
+        assertEquals(expected.exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -285,7 +285,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
 
         val session = sut.createNewSession(previousSession)
-        assertEquals(previousSession.replaceExerciseNameAndClearReps("C1", "C3"), session)
+        assertEquals(previousSession.replaceExerciseName("C1", "C3").exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -313,7 +313,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
 
         val session = sut.createNewSession(previousSession)
-        assertEquals(previousSession.clearExercisesRepetitions(), session)
+        assertEquals(previousSession.exerciseNames, session.exerciseNames)
     }
 
     @Test
@@ -338,7 +338,7 @@ class FirstLevelSessionSecondProgramTest : WorkoutTestBase() {
         )
 
         val session = sut.createNewSession(previousSession)
-        assertEquals(previousSession.replaceExerciseNameAndClearReps("E", "E1"), session)
+        assertEquals(previousSession.replaceExerciseName("E", "E1").exerciseNames, session.exerciseNames)
     }
 
     @Test

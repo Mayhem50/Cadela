@@ -146,7 +146,7 @@ fun MutableList<Exercise>.changeTarget(search: String, target: Int, threshold: I
             this[index] =
                 Exercise(
                     exercise.name,
-                    exercise.series.newTarget(target),
+                    exercise.series.withTarget(target),
                     exercise.restAfter,
                     exercise.speed
                 )

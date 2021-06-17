@@ -156,49 +156,49 @@ data class Session(
             exercises = listOf(
                 Exercise(
                     name = "B1",
-                    series = Series(6).newTarget(5),
+                    series = Series(6).withTarget(5),
                     restAfter = Rest(duration = 25),
                     speed = ESpeed.FAST
                 ),
                 Exercise(
                     name = "A3",
-                    series = Series(6).newTarget(5),
+                    series = Series(6).withTarget(5),
                     restAfter = Rest(duration = 25),
                     speed = ESpeed.FAST
                 ),
                 Exercise(
                     name = "A2",
-                    series = Series(6).newTarget(5),
+                    series = Series(6).withTarget(5),
                     restAfter = Rest(duration = 180),
                     speed = ESpeed.FAST
                 ),
                 Exercise(
                     name = "C1",
-                    series = Series(6).newTarget(5),
+                    series = Series(6).withTarget(5),
                     restAfter = Rest(duration = 180),
                     speed = ESpeed.FAST
                 ),
                 Exercise(
                     name = "E",
-                    series = Series(6).newTarget(5),
+                    series = Series(6).withTarget(5),
                     restAfter = Rest(duration = 180)
                 ),
                 Exercise(
                     name = "F",
-                    series = Series(4).newTarget(5),
+                    series = Series(4).withTarget(5),
                     restAfter = Rest(duration = 180)
                 ),
                 Exercise(
                     name = "G",
-                    series = Series(6).newTarget(10),
+                    series = Series(6).withTarget(10),
                     restAfter = Rest(duration = 90)
                 ),
                 Exercise(
                     name = "H",
-                    series = Series(6).newTarget(1),
+                    series = Series(6).withTarget(1),
                     restAfter = Rest(duration = 60)
                 ),
-                Exercise(name = "K2", series = Series(3).newTarget(12), restAfter = null)
+                Exercise(name = "K2", series = Series(3).withTarget(12), restAfter = null)
             )
         )
 
@@ -257,41 +257,3 @@ fun Session.replaceExerciseName(search: String, replaceBy: String): Session {
         }, levelStartedAt)
     } else Session(name, exercises, levelStartedAt)
 }
-
-fun Session.clearExercisesRepetitions() = Session(
-    name,
-    exercises.map {
-        Exercise(
-            it.name,
-            Series(
-                it.series.count,
-                it.series.repetitions.map { Repetition(0, it.target) }.toMutableList(),
-                it.series.restAfter
-            ),
-            it.restAfter,
-            it.speed
-        )
-    }, levelStartedAt
-)
-
-fun Session.changeTargetForExercise(search: String, newTarget: Int): Session {
-    val exercises = exercises.toMutableList()
-    val index = exercises.indexOfFirst { it.name == search }
-    if (index >= 0) {
-        val exercise = exercises[index]
-        exercises[index] = Exercise(
-            exercise.name,
-            exercise.series.newTarget(newTarget),
-            exercise.restAfter,
-            exercise.speed
-        )
-    }
-
-    return Session(name, exercises, levelStartedAt)
-}
-
-fun Session.changeTargetForExerciseAndClearReps(search: String, newTarget: Int) =
-    clearExercisesRepetitions().changeTargetForExercise(search, newTarget)
-
-fun Session.replaceExerciseNameAndClearReps(search: String, replaceBy: String) =
-    clearExercisesRepetitions().replaceExerciseName(search, replaceBy)

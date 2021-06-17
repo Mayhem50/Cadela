@@ -1,7 +1,6 @@
 package com.br2.cadela.workout
 
-import com.br2.cadela.workout.datas.Repetition
-import com.br2.cadela.workout.datas.Session
+import com.br2.cadela.workout.datas.*
 import com.br2.cadela.workout.domain.WorkoutService
 import com.br2.cadela.workout.repositories.SessionDao
 import com.br2.cadela.workout.repositories.SessionRepository
@@ -34,6 +33,47 @@ class WorkoutTest : WorkoutTestBase() {
     fun `When creating a new Session a session that contains all exercises & rest between exercises  return`() {
         val session = sut.createNewSession()
         assertFalse(session.exercises.isEmpty())
+    }
+
+    @Test
+    fun `When starting a new session that will be the same as the previous, target reps will be +1 on each serie except on K2`() {
+        val previousSession = Session(
+            name = "first_program",
+            exercises = listOf(
+                Exercise(
+                    name = "A6",
+                    series = Series(2, MutableList(2) { Repetition(4) }),
+                    restAfter = Rest(120)
+                ),
+                Exercise(name = "A2", series = Series(2, MutableList(2) { Repetition(4) }), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2, MutableList(2) { Repetition(4) }), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2, MutableList(2) { Repetition(4) }), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2, MutableList(2) { Repetition(4) }), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2, MutableList(2) { Repetition(4) }), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2, MutableList(2) { Repetition(4) }), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2, MutableList(2) { Repetition(4, 12) }), restAfter = null)
+            )
+        )
+        val expectedSession = Session(
+            name = "first_program",
+            exercises = listOf(
+                Exercise(
+                    name = "A6",
+                    series = Series(2, MutableList(2) { Repetition(0, 5) }),
+                    restAfter = Rest(120)
+                ),
+                Exercise(name = "A2", series = Series(2, MutableList(2) { Repetition(0, 5) }), restAfter = Rest(120)),
+                Exercise(name = "D", series = Series(2, MutableList(2) { Repetition(0, 5) }), restAfter = Rest(120)),
+                Exercise(name = "C1", series = Series(2, MutableList(2) { Repetition(0, 5) }), restAfter = Rest(120)),
+                Exercise(name = "E", series = Series(2, MutableList(2) { Repetition(0, 5) }), restAfter = Rest(120)),
+                Exercise(name = "F", series = Series(2, MutableList(2) { Repetition(0, 5) }), restAfter = Rest(120)),
+                Exercise(name = "G", series = Series(2, MutableList(2) { Repetition(0, 5) }), restAfter = Rest(120)),
+                Exercise(name = "K2", series = Series(2, MutableList(2) { Repetition(0, 12) }), restAfter = null)
+            )
+        )
+
+        val session = sut.createNewSession(previousSession)
+        assertEquals(expectedSession, session)
     }
 
     @Test

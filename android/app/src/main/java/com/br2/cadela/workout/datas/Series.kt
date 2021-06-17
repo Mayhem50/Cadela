@@ -16,7 +16,7 @@ val Series.meanRepsDone: Int
 fun Series.withRestAfterOf(duration: Int) =
     Series(count = count, repetitions = repetitions, restAfter = Rest(duration))
 
-fun Series.newTarget(newTarget: Int) =
+fun Series.withTarget(newTarget: Int) =
     Series(
         count = count,
         repetitions = repetitions.map { Repetition(it.done, newTarget) }.toMutableList(),

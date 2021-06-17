@@ -48,7 +48,7 @@ class SecondLevelSessionTest : WorkoutTestBase() {
 
         val session = sut.createNewSession(previousSession)
 
-        assertEquals(previousSession.replaceExerciseNameAndClearReps("E", "E1"), session)
+        assertEquals(previousSession.replaceExerciseName("E", "E1").exerciseNames, session.exerciseNames)
     }
 
     @Test

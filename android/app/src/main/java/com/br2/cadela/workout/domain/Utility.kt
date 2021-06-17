@@ -1,9 +1,6 @@
 package com.br2.cadela.workout.domain
 
-import com.br2.cadela.workout.datas.Exercise
-import com.br2.cadela.workout.datas.Session
-import com.br2.cadela.workout.datas.clearExercisesRepetitions
-import com.br2.cadela.workout.datas.replaceExercise
+import com.br2.cadela.workout.datas.*
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -35,3 +32,4 @@ internal fun stillOnFirstLevel(
     nextSession: Session
 ) =
     previousSession?.name == Session.FIRST_PROGRAM.name && nextSession.name == Session.SECOND_PROGRAM.name
+

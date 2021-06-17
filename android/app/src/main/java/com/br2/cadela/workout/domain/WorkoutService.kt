@@ -23,7 +23,7 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
 
         return if (stillOnSameLevel(previousSession, nextSession)
         ) {
-            nextSession.clone(previousSession?.levelStartedAt)
+            nextSession.clone(previousSession?.levelStartedAt).updateTargetRepsBasedOnPreviousSession(previousSession)
         } else nextSession
     }
 
