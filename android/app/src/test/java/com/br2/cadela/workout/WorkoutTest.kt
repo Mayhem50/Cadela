@@ -2,6 +2,7 @@ package com.br2.cadela.workout
 
 import com.br2.cadela.workout.datas.Repetition
 import com.br2.cadela.workout.datas.Session
+import com.br2.cadela.workout.domain.WorkoutService
 import com.br2.cadela.workout.repositories.SessionDao
 import com.br2.cadela.workout.repositories.SessionRepository
 import io.mockk.*

@@ -6,6 +6,7 @@ import com.br2.cadela.workout.datas.Exercise
 import com.br2.cadela.workout.datas.Rest
 import com.br2.cadela.workout.datas.Series
 import com.br2.cadela.workout.datas.Session
+import com.br2.cadela.workout.domain.WorkoutService
 import com.br2.cadela.workout.repositories.SessionDao
 import com.br2.cadela.workout.repositories.SessionRecord
 import com.br2.cadela.workout.repositories.SessionRepository
