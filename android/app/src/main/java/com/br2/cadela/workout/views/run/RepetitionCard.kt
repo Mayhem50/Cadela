@@ -197,11 +197,12 @@ private fun RepetitionList(
     repetitions: List<Repetition>,
     modifier: Modifier
 ) {
-    val currentIndex by
-    viewModel?.currentSerieIndex?.observeAsState() ?: remember { mutableStateOf(5) }
     ConstraintLayout(
         modifier = modifier.padding(top = 16.dp)
     ) {
+        val currentIndex by
+            viewModel?.currentSerieIndex?.observeAsState() ?: remember { mutableStateOf(5) }
+
         val guideline1 = createGuidelineFromStart(.05f)
         val guideline2 = createGuidelineFromStart(.25f)
         val guideline3 = createGuidelineFromStart(.55f)

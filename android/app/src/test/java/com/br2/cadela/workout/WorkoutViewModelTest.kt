@@ -2,10 +2,7 @@ package com.br2.cadela.workout
 
 import androidx.lifecycle.Observer
 import com.br2.cadela.InstantExecutorExtension
-import com.br2.cadela.workout.datas.Exercise
-import com.br2.cadela.workout.datas.Rest
-import com.br2.cadela.workout.datas.Series
-import com.br2.cadela.workout.datas.Session
+import com.br2.cadela.workout.datas.*
 import com.br2.cadela.workout.domain.WorkoutService
 import com.br2.cadela.workout.repositories.SessionDao
 import com.br2.cadela.workout.repositories.SessionRecord
@@ -71,11 +68,8 @@ class WorkoutViewModelTest {
         sut.startSession().join()
         sut.endSession()
         coVerify { workoutService.endSession(any()) }
-        verifyAll {
-            observer.onChanged(any())
-            observer.onChanged(null)
-            exerciseObserver.onChanged(null)
-        }
+        assertEquals(null, sut.currentSession.value)
+        assertEquals(null, sut.currentExercise.value)
     }
 
     @Test
@@ -104,29 +98,44 @@ class WorkoutViewModelTest {
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
-                    Exercise(name = "A", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0)),
-                    Exercise(name = "B", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0))
+                    Exercise(
+                        name = "A", series = Series(
+                            count = 1, repetitions = mutableListOf(
+                                Repetition(0)
+                            ), restAfter = Rest(0)
+                        ), restAfter = Rest(0)
+                    )
                 )
             )
+            val spyOnNextExercise = spyk<() -> Unit>("onNext")
+            val spyOnEndSession = spyk<() -> Unit>("onEnd")
             coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
             sut.currentExercise.observeForever(exerciseObserver)
             sut.startSession().join()
             sut.runSession()
-            sut.setRepsForCurrentSerie(5)
-            sut.setRepsForCurrentSerie(5)
-            verify { exerciseObserver.onChanged(null) }
+            sut.moveToNext({ spyOnNextExercise() }, { spyOnEndSession() })
+            verify { spyOnEndSession() }
+            verify(exactly = 0) { spyOnNextExercise() }
         }
 
     @Test
     fun `Update current serie current repetition`() = runBlocking {
         val doneReps = 5
         val session = Session(
-        name = "dummy_name",
-        exercises = listOf(
-            Exercise(name = "A", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0)),
-            Exercise(name = "B", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0))
+            name = "dummy_name",
+            exercises = listOf(
+                Exercise(
+                    name = "A",
+                    series = Series(count = 1, restAfter = Rest(0)),
+                    restAfter = Rest(0)
+                ),
+                Exercise(
+                    name = "B",
+                    series = Series(count = 1, restAfter = Rest(0)),
+                    restAfter = Rest(0)
+                )
+            )
         )
-    )
         coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
 
         sut.startSession().join()
@@ -138,42 +147,49 @@ class WorkoutViewModelTest {
     }
 
     @Test
-    fun `Update current serie current repetition make move to next exercise, update rest time after exercise if no more reps to do and can set rep for it`() =
+    fun `When exercise have more than 1 serie moveToNext move to next serie`() =
         runBlocking {
-            val session = Session(
-                name = "dummy_name",
-                exercises = listOf(
-                    Exercise(name = "A", series = Series(count = 2, restAfter = Rest(1)), restAfter = Rest(3)),
-                    Exercise(name = "B", series = Series(count = 2, restAfter = Rest(2)), restAfter = Rest(4))
-                )
-            )
-            sut.currentExercise.observeForever(exerciseObserver)
-            sut.currentRest.observeForever(restObserver)
-            coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
-
-            sut.startSession().join()
-            sut.runSession()
-            sut.setRepsForCurrentSerie(5)
-            sut.setRepsForCurrentSerie(5)
-
-            sut.setRepsForCurrentSerie(10)
-
-            verify { exerciseObserver.onChanged(session.exercises[1]) }
-            verify { restObserver.onChanged(session.exercises[0].restAfter) }
-            assertEquals(10, sut.currentExercise.value!!.series.repetitions[0].done)
-        }
-
-    @Test
-    fun `Update current serie current repetition make move to next repetition not done and update rest time`() =
-        runBlocking {
-            sut.currentExercise.observeForever(exerciseObserver)
-            sut.currentRest.observeForever(restObserver)
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
                     Exercise(
                         name = "A",
-                        series = Series(count = 3, restAfter = Rest(1)),
+                        series = Series(count = 2, restAfter = Rest(1)),
+                        restAfter = Rest(3)
+                    ),
+                    Exercise(
+                        name = "B",
+                        series = Series(count = 2, restAfter = Rest(2)),
+                        restAfter = Rest(4)
+                    )
+                )
+            )
+
+            val spyOnNextExercise = spyk<() -> Unit>("onNext")
+            val spyOnEndSession = spyk<() -> Unit>("onEnd")
+            coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
+
+            sut.startSession().join()
+            sut.runSession()
+            sut.moveToNext({ spyOnNextExercise() }, { spyOnEndSession() })
+
+            verify(exactly = 0) { spyOnEndSession() }
+            verify(exactly = 0) { spyOnNextExercise() }
+            assertEquals(1, sut.currentSerieIndex.value)
+        }
+
+    @Test
+    fun `When move to next serie update rest time with serie's rest time`() =
+        runBlocking {
+            sut.currentExercise.observeForever(exerciseObserver)
+            sut.currentRest.observeForever(restObserver)
+            val expectedRest = 1
+            val session = Session(
+                name = "dummy_name",
+                exercises = listOf(
+                    Exercise(
+                        name = "A",
+                        series = Series(count = 3, restAfter = Rest(expectedRest)),
                         restAfter = Rest(10)
                     ),
                     Exercise(
@@ -186,9 +202,35 @@ class WorkoutViewModelTest {
             coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
             sut.startSession().join()
             sut.runSession()
-            sut.setRepsForCurrentSerie(5)
-            sut.setRepsForCurrentSerie(5)
-            verify { restObserver.onChanged(session.exercises[0].series.restAfter) }
-            verify(exactly = 0) { exerciseObserver.onChanged(session.exercises[1]) }
+            sut.moveToNext({}, {})
+            assertEquals(expectedRest, sut.currentRest.value!!.duration)
+        }
+
+    @Test
+    fun `When move to next exercise update rest time with exercise's rest time`() =
+        runBlocking {
+            sut.currentExercise.observeForever(exerciseObserver)
+            sut.currentRest.observeForever(restObserver)
+            val expectedRest = 10
+            val session = Session(
+                name = "dummy_name",
+                exercises = listOf(
+                    Exercise(
+                        name = "A",
+                        series = Series(count = 1, restAfter = Rest(1)),
+                        restAfter = Rest(10)
+                    ),
+                    Exercise(
+                        name = "B",
+                        series = Series(count = 2, restAfter = Rest(2)),
+                        restAfter = Rest(11)
+                    )
+                )
+            )
+            coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
+            sut.startSession().join()
+            sut.runSession()
+            sut.moveToNext({}, {})
+            assertEquals(expectedRest, sut.currentRest.value!!.duration)
         }
 }

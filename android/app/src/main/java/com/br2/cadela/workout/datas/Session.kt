@@ -23,7 +23,7 @@ data class Session(
         get() = exercises.flatMap { it.series.repetitions }.all { it.done == 0 }
 
     val isComplete: Boolean
-        get() = exercises.map { it.series.repetitions.any { rep -> rep.done > 0 } }.all { it }
+        get() = exercises.all { it.isComplete }
 
     fun clone(newStartDate: LocalDate? = null): Session =
         Session(name = name, exercises = exercises, levelStartedAt = newStartDate ?: levelStartedAt)

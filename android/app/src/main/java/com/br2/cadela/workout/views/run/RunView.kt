@@ -15,8 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import com.br2.cadela.R
 import com.br2.cadela.compose.pagerSwipeAnimation
+import com.br2.cadela.shared.buildPopupToCurrent
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.ui.theme.Red200
 import com.br2.cadela.ui.theme.Red700
@@ -65,8 +67,11 @@ private val PREVIEW_SESSION = Session(
 fun WorkoutRunView(viewModel: WorkoutViewModel?, navController: NavController?) {
     val scope = rememberCoroutineScope()
     val session by
-        viewModel?.currentSession?.observeAsState() ?: remember { mutableStateOf(PREVIEW_SESSION) }
-    val pagerState = rememberPagerState(pageCount = session?.exercises?.size ?: 0, initialPage = session?.currentExerciseIndex ?: 0)
+    viewModel?.currentSession?.observeAsState() ?: remember { mutableStateOf(PREVIEW_SESSION) }
+    val pagerState = rememberPagerState(
+        pageCount = session?.exercises?.size ?: 0,
+        initialPage = session?.currentExerciseIndex ?: 0
+    )
 
     BackPressWarningDialog(viewModel, navController)
 
@@ -109,7 +114,7 @@ fun WorkoutRunView(viewModel: WorkoutViewModel?, navController: NavController?) 
                 }
             RepetitionCard(viewModel, modifier, exercise) { repetitionDone ->
                 viewModel?.setRepsForCurrentSerie(repetitionDone)
-                moveToNext(viewModel, scope, pagerState)
+                moveToNext(viewModel, navController, scope, pagerState)
             }
         }
 
@@ -155,7 +160,9 @@ fun NoStopAllowedDialog(dismissRequest: () -> Unit) {
         buttons = {
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth().padding(8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
             ) {
                 Button(onClick = { dismissRequest() }) { Text(text = stringResource(R.string.ok)) }
             }
@@ -186,13 +193,25 @@ private fun BackToHomeDialog(
 @OptIn(ExperimentalPagerApi::class)
 private fun moveToNext(
     viewModel: WorkoutViewModel?,
+    navController: NavController?,
     scope: CoroutineScope,
     pagerState: PagerState
 ) {
     viewModel?.startRest {
-        scope.launch {
-            pagerState.animateScrollToPage(pagerState.currentPage + 1)
-        }
+        viewModel.moveToNext(
+            onNextExercise = {
+                scope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                }
+            },
+            onSessionEnd = {
+                viewModel.endSession()
+                navController?.navigate(
+                    "workout_home",
+                    NavOptions.Builder().buildPopupToCurrent(navController)
+                )
+            }
+        )
     }
 }
 

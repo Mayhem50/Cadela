@@ -3,6 +3,7 @@ package com.br2.cadela.workout.domain
 import com.br2.cadela.workout.datas.*
 import com.br2.cadela.workout.repositories.SessionRepository
 import kotlinx.coroutines.*
+import java.lang.Integer.max
 import java.time.LocalDate
 
 // TODO: Handle beginning of level -> 4 sessions/week then 3 sessions/week
@@ -57,8 +58,8 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     fun runSession(): Exercise? {
-        _currentExerciseIndex = -1
-        return moveToNextExercise()
+        _currentExerciseIndex = _currentSession?.currentExerciseIndex ?: _currentExerciseIndex
+        return _currentSession?.exercises?.elementAt(_currentExerciseIndex)
     }
 }
 

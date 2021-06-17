@@ -30,7 +30,7 @@ class SessionTest {
             "any_name", listOf(
                 Exercise(
                     "any_name",
-                    Series(2, mutableListOf(Repetition(1), Repetition(0))),
+                    Series(2, mutableListOf(Repetition(1), Repetition(1))),
                     Rest(0)
                 ),
                 Exercise(

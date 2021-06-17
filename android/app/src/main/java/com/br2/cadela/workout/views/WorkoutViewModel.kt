@@ -50,7 +50,16 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
 
     fun startSession() = viewModelScope.launch(Dispatchers.IO) {
         val session = workoutService.startNewSession()
-        withContext(Dispatchers.Main) { _currentSession.value = session }
+        withContext(Dispatchers.Main) {
+            _currentSession.value = session
+            _isResting.value = false
+            _countDownTimer?.cancel()
+            _restProgress.value = 0f
+            _timeDisplay.value = EMPTY_TIME_STRING
+            _currentExercise.value = session.exercises[session.currentExerciseIndex]
+            _currentSerieIndex.value = 0
+            _currentRest.value = _currentExercise.value!!.series.restAfter
+        }
     }
 
     fun endSession() = viewModelScope.launch(Dispatchers.IO) {
@@ -76,29 +85,41 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
     fun setRepsForCurrentSerie(done: Int) {
         _currentExercise.value?.let {
             it.series.repetitions[_currentSerieIndex.value!!] = Repetition(done)
-            _currentSerieIndex.value = _currentSerieIndex.value!! + 1
+        }
+    }
 
+    fun moveToNext(onNextExercise: () -> Unit, onSessionEnd: () -> Unit) {
+        _currentExercise.value?.let {
+            _currentSerieIndex.value = _currentSerieIndex.value!! + 1
             if (_currentSerieIndex.value!! < it.series.repetitions.size) {
                 updateCurrentRest(it.series.restAfter)
-            } else {
+            } else if (!isLastExercise()) {
                 moveToNextExercise(it)
+                onNextExercise()
+            } else {
+                onSessionEnd()
             }
         }
     }
 
     @OptIn(ExperimentalTime::class)
-    fun startRest(callback: (() -> Unit)? = null){
-        if(_isResting.value == true) {
+    fun startRest(callback: (() -> Unit)? = null) {
+        if (_isResting.value == true) {
             return
         }
 
-        val restDurationMs = _currentRest.value!!.duration.toLong() * 1000
+        if (isLastSerie() && isLastExercise()) {
+            callback?.invoke()
+            return
+        }
+
+        val restDurationMs = (_currentRest.value?.duration ?: 0).toLong() * 1000
         _isResting.value = true
-        _countDownTimer = object : CountDownTimer( restDurationMs, 1000){
+        _countDownTimer = object : CountDownTimer(restDurationMs, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 _restProgress.value = 1f - millisUntilFinished.toFloat() / restDurationMs.toFloat()
                 val duration = Duration.milliseconds(millisUntilFinished)
-                duration.toComponents { minutes, seconds, nanoseconds ->
+                duration.toComponents { minutes, seconds, _ ->
                     _timeDisplay.value = String.format("%02d:%02d", minutes, seconds)
                 }
             }
@@ -115,13 +136,19 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
         _countDownTimer?.start()
     }
 
+    private fun isLastSerie() =
+        _currentExercise.value?.series?.count == _currentSerieIndex.value!! + 1
+
+    private fun isLastExercise() =
+        _currentExercise.value == _currentSession.value?.exercises?.last()
+
     private fun moveToNextExercise(it: Exercise) {
         _currentSerieIndex.value = 0
         updateCurrentRest(it.restAfter)
         _currentExercise.value = workoutService.moveToNextExercise()
     }
 
-    private fun updateCurrentRest(rest: Rest?){
+    private fun updateCurrentRest(rest: Rest?) {
         _currentRest.value = rest
     }
 }
