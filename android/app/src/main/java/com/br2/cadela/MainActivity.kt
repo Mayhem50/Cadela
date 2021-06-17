@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
             applicationContext,
             CadelaDatabase::class.java,
             getString(R.string.database_name)
-        ).build()
+        ).fallbackToDestructiveMigration().build()
         val api = ApiClient()
 
         AuthenticationModule.boostrap(db, api)
