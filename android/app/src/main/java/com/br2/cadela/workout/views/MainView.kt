@@ -49,7 +49,6 @@ fun WorkoutMainView(mainNavController: NavController?) {
                     navController = navController,
                     routes = listOf(
                         RouteItem("workout_home", Icons.Filled.Home),
-                        RouteItem("nav_settings", Icons.Filled.Settings),
                         RouteItem("workout_stats", Icons.Filled.Timeline)
                     ),
                     shouldHide = hideNavBar,
@@ -64,7 +63,6 @@ fun WorkoutMainView(mainNavController: NavController?) {
         ) {
             NavHost(navController = navController, startDestination = "workout_home") {
                 composable("workout_home") {WorkoutHomeView(WorkoutModule.workoutVm, navController) }
-                composable("nav_settings") { WorkoutHomeView(WorkoutModule.workoutVm, navController) }
                 composable("workout_stats") { WorkoutHomeView(WorkoutModule.workoutVm, navController) }
                 composable("workout_run") { WorkoutRunView(WorkoutModule.workoutVm, navController) }
             }
