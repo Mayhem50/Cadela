@@ -23,7 +23,7 @@ class SessionRepositoryTest {
 
     @Test
     fun `Load last session from Dao`() = runBlocking {
-        val record: SessionRecord = SessionRecord(0, Session.FIRST_LEVEL_TEST, LocalDate.parse("2021-05-15"), LocalDate.parse("2021-05-15"))
+        val record = SessionRecord(Session.FIRST_LEVEL_TEST, "dummy_name", LocalDate.parse("2021-05-15"), LocalDate.parse("2021-05-15"))
 
         coEvery { sessionDao.getLastSession() } returns record
         val session = sut.getLastSession()
@@ -33,7 +33,7 @@ class SessionRepositoryTest {
 
     @Test
     fun `Save session`() = runBlocking {
-        sut.saveSession(Session.FIRST_LEVEL_TEST)
+        sut.saveSession(Session.FIRST_LEVEL_TEST, null)
         coVerify { sessionDao.save(SessionRecord(session = Session.FIRST_LEVEL_TEST)) }
     }
 }

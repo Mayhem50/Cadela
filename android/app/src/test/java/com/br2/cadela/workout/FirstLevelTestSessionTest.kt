@@ -83,7 +83,6 @@ class FirstLevelTestSessionTest : WorkoutTestBase() {
             levelStartedAt = LocalDate.of(2021, 5, 30))
 
         coEvery { sessionDao.getLastSession() } returns SessionRecord(
-            id = 0,
             session = firstProgramOfFirstLevel
         )
 

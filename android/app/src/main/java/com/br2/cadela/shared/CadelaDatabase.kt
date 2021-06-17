@@ -14,7 +14,7 @@ import com.br2.cadela.workout.repositories.WorkoutTypeConverter
         TokenRecord::class,
         SessionRecord::class
     ],
-    version = 1
+    version = 2
 )
 @TypeConverters(WorkoutTypeConverter::class)
 abstract class CadelaDatabase : RoomDatabase() {

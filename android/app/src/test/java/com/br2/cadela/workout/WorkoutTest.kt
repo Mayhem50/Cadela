@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 
 abstract class WorkoutTestBase {
     protected lateinit var sessionDao: SessionDao
@@ -88,7 +89,7 @@ class WorkoutTest : WorkoutTestBase() {
     fun `Current session is finished`() = runBlocking {
         val session = sut.startNewSession()
         sut.endSession(session)
-        coVerify { sessionRepository.saveSession(any()) }
+        coVerify { sessionRepository.saveSession(any(), LocalDate.now()) }
     }
 
     @Test
@@ -101,7 +102,7 @@ class WorkoutTest : WorkoutTestBase() {
         val currentSession = sut.startNewSession()
         currentSession.exercises[0].series.repetitions[0] = Repetition(12)
         sut.pauseSession(currentSession)
-        coVerify { sessionRepository.saveSession(any()) }
+        coVerify { sessionRepository.saveSession(any(), null) }
         sut.startNewSession()
         assertEquals(makeIncompleteSession(), currentSession)
     }

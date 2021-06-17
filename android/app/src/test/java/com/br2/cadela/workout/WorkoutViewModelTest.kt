@@ -40,7 +40,7 @@ class WorkoutViewModelTest {
         restObserver = mockk()
         sessionDao = mockk()
 
-        coEvery { sessionDao.getLastSession() } returns SessionRecord(0, Session.FIRST_LEVEL_TEST)
+        coEvery { sessionDao.getLastSession() } returns SessionRecord(Session.FIRST_LEVEL_TEST)
         coEvery { sessionDao.save(any()) } returns Unit
         every { observer.onChanged(any()) } returns Unit
         every { exerciseObserver.onChanged(any()) } returns Unit
@@ -108,7 +108,7 @@ class WorkoutViewModelTest {
                     Exercise(name = "B", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0))
                 )
             )
-            coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
+            coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
             sut.currentExercise.observeForever(exerciseObserver)
             sut.startSession().join()
             sut.runSession()
@@ -127,7 +127,7 @@ class WorkoutViewModelTest {
             Exercise(name = "B", series = Series(count = 1, restAfter = Rest(0)), restAfter = Rest(0))
         )
     )
-        coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
+        coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
 
         sut.startSession().join()
         sut.runSession()
@@ -149,7 +149,7 @@ class WorkoutViewModelTest {
             )
             sut.currentExercise.observeForever(exerciseObserver)
             sut.currentRest.observeForever(restObserver)
-            coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
+            coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
 
             sut.startSession().join()
             sut.runSession()
@@ -183,7 +183,7 @@ class WorkoutViewModelTest {
                     )
                 )
             )
-            coEvery { sessionDao.getLastSession() } returns SessionRecord(0, session)
+            coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
             sut.startSession().join()
             sut.runSession()
             sut.setRepsForCurrentSerie(5)

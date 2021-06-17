@@ -3,6 +3,7 @@ package com.br2.cadela.workout.domain
 import com.br2.cadela.workout.datas.*
 import com.br2.cadela.workout.repositories.SessionRepository
 import kotlinx.coroutines.*
+import java.time.LocalDate
 
 // TODO: Handle beginning of level -> 4 sessions/week then 3 sessions/week
 // TODO: Change 2nd Program to 2nd Level if doing session less than 3/week
@@ -35,15 +36,15 @@ class WorkoutService(private val sessionRepository: SessionRepository) {
     }
 
     suspend fun endSession(session: Session) {
-        saveAndClearCurrentSession(session)
+        saveAndClearCurrentSession(session, LocalDate.now())
     }
 
     suspend fun pauseSession(session: Session) {
         saveAndClearCurrentSession(session)
     }
 
-    private suspend fun saveAndClearCurrentSession(session: Session) {
-        sessionRepository.saveSession(session)
+    private suspend fun saveAndClearCurrentSession(session: Session, endDate: LocalDate? = null)  {
+        sessionRepository.saveSession(session, endDate)
         _currentSession = null
     }
 
