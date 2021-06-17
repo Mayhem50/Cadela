@@ -23,6 +23,7 @@ import com.br2.cadela.R
 import com.br2.cadela.shared.stringResourceByName
 import com.br2.cadela.shared.toFormattedString
 import com.br2.cadela.ui.theme.CadelaTheme
+import com.br2.cadela.ui.theme.Red200
 import com.br2.cadela.workout.datas.*
 import java.time.Duration
 import java.time.LocalDate
@@ -39,7 +40,7 @@ fun WorkoutHomeView(viewModel: WorkoutViewModel?, navController: NavController?)
     ) {
         session?.value?.let {
             HomeView(it, viewModel, navController)
-        } ?: CircularProgressIndicator(color = Color.White)
+        } ?: CircularProgressIndicator(color = Red200)
     }
 
 }
