@@ -1,6 +1,5 @@
 package com.br2.cadela
 
-import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent

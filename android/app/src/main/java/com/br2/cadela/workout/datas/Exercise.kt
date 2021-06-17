@@ -122,7 +122,7 @@ fun Exercise.withRestOf(rest: Rest) = Exercise(name, series, rest, speed)
 fun Exercise.withSeries(series: Series) =
     Exercise(name, series, restAfter)
 
-fun MutableList<Exercise>.replaceExercise(search: String, replaceBy: String, threshold: Int){
+fun MutableList<Exercise>.replaceExercise(search: String, replaceBy: String, threshold: Int) {
     val index = indexOfFirst { it.name == search }
     if (index >= 0) {
         val exercise = elementAt(index)
@@ -137,7 +137,8 @@ fun MutableList<Exercise>.replaceExercise(search: String, replaceBy: String, thr
         }
     }
 }
-fun MutableList<Exercise>.changeTarget(search: String, target: Int, threshold: Int){
+
+fun MutableList<Exercise>.changeTarget(search: String, target: Int, threshold: Int) {
     val index = indexOfFirst { it.name == search }
     if (index >= 0) {
         val exercise = elementAt(index)
@@ -150,5 +151,18 @@ fun MutableList<Exercise>.changeTarget(search: String, target: Int, threshold: I
                     exercise.speed
                 )
         }
+    }
+}
+
+fun MutableList<Exercise>.addRepetitionsOn(name: String, seriesCount: Int) {
+    val index = indexOfFirst { it.name == name }
+    if (index >= 0) {
+        val exercise = this[index]
+        this[index] = Exercise(
+            exercise.name,
+            Series(count = seriesCount, restAfter = exercise.series.restAfter),
+            exercise.restAfter,
+            exercise.speed
+        )
     }
 }

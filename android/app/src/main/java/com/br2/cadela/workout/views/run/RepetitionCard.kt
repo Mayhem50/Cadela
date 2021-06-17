@@ -1,6 +1,9 @@
 package com.br2.cadela.workout.views.run
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -196,8 +199,39 @@ private fun RepetitionList(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
     ) {
+        RepetitionListHeader()
         repetitions.mapIndexed { index, it ->
             RepetitionRow(currentIndex, index, it)
+        }
+    }
+}
+
+@Composable
+fun RepetitionListHeader() {
+    Row(
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(horizontal = 4.dp, vertical = 4.dp)
+    ) {
+        Box(modifier = Modifier.weight(0.3f))
+
+        Column(modifier = Modifier.weight(.5f)) {
+            Text(text = "Series")
+        }
+
+        Column(modifier = Modifier.weight(.5f)) {
+            Text(
+                text = "Done",
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Column(modifier = Modifier.weight(.5f)) {
+            Text(
+                text = "Target",
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -217,16 +251,23 @@ private fun RepetitionRow(
         RepetitionRowIcon(
             currentIndex = currentIndex ?: 0,
             index = index,
-            modifier = Modifier.weight(0.5f)
+            modifier = Modifier.weight(0.3f)
         )
 
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = "Rep.${index + 1}")
+        Column(modifier = Modifier.weight(.5f)) {
+            Text(text = "${index + 1}")
         }
 
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.weight(.5f)) {
             Text(
                 text = if (repetition.done == 0) "-" else "${repetition.done}",
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Column(modifier = Modifier.weight(.5f)) {
+            Text(
+                text = if (repetition.target == 0) "MAX" else "${repetition.target}",
                 textAlign = TextAlign.Center
             )
         }

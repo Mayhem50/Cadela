@@ -14,7 +14,6 @@ import androidx.navigation.NavController
 import com.br2.cadela.R
 import com.br2.cadela.authentication.signin.SigninView
 import com.br2.cadela.shared.FakeNavControllerPreviewParameter
-import com.br2.cadela.shared.fillAllAndSmallPadding
 import com.br2.cadela.ui.theme.CadelaTheme
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding

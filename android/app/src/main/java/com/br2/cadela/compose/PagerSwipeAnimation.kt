@@ -1,6 +1,5 @@
 package com.br2.cadela.compose
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp

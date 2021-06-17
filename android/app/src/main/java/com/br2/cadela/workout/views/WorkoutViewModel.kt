@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.br2.cadela.workout.WorkoutService
 import com.br2.cadela.workout.datas.Exercise
 import com.br2.cadela.workout.datas.Repetition
 import com.br2.cadela.workout.datas.Rest
 import com.br2.cadela.workout.datas.Session
+import com.br2.cadela.workout.domain.WorkoutService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
