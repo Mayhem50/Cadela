@@ -142,6 +142,7 @@ private fun RepetitionInput(
             .graphicsLayer {
                 shape = RoundedCornerShape(corner = CornerSize(4.dp))
                 clip = true
+                shadowElevation = 5f
             }
             .background(if(isSystemInDarkTheme()) Color.DarkGray else Color.White)
             .padding(8.dp)) {
