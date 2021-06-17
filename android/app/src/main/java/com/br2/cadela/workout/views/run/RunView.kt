@@ -64,9 +64,10 @@ private val PREVIEW_SESSION = Session(
 @Composable
 fun WorkoutRunView(viewModel: WorkoutViewModel?, navController: NavController?) {
     val scope = rememberCoroutineScope()
-    val session =
+    val session by
         viewModel?.currentSession?.observeAsState() ?: remember { mutableStateOf(PREVIEW_SESSION) }
-    val pagerState = rememberPagerState(pageCount = session?.value?.exercises?.size ?: 0)
+    val pagerState = rememberPagerState(pageCount = session?.exercises?.size ?: 0, initialPage = session?.currentExerciseIndex ?: 0)
+
     BackPressWarningDialog(viewModel, navController)
 
     ConstraintLayout(
@@ -99,7 +100,7 @@ fun WorkoutRunView(viewModel: WorkoutViewModel?, navController: NavController?) 
                 }
 
         ) { page ->
-            val exercise = session.value!!.exercises[page]
+            val exercise = session!!.exercises[page]
             val modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()

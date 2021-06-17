@@ -5,6 +5,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -142,7 +143,7 @@ private fun RepetitionInput(
                 shape = RoundedCornerShape(corner = CornerSize(4.dp))
                 clip = true
             }
-            .background(Color.White)
+            .background(if(isSystemInDarkTheme()) Color.DarkGray else Color.White)
             .padding(8.dp)) {
         Button(
             enabled = enabled,
@@ -164,13 +165,13 @@ private fun RepetitionInput(
                 style = TextStyle(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                    color = if(isSystemInDarkTheme()) Color.White else Color.Black
                 )
             )
             Icon(
                 imageVector = Icons.Filled.FitnessCenter,
                 contentDescription = null,
-                tint = Color.Black,
+                tint = if(isSystemInDarkTheme()) Color.White else Color.Black,
                 modifier = Modifier
                     .padding(start = 8.dp)
                     .size(20.dp)
@@ -200,9 +201,9 @@ private fun RepetitionList(
     ConstraintLayout(
         modifier = modifier.padding(top = 16.dp)
     ) {
-        val guideline1 = createGuidelineFromStart(.10f)
-        val guideline2 = createGuidelineFromStart(.35f)
-        val guideline3 = createGuidelineFromStart(.60f)
+        val guideline1 = createGuidelineFromStart(.05f)
+        val guideline2 = createGuidelineFromStart(.25f)
+        val guideline3 = createGuidelineFromStart(.55f)
         val guideline4 = createGuidelineFromStart(.85f)
 
         val columnModifiers = columnModifiers(guideline1, guideline2, guideline3, guideline4)

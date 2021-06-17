@@ -1,16 +1,17 @@
 package com.br2.cadela.workout.views
 
 import android.text.format.DateUtils
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.br2.cadela.R
 import com.br2.cadela.shared.stringResourceByName
@@ -30,25 +32,53 @@ import java.time.LocalDate
 
 @Composable
 fun WorkoutHomeView(viewModel: WorkoutViewModel?, navController: NavController?) {
-    val session = viewModel?.currentSession?.observeAsState()
-    viewModel?.startSession()
-    Box(
-        contentAlignment = Alignment.Center,
+    val session by viewModel?.currentSession?.observeAsState() ?: remember {
+        mutableStateOf(Session.FIRST_LEVEL_TEST)
+    }
+
+    if(session == null) viewModel?.startSession()
+
+    ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-        session?.value?.let {
-            HomeView(it, viewModel, navController)
-        } ?: CircularProgressIndicator(color = Red200)
+        val (logo, content) = createRefs()
+        val centerHorizontalGuideline = createGuidelineFromTop(.5f)
+        val centerVerticalGuideline = createGuidelineFromStart(.5f)
+
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = null,
+            Modifier
+                .width(100f.dp)
+                .height(100f.dp)
+                .constrainAs(ref = logo) {
+                    top.linkTo(parent.top, 32.dp)
+                    centerAround(centerVerticalGuideline)
+                },
+            alignment = Alignment.TopCenter
+        )
+        val modifier = Modifier.constrainAs(ref = content){
+            centerAround(centerHorizontalGuideline)
+            centerAround(centerVerticalGuideline)
+        }
+        session?.let {
+            HomeView(it, viewModel, navController, modifier)
+        } ?: CircularProgressIndicator(color = Red200, modifier = modifier)
     }
 
 }
 
 @Composable
-private fun HomeView(session: Session, viewModel: WorkoutViewModel?, navController: NavController?) {
+private fun HomeView(
+    session: Session,
+    viewModel: WorkoutViewModel?,
+    navController: NavController?,
+    modifier: Modifier = Modifier
+) {
     Card(
-        elevation = 3f.dp, modifier = Modifier
+        elevation = 3f.dp, modifier = modifier
             .padding(16f.dp)
     ) {
         Column(

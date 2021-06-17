@@ -6,6 +6,9 @@ data class Exercise(
     val restAfter: Rest?,
     val speed: ESpeed = ESpeed.NORMAL
 ) {
+    val isComplete: Boolean
+        get() = series.repetitions.all { it.done > 0 }
+
     companion object {
         val A = Exercise(name = "A", Series(1), null)
         val A1 = Exercise(name = "A1", Series(1), null)
