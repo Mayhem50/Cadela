@@ -29,6 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintLayoutBaseScope
+import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.br2.cadela.shared.stringResourceByName
 import com.br2.cadela.ui.theme.CadelaTheme
@@ -92,7 +94,7 @@ fun RepetitionCard(
                 viewModel = viewModel,
                 repetitions = exercise.series.repetitions,
                 modifier = Modifier.constrainAs(ref = repetitions) {
-                    top.linkTo(title.bottom, 8.dp)
+                    top.linkTo(title.bottom, 16.dp)
                     bottom.linkTo(button.top, 8.dp)
                     start.linkTo(parent.start, 8.dp)
                     end.linkTo(verticalGuideline, 8.dp)
@@ -195,83 +197,98 @@ private fun RepetitionList(
 ) {
     val currentIndex by
     viewModel?.currentSerieIndex?.observeAsState() ?: remember { mutableStateOf(5) }
-    Column(
-        verticalArrangement = Arrangement.Top,
-        modifier = modifier
+    ConstraintLayout(
+        modifier = modifier.padding(top = 16.dp)
     ) {
-        RepetitionListHeader()
+        val guideline1 = createGuidelineFromStart(.10f)
+        val guideline2 = createGuidelineFromStart(.35f)
+        val guideline3 = createGuidelineFromStart(.60f)
+        val guideline4 = createGuidelineFromStart(.85f)
+
+        val columnModifiers = columnModifiers(guideline1, guideline2, guideline3, guideline4)
+
+        RepetitionListHeader(columnModifiers = columnModifiers)
+
         repetitions.mapIndexed { index, it ->
-            RepetitionRow(currentIndex, index, it)
+            RepetitionRow(
+                currentIndex, index, it,
+                columnModifiers(
+                    guideline1 = guideline1,
+                    guideline2 = guideline2,
+                    guideline3 = guideline3,
+                    guideline4 = guideline4,
+                    index = index + 1
+                )
+            )
         }
     }
 }
 
 @Composable
-fun RepetitionListHeader() {
-    Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(horizontal = 4.dp, vertical = 4.dp)
-    ) {
-        Box(modifier = Modifier.weight(0.3f))
+private fun ConstraintLayoutScope.columnModifiers(
+    guideline1: ConstraintLayoutBaseScope.VerticalAnchor,
+    guideline2: ConstraintLayoutBaseScope.VerticalAnchor,
+    guideline3: ConstraintLayoutBaseScope.VerticalAnchor,
+    guideline4: ConstraintLayoutBaseScope.VerticalAnchor,
+    index: Int = 0
+): ColumnModifiers {
+    val (col1, col2, col3, col4) = createRefs()
+    val rowOffset = 32.dp * index
+    val horizontalGuideline = createGuidelineFromTop(rowOffset)
+    return ColumnModifiers(
+        Modifier.constrainAs(ref = col1) {
+            centerAround(horizontalGuideline)
+            centerAround(guideline1)
+        },
+        Modifier.Companion.constrainAs(ref = col2) {
+            centerAround(horizontalGuideline)
+            centerAround(guideline2)
+        },
+        Modifier.Companion.constrainAs(ref = col3) {
+            centerAround(horizontalGuideline)
+            centerAround(guideline3)
+        },
+        Modifier.Companion.constrainAs(ref = col4) {
+            centerAround(horizontalGuideline)
+            centerAround(guideline4)
+        })
+}
 
-        Column(modifier = Modifier.weight(.5f)) {
-            Text(text = "Series")
-        }
-
-        Column(modifier = Modifier.weight(.5f)) {
-            Text(
-                text = "Done",
-                textAlign = TextAlign.Center
-            )
-        }
-
-        Column(modifier = Modifier.weight(.5f)) {
-            Text(
-                text = "Target",
-                textAlign = TextAlign.Center
-            )
-        }
-    }
+@Composable
+fun RepetitionListHeader(columnModifiers: ColumnModifiers) {
+    val style= TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
+    Box(modifier = columnModifiers.col1)
+    Text(text = "Series", textAlign = TextAlign.Center, style = style, modifier = columnModifiers.col2)
+    Text(text = "Done", textAlign = TextAlign.Center, style = style, modifier = columnModifiers.col3)
+    Text(text = "Target", textAlign = TextAlign.Center, style = style, modifier = columnModifiers.col4)
 }
 
 @Composable
 private fun RepetitionRow(
     currentIndex: Int?,
     index: Int,
-    repetition: Repetition
+    repetition: Repetition,
+    columnModifiers: ColumnModifiers
 ) {
-    Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(horizontal = 4.dp, vertical = 4.dp)
-    ) {
-        RepetitionRowIcon(
-            currentIndex = currentIndex ?: 0,
-            index = index,
-            modifier = Modifier.weight(0.3f)
-        )
 
-        Column(modifier = Modifier.weight(.5f)) {
-            Text(text = "${index + 1}")
-        }
+    RepetitionRowIcon(
+        currentIndex = currentIndex ?: 0,
+        index = index,
+        modifier = columnModifiers.col1
+    )
+    Text(text = "${index + 1}", textAlign = TextAlign.Center, modifier = columnModifiers.col2)
+    Text(
+        text = if (repetition.done == 0) "-" else "${repetition.done}",
+        textAlign = TextAlign.Center,
+        modifier = columnModifiers.col3
+    )
+    Text(
+        text = if (repetition.target == 0) "MAX" else "${repetition.target}",
+        textAlign = TextAlign.Center,
+        modifier = columnModifiers.col4
+    )
 
-        Column(modifier = Modifier.weight(.5f)) {
-            Text(
-                text = if (repetition.done == 0) "-" else "${repetition.done}",
-                textAlign = TextAlign.Center
-            )
-        }
 
-        Column(modifier = Modifier.weight(.5f)) {
-            Text(
-                text = if (repetition.target == 0) "MAX" else "${repetition.target}",
-                textAlign = TextAlign.Center
-            )
-        }
-    }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -281,7 +298,7 @@ private fun RepetitionRowIcon(currentIndex: Int, index: Int, modifier: Modifier)
     fun isBeforeCurrentIndex() =
         currentIndex != index && index < currentIndex
 
-    Box(modifier = modifier) {
+    Box(modifier = modifier.height(20.dp)) {
         AnimatedVisibility(
             visible = isCurrentIndex(),
             enter = fadeIn(),
@@ -309,6 +326,13 @@ private fun RepetitionRowIcon(currentIndex: Int, index: Int, modifier: Modifier)
     }
 }
 
+data class ColumnModifiers(
+    val col1: Modifier,
+    val col2: Modifier,
+    val col3: Modifier,
+    val col4: Modifier
+)
+
 @Preview
 @Composable
 fun PreviewExerciseCard() {
@@ -316,7 +340,8 @@ fun PreviewExerciseCard() {
         RepetitionCard(
             viewModel = null,
             modifier = Modifier,
-            exercise = Exercise("A", Series(7), null)) {
+            exercise = Exercise("A", Series(7), null)
+        ) {
 
         }
     }
