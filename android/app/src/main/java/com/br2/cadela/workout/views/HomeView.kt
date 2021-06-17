@@ -38,31 +38,7 @@ fun WorkoutHomeView(viewModel: WorkoutViewModel?, navController: NavController?)
 
     if(session == null) viewModel?.startSession()
 
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-        val (logo, content) = createRefs()
-        val centerHorizontalGuideline = createGuidelineFromTop(.5f)
-        val centerVerticalGuideline = createGuidelineFromStart(.5f)
-
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = null,
-            Modifier
-                .width(100f.dp)
-                .height(100f.dp)
-                .constrainAs(ref = logo) {
-                    top.linkTo(parent.top, 32.dp)
-                    centerAround(centerVerticalGuideline)
-                },
-            alignment = Alignment.TopCenter
-        )
-        val modifier = Modifier.constrainAs(ref = content){
-            centerAround(centerHorizontalGuideline)
-            centerAround(centerVerticalGuideline)
-        }
+    PageWithLogo { modifier ->
         session?.let {
             HomeView(it, viewModel, navController, modifier)
         } ?: CircularProgressIndicator(color = Red200, modifier = modifier)
