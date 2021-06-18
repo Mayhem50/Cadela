@@ -31,8 +31,8 @@ inline fun PageWithLogo(crossinline content: @Composable (modifier: Modifier) ->
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
             Modifier
-                .width(100f.dp)
-                .height(100f.dp)
+                .width(60.dp)
+                .height(60.dp)
                 .constrainAs(ref = logo) {
                     top.linkTo(parent.top, 32.dp)
                     centerAround(centerVerticalGuideline)

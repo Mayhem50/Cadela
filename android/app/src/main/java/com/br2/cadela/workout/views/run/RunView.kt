@@ -197,22 +197,23 @@ private fun moveToNext(
     scope: CoroutineScope,
     pagerState: PagerState
 ) {
-    viewModel?.startRest {
-        viewModel.moveToNext(
-            onNextExercise = {
+    viewModel?.moveToNext(
+        onNextExercise = {
+            viewModel.startRest {
                 scope.launch {
                     pagerState.animateScrollToPage(pagerState.currentPage + 1)
                 }
-            },
-            onSessionEnd = {
-                viewModel.endSession()
-                navController?.navigate(
-                    "workout_home",
-                    NavOptions.Builder().buildPopupToCurrent(navController)
-                )
             }
-        )
-    }
+        },
+        onSessionEnd = {
+            viewModel.endSession()
+            navController?.navigate(
+                "workout_home",
+                NavOptions.Builder().setExitAnim(android.R.anim.fade_out)
+                    .buildPopupToCurrent(navController)
+            )
+        }
+    )
 }
 
 @Preview(name = "Full Reps", showBackground = true)

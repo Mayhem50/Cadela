@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,12 +20,16 @@ import com.br2.cadela.workout.views.WorkoutViewModel
 
 @Composable
 fun CircularTimer(viewModel: WorkoutViewModel?, modifier: Modifier) {
-    val progress = viewModel?.restProgress?.observeAsState(initial = 0f)
-    val timeString = viewModel?.timeDisplay?.observeAsState()
+    val progress by viewModel?.restProgress?.observeAsState(initial = 0f) ?: remember {
+        mutableStateOf(0f)
+    }
+    val timeString by viewModel?.timeDisplay?.observeAsState("--:--") ?: remember {
+        mutableStateOf("--:--")
+    }
 
     Box(modifier = modifier.wrapContentSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = timeString?.value ?: "--:--",
+            text = timeString,
             modifier = Modifier.fillMaxWidth(0.65f),
             textAlign = TextAlign.Center,
             style = TextStyle(
@@ -43,7 +47,7 @@ fun CircularTimer(viewModel: WorkoutViewModel?, modifier: Modifier) {
                 .height(240.dp)
         )
         CircularProgressIndicator(
-            progress = progress?.value ?: .5f, strokeWidth = 6.dp,
+            progress = progress, strokeWidth = 6.dp,
             modifier = Modifier
                 .fillMaxWidth(.65f)
                 .height(240.dp)

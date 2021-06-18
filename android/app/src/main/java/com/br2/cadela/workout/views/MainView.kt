@@ -38,9 +38,6 @@ fun WorkoutMainView(mainNavController: NavController?) {
             .background(Red500)
     ) {
         val navController = rememberNavController()
-        var hideNavBar by remember {
-            mutableStateOf(false)
-        }
 
         Scaffold(
             bottomBar = {
@@ -50,7 +47,6 @@ fun WorkoutMainView(mainNavController: NavController?) {
                         RouteItem("workout_home", Icons.Filled.Home),
                         RouteItem("workout_stats", Icons.Filled.Timeline)
                     ),
-                    shouldHide = hideNavBar,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -61,7 +57,7 @@ fun WorkoutMainView(mainNavController: NavController?) {
                 .navigationBarsPadding()
         ) {
             NavHost(navController = navController, startDestination = "workout_home") {
-                composable("workout_home") {WorkoutHomeView(WorkoutModule.workoutVm, navController) }
+                composable("workout_home") { WorkoutHomeView(WorkoutModule.workoutVm, navController) }
                 composable("workout_stats") { WorkoutStatsView(WorkoutModule.workoutVm, navController) }
                 composable("workout_run") { WorkoutRunView(WorkoutModule.workoutVm, navController) }
             }
@@ -75,10 +71,10 @@ fun WorkoutMainView(mainNavController: NavController?) {
 private fun BottomNavBar(
     navController: NavHostController,
     routes: List<RouteItem>,
+    modifier: Modifier = Modifier,
     selectedContentColor: Color = Color.White,
     unselectedContentColor: Color = Color.LightGray,
-    shouldHide: Boolean = false,
-    modifier: Modifier = Modifier
+    shouldHide: Boolean = false
 ) {
     var hide by remember { mutableStateOf(false) }
     var currentRoute by remember { mutableStateOf("workout_home") }

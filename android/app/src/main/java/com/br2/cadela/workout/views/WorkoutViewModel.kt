@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.br2.cadela.workout.datas.Exercise
 import com.br2.cadela.workout.datas.Repetition
-import com.br2.cadela.workout.datas.Rest
 import com.br2.cadela.workout.datas.Session
 import com.br2.cadela.workout.domain.WorkoutService
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +15,15 @@ import kotlinx.coroutines.withContext
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
-class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel() {
-    val EMPTY_TIME_STRING = "--:--"
+class WorkoutViewModel(
+    private val workoutService: WorkoutService,
+    private val _countDownFactory: CountdownTimerFactory = CountdownTimerFactory()
+) : ViewModel() {
+    companion object {
+        const val EMPTY_TIME_STRING = "--:--"
+    }
+
+    private var _previousExercise: Exercise? = null
     private var _countDownTimer: CountDownTimer? = null
 
     private val _isResting = MutableLiveData(false)
@@ -31,10 +37,6 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
     private val _restProgress = MutableLiveData(0f)
     val restProgress: LiveData<Float>
         get() = _restProgress
-
-    private val _currentRest = MutableLiveData<Rest?>()
-    val currentRest: LiveData<Rest?>
-        get() = _currentRest
 
     private val _currentSerieIndex = MutableLiveData(0)
     val currentSerieIndex: LiveData<Int>
@@ -58,7 +60,6 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
             _timeDisplay.value = EMPTY_TIME_STRING
             _currentExercise.value = session.exercises[session.currentExerciseIndex]
             _currentSerieIndex.value = 0
-            _currentRest.value = _currentExercise.value!!.series.restAfter
         }
     }
 
@@ -84,20 +85,21 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
 
     fun setRepsForCurrentSerie(done: Int) {
         _currentExercise.value?.let {
-            it.series.repetitions[_currentSerieIndex.value!!] = Repetition(done)
+            it.series.repetitions[it.currentRepetitionIndex] = Repetition(done)
         }
     }
 
     fun moveToNext(onNextExercise: () -> Unit, onSessionEnd: () -> Unit) {
         _currentExercise.value?.let {
             _currentSerieIndex.value = _currentSerieIndex.value!! + 1
-            if (_currentSerieIndex.value!! < it.series.repetitions.size) {
-                updateCurrentRest(it.series.restAfter)
-            } else if (!isLastExercise()) {
-                moveToNextExercise(it)
-                onNextExercise()
-            } else {
-                onSessionEnd()
+            when {
+                _currentSerieIndex.value!! < it.series.count -> {
+                }
+                !isLastExercise() -> {
+                    moveToNextExercise(it)
+                    onNextExercise()
+                }
+                else -> onSessionEnd()
             }
         }
     }
@@ -108,47 +110,61 @@ class WorkoutViewModel(private val workoutService: WorkoutService) : ViewModel()
             return
         }
 
-        if (isLastSerie() && isLastExercise()) {
-            callback?.invoke()
-            return
+        _countDownTimer?.let {
+            it.cancel()
+            _countDownTimer = null
         }
 
-        val restDurationMs = (_currentRest.value?.duration ?: 0).toLong() * 1000
+        val restDuration = getRestTimeMs()
+
         _isResting.value = true
-        _countDownTimer = object : CountDownTimer(restDurationMs, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                _restProgress.value = 1f - millisUntilFinished.toFloat() / restDurationMs.toFloat()
+        _countDownTimer =
+            _countDownFactory.createCountDownTimer(restDuration, { millisUntilFinished ->
+                _restProgress.value = 1f - millisUntilFinished.toFloat() / restDuration.toFloat()
                 val duration = Duration.milliseconds(millisUntilFinished)
                 duration.toComponents { minutes, seconds, _ ->
                     _timeDisplay.value = String.format("%02d:%02d", minutes, seconds)
                 }
-            }
-
-            override fun onFinish() {
+            }, {
                 _restProgress.value = 1.0f
                 _isResting.value = false
                 _timeDisplay.value = EMPTY_TIME_STRING
                 callback?.invoke()
-            }
-
-        }
+            })
 
         _countDownTimer?.start()
     }
 
-    private fun isLastSerie() =
-        _currentExercise.value?.series?.count == _currentSerieIndex.value!! + 1
+    private fun getRestTimeMs(): Int {
+        return (_previousExercise?.let {
+            (if (_currentSerieIndex.value == 0) it.restAfter else _currentExercise.value!!.series.restAfter)?.duration
+        } ?: _currentExercise.value?.series?.restAfter?.duration ?: 0) * 1000
+    }
 
     private fun isLastExercise() =
         _currentExercise.value == _currentSession.value?.exercises?.last()
 
     private fun moveToNextExercise(it: Exercise) {
+        _previousExercise = _currentExercise.value
         _currentSerieIndex.value = 0
-        updateCurrentRest(it.restAfter)
         _currentExercise.value = workoutService.moveToNextExercise()
     }
+}
 
-    private fun updateCurrentRest(rest: Rest?) {
-        _currentRest.value = rest
+class CountdownTimerFactory {
+    fun createCountDownTimer(
+        restDurationMs: Number,
+        onTick: (millisUntilFinished: Long) -> Unit,
+        onFinish: () -> Unit
+    ): CountDownTimer {
+        return object : CountDownTimer(restDurationMs.toLong(), 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                onTick(millisUntilFinished)
+            }
+
+            override fun onFinish() {
+                onFinish()
+            }
+        }
     }
 }

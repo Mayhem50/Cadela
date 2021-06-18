@@ -9,6 +9,9 @@ data class Exercise(
     val isComplete: Boolean
         get() = series.repetitions.all { it.done > 0 }
 
+    val currentRepetitionIndex: Int
+        get() = series.repetitions.indexOfFirst { it.done == 0 }
+
     companion object {
         val A = Exercise(name = "A", Series(1), null)
         val A1 = Exercise(name = "A1", Series(1), null)

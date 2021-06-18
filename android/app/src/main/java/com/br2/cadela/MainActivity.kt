@@ -7,6 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +20,8 @@ import com.br2.cadela.ui.theme.CadelaTheme
 import com.br2.cadela.workout.WorkoutModule
 import com.br2.cadela.workout.views.WorkoutMainView
 import com.google.accompanist.insets.ProvideWindowInsets
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     @ExperimentalComposeUiApi
@@ -54,6 +57,11 @@ class MainActivity : ComponentActivity() {
             CadelaDatabase::class.java,
             getString(R.string.database_name)
         ).fallbackToDestructiveMigration().build()
+
+//        lifecycleScope.launch(Dispatchers.IO){
+//            db.clearAllTables()
+//        }
+
         val api = ApiClient()
 
         AuthenticationModule.boostrap(db, api)

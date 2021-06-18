@@ -1,5 +1,6 @@
 package com.br2.cadela.workout
 
+import android.os.CountDownTimer
 import androidx.lifecycle.Observer
 import com.br2.cadela.InstantExecutorExtension
 import com.br2.cadela.workout.datas.*
@@ -7,6 +8,7 @@ import com.br2.cadela.workout.domain.WorkoutService
 import com.br2.cadela.workout.repositories.SessionDao
 import com.br2.cadela.workout.repositories.SessionRecord
 import com.br2.cadela.workout.repositories.SessionRepository
+import com.br2.cadela.workout.views.CountdownTimerFactory
 import com.br2.cadela.workout.views.WorkoutViewModel
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -181,56 +183,70 @@ class WorkoutViewModelTest {
     @Test
     fun `When move to next serie update rest time with serie's rest time`() =
         runBlocking {
+            val countdownTimerFactory = spyk<CountdownTimerFactory>()
+
+            sut = WorkoutViewModel(workoutService, countdownTimerFactory)
             sut.currentExercise.observeForever(exerciseObserver)
-            sut.currentRest.observeForever(restObserver)
-            val expectedRest = 1
+            val expectedRestInSec = 10
+            val expectedRestInMs = expectedRestInSec * 1000
+            val otherRest = 100
+
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
                     Exercise(
                         name = "A",
-                        series = Series(count = 3, restAfter = Rest(expectedRest)),
-                        restAfter = Rest(10)
+                        series = Series(count = 3, restAfter = Rest(expectedRestInSec)),
+                        restAfter = Rest(otherRest)
                     ),
                     Exercise(
                         name = "B",
-                        series = Series(count = 2, restAfter = Rest(2)),
-                        restAfter = Rest(11)
+                        series = Series(count = 2, restAfter = Rest(otherRest)),
+                        restAfter = Rest(otherRest)
                     )
                 )
             )
             coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
+
             sut.startSession().join()
             sut.runSession()
             sut.moveToNext({}, {})
-            assertEquals(expectedRest, sut.currentRest.value!!.duration)
+            sut.startRest()
+
+            verify { countdownTimerFactory.createCountDownTimer(expectedRestInMs, any(), any()) }
         }
 
     @Test
     fun `When move to next exercise update rest time with exercise's rest time`() =
         runBlocking {
+            val countdownTimerFactory = spyk<CountdownTimerFactory>()
+            sut = WorkoutViewModel(workoutService, countdownTimerFactory)
             sut.currentExercise.observeForever(exerciseObserver)
-            sut.currentRest.observeForever(restObserver)
-            val expectedRest = 10
+            val expectedRestInSec = 10
+            val expectedRestInMs = expectedRestInSec * 1000
+            val otherRest = 100
             val session = Session(
                 name = "dummy_name",
                 exercises = listOf(
                     Exercise(
                         name = "A",
-                        series = Series(count = 1, restAfter = Rest(1)),
-                        restAfter = Rest(10)
+                        series = Series(count = 1, restAfter = Rest(otherRest)),
+                        restAfter = Rest(expectedRestInSec)
                     ),
                     Exercise(
                         name = "B",
-                        series = Series(count = 2, restAfter = Rest(2)),
-                        restAfter = Rest(11)
+                        series = Series(count = 2, restAfter = Rest(otherRest)),
+                        restAfter = Rest(otherRest)
                     )
                 )
             )
             coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
+
             sut.startSession().join()
             sut.runSession()
             sut.moveToNext({}, {})
-            assertEquals(expectedRest, sut.currentRest.value!!.duration)
+            sut.startRest()
+
+            verify { countdownTimerFactory.createCountDownTimer(expectedRestInMs, any(), any()) }
         }
 }
