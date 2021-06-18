@@ -32,9 +32,9 @@ data class Session(
         val FIRST_LEVEL_TEST = Session(
             name = "first_level_test",
             exercises = listOf(
-                Exercise(name = "A", series = Series(1), restAfter = Rest(180)),
-                Exercise(name = "B", series = Series(1), restAfter = Rest(180)),
-                Exercise(name = "C", series = Series(1), restAfter = Rest(180)),
+                Exercise(name = "A", series = Series(1), restAfter = Rest(1)),
+                Exercise(name = "B", series = Series(1), restAfter = Rest(1)),
+                Exercise(name = "C", series = Series(1), restAfter = Rest(1)),
                 Exercise(name = "A1", series = Series(1), restAfter = null)
             )
         )
@@ -99,9 +99,9 @@ data class Session(
         val SECOND_PROGRAM = Session(
             name = "second_program",
             exercises = listOf(
-                Exercise(name = "B", series = Series(3), restAfter = Rest(duration = 120)),
-                Exercise(name = "A1", series = Series(3), restAfter = Rest(duration = 120)),
-                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 120)),
+                Exercise(name = "B", series = Series(3, restAfter = Rest(duration = 1)), restAfter = Rest(duration = 1)),
+                Exercise(name = "A1", series = Series(3, restAfter = Rest(duration = 1)), restAfter = Rest(duration = 1)),
+                Exercise(name = "D", series = Series(1), restAfter = Rest(duration = 1)),
                 Exercise(
                     name = "C1",
                     series = Series(3),

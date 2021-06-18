@@ -198,6 +198,9 @@ private fun moveToNext(
     pagerState: PagerState
 ) {
     viewModel?.moveToNext(
+        onNextSerie = {
+            viewModel.startRest()
+        },
         onNextExercise = {
             viewModel.startRest {
                 scope.launch {

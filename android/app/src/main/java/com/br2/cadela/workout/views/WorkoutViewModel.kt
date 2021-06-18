@@ -89,11 +89,12 @@ class WorkoutViewModel(
         }
     }
 
-    fun moveToNext(onNextExercise: () -> Unit, onSessionEnd: () -> Unit) {
+    fun moveToNext(onNextSerie: () -> Unit, onNextExercise: () -> Unit, onSessionEnd: () -> Unit) {
         _currentExercise.value?.let {
             _currentSerieIndex.value = _currentSerieIndex.value!! + 1
             when {
                 _currentSerieIndex.value!! < it.series.count -> {
+                    onNextSerie()
                 }
                 !isLastExercise() -> {
                     moveToNextExercise(it)

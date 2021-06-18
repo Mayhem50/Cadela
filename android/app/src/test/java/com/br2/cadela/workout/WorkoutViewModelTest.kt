@@ -109,14 +109,16 @@ class WorkoutViewModelTest {
                     )
                 )
             )
-            val spyOnNextExercise = spyk<() -> Unit>("onNext")
+            val spyOnNextSerie = spyk<() -> Unit>("onNextSerie")
+            val spyOnNextExercise = spyk<() -> Unit>("onNextExercise")
             val spyOnEndSession = spyk<() -> Unit>("onEnd")
             coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
             sut.currentExercise.observeForever(exerciseObserver)
             sut.startSession().join()
             sut.runSession()
-            sut.moveToNext({ spyOnNextExercise() }, { spyOnEndSession() })
+            sut.moveToNext({spyOnNextSerie()}, { spyOnNextExercise() }, { spyOnEndSession() })
             verify { spyOnEndSession() }
+            verify(exactly = 0) { spyOnNextSerie() }
             verify(exactly = 0) { spyOnNextExercise() }
         }
 
@@ -167,14 +169,16 @@ class WorkoutViewModelTest {
                 )
             )
 
-            val spyOnNextExercise = spyk<() -> Unit>("onNext")
+            val spyOnNextSerie = spyk<() -> Unit>("onNextSerie")
+            val spyOnNextExercise = spyk<() -> Unit>("onNextExercise")
             val spyOnEndSession = spyk<() -> Unit>("onEnd")
             coEvery { sessionDao.getLastSession() } returns SessionRecord(session)
 
             sut.startSession().join()
             sut.runSession()
-            sut.moveToNext({ spyOnNextExercise() }, { spyOnEndSession() })
+            sut.moveToNext({spyOnNextSerie()}, { spyOnNextExercise() }, { spyOnEndSession() })
 
+            verify { spyOnNextSerie() }
             verify(exactly = 0) { spyOnEndSession() }
             verify(exactly = 0) { spyOnNextExercise() }
             assertEquals(1, sut.currentSerieIndex.value)
@@ -210,7 +214,7 @@ class WorkoutViewModelTest {
 
             sut.startSession().join()
             sut.runSession()
-            sut.moveToNext({}, {})
+            sut.moveToNext({}, {}, {})
             sut.startRest()
 
             verify { countdownTimerFactory.createCountDownTimer(expectedRestInMs, any(), any()) }
@@ -244,7 +248,7 @@ class WorkoutViewModelTest {
 
             sut.startSession().join()
             sut.runSession()
-            sut.moveToNext({}, {})
+            sut.moveToNext({}, {}, {})
             sut.startRest()
 
             verify { countdownTimerFactory.createCountDownTimer(expectedRestInMs, any(), any()) }
